@@ -1,0 +1,11 @@
+/* This file adds the requisite utility classes for Tailwind to work. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base {
+    html {
+      font-family: "salsa", system-ui, sans-serif;
+    }
+  }

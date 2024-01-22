@@ -1,0 +1,19 @@
+{
+  "detectedConfig": {
+    "typescript": true,
+    "naming": "Pascal Case",
+    "unit": "px",
+    "framework": "react",
+    "styling": "Tailwind"
+  },
+  "locofyConfig": {
+    "project_name": "FIAR",
+    "id": "65314fbc2a4d56943f51e8f9",
+    "framework": "react-native",
+    "typescript": true,
+    "path": "assets/",
+    "componentsPath": "/home/developpeur/Documents/MOBILE Projects/FoodAnnotation_and_recommandation/src/components",
+    "screensPath": "/home/developpeur/Documents/MOBILE Projects/FoodAnnotation_and_recommandation/src/views",
+    "project_environment": "expo_go"
+  }
+}
