@@ -1,9 +1,9 @@
-import { AcceuilSreen } from "./Acceuil";
-import { SearchSreen } from "./Search";
-import { RecommendationSreen } from "./Recommendation";
-import { HomeSreen } from "./Home";
-import {  SettingSreen } from "./Settting";
-import { SignupSreen } from "./signup";
-import { LoginScreen } from "./login";
+import { ReservationSreen } from "./Reservation/Reservation";
+import { AgendaSreen  } from "./Agenda/Agenda";
+import { BilletsSreen } from "./Billets/Billets";
+import {  SettingSreen } from "./Plus/Plus";
+import { SignupSreen } from "./Auth/signup";
+import { LoginScreen } from "./Auth/login";
+import { TrajetsScreen } from "./Reservation/Trajet"
 
-export { AcceuilSreen, SearchSreen, RecommendationSreen, HomeSreen, SettingSreen, SignupSreen, LoginScreen};
+export { ReservationSreen, AgendaSreen ,TrajetsScreen, BilletsSreen, SettingSreen, SignupSreen, LoginScreen};

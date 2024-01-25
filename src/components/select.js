@@ -79,9 +79,9 @@ const CustomSelect = ({ options, onChange, placeholder }) => {
         >
           {options.map((option) => (
             <Select.Item
-              key={option.value}
-              label={option.label}
-              value={option.value}
+              key={option.id}
+              label={option.nom}
+              value={option.nom}
             />
           ))}
         </Select>

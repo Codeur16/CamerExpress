@@ -12,10 +12,10 @@ const MyTimePicker = ({ onTimeSelected, name }) => {
   const onChange = (event, selectedTime) => {
     const currentTime = selectedTime || time;
     setShowTimePicker(Platform.OS === "ios"); // Cacher le sélecteur sur iOS
-    setTime(formatTime(currentTime));
-
+    setTime(currentTime);
+   
     // Appel de la fonction de rappel avec l'heure sélectionnée
-    onTimeSelected(formatTime(currentTime));
+    onTimeSelected(currentTime);
   };
 //   const onChange = (event, selectedDate) => {
 //     const currentDate = selectedDate || date;
@@ -72,9 +72,9 @@ const MyTimePicker = ({ onTimeSelected, name }) => {
           showTimepicker();
         }}
       >
-        {typeof time2 === "object" &&
-        typeof time2.toLocaleTimeString === "function"
-          ? formatTime(time2)
+        {typeof time === "object" &&
+        typeof time.toLocaleTimeString === "function"
+          ? formatTime(time)
           : name}
       </Button>
       {showTimePicker && (

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { FontFamily } from '../../GlobalStyles';
+import color from '../utils/color';
 
 export const NotificationScreen = () => {
     return (
@@ -26,7 +27,7 @@ const styles = StyleSheet.create({
     message: {
         fontSize: 16,
         fontWeight: 'medium',
-        color: 'rgba(0, 0, 0, 0.2)',
+        color: color.Black3 ,
         fontFamily: FontFamily.Poppins,
         fontSize: 30,
     },

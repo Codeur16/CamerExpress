@@ -13,9 +13,9 @@ import {
   DatePickerAndroid,
 } from "react-native";
 import DatePicker from "react-native-datepicker";
-
+import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import Form from "../components/formulairePlat";
+import Form from "../../components/formulairePlat";
 import * as ImagePicker from "expo-image-picker";
 import {
   FontAwesome,
@@ -23,28 +23,29 @@ import {
   Feather,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { FontFamily } from "../../GlobalStyles";
-import bus from "../assets/bus.jpg";
-import cover from "../assets/cover.png";
+import { FontFamily } from "../../../GlobalStyles";
+import bus from "../../assets/bus.jpg";
 import { LinearGradient } from "expo-linear-gradient";
 import { Button, Dialog, Portal } from "react-native-paper";
 import { Icon, MD3Colors } from "react-native-paper";
-import exchange from "../assets/exchange.svg";
+import exchange from "../../assets/exchange.svg";
 import { SvgXml } from "react-native-svg";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { TextInput } from "react-native-paper";
-import { CustomSelect } from "../components/select";
-import ModelSelect from "../components/ModelSelect";
-import MyDatePicker from "../components/DatePicker";
-import MyTimePicker from "../components/TimePicked";
+import { CustomSelect } from "../../components/select";
+import ModelSelect from "../../components/ModelSelect";
+import MyDatePicker from "../../components/DatePicker";
+import MyTimePicker from "../../components/TimePicked";
 import { Provider } from "react-native-paper";
+import axios from 'axios';
+import url from "../../utils/url";
 
 // export function AnnotationSreen({ route, navigation }) {
 
-export function AcceuilSreen() {
+export function ReservationSreen() {
   const [focus, setFocus] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
-  const [selectedTime, setSelectedTime] = useState('');
+  const [selectedTime, setSelectedTime] = useState("");
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="#0081c7" d="M18 10a1 1 0 0 0-1-1H5.41l2.3-2.29a1 1 0 0 0-1.42-1.42l-4 4a1 1 0 0 0-.21 1.09A1 1 0 0 0 3 11h14a1 1 0 0 0 1-1m3.92 3.62A1 1 0 0 0 21 13H7a1 1 0 0 0 0 2h11.59l-2.3 2.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0l4-4a1 1 0 0 0 .21-1.09"/></svg>`;
   const customFont = {
     fontFamily: FontFamily.Salsa, // Remplacez 'VotrePolice' par le nom réel de votre police
@@ -70,21 +71,89 @@ export function AcceuilSreen() {
     fontSize: 18,
     color: "white",
   };
-  const [SelectedClasseVoyage, setSelectedClasseVoyage]=useState('')
-  const [classeVoyage, setClasseVoyage]=useState( [
-    { label: "VIP", value: "VIP" },
-    { label: "Classique", value: "Classique" },
+  const [SelectedClasseVoyage, setSelectedClasseVoyage] = useState("");
+  const [SelectedVilleArrive, setSelectedVilleArrive] = useState("Douala");
+  const [classeVoyage, setClasseVoyage] = useState([
+    { id: "1", nom: "VIP" },
+    { id: "2", nom: "Classique" },
   ]);
-  const [SelectedAgence, setSelectedAgence]=useState('')
-  const [Agence, setAgence]=useState( [
-    { label: "Generale Voyage", value: "Generale Voyage" },
-    { label: "Finex", value: "Finex" },
+  const [SelectedVilleDepart, setSelectedVilleDepart] = useState("Yaounde");
+  const [VilleDepart, setVilleDepart] = useState([
+    { label: "Yaounde", value: "Yaounde" },
+    { label: "Douala", value: "Douala" },
   ]);
-  const [SelectedSitesAgences, setSelectedSitesAgences]=useState('')
-  const [sitesAgence, setSitesAgence]=useState( [
+  
+  const [VilleArrive, setVilleArrive] = useState([
+    { label: "Yaounde", value: "Yaounde" },
+    { label: "Douala", value: "Douala" },
+  ]);
+  const [SelectedSitesAgencesDepart, setSelectedSitesAgencesDepart] = useState("Mvan");
+  const [SelectedSitesAgencesArrive, setSelectedSitesAgencesArrive] = useState("Akwa");
+
+  const [sitesAgence, setSitesAgence] = useState([
     { label: "Mvan", value: "Mvan" },
     { label: "Akwa", value: "Akwa" },
   ]);
+const [data, setdata]=useState([])
+const navigation = useNavigation();
+
+/*   Requette de recupperer   les villes */
+
+useEffect(() => {
+  // Fonction pour effectuer la requête GET
+  const fetchData = async () => {
+    try {
+      const reponse = await axios.get("http://192.168.43.63:8080/api/ville");
+      console.log(reponse.data);
+      console.log(reponse.data.message);
+      setdata(reponse.data)
+      // setDonnees(reponse.data);
+    } catch (erreur) {
+      
+      console.error("Erreur lors de la récupération des données :", erreur);
+    }
+  };
+  fetchData()
+})
+
+  /** Recherche dans le tables */
+  const rechercherIdParNom = (tableau, nomRecherche) => {
+    // Utilisation de la méthode find pour rechercher le premier objet par nom
+    const objetTrouve = tableau.find(objet => objet.nom === nomRecherche);
+  
+    // Retourne l'id si l'objet est trouvé, sinon retourne null
+    return objetTrouve ? objetTrouve.id : null;
+  };
+
+
+/*   Requette de recupperer   les sites de depart*/
+const [dataSiteDepart, setDataSiteDepart]=useState([])
+
+useEffect(() => {
+  // Fonction pour effectuer la requête GET
+  const fetchData = async () => {
+    try {
+      const reponse = await axios.get("http://192.168.43.63:8080/api/site/?ville="+rechercherIdParNom(SelectedVilleDepart));
+      console.log(reponse.data);
+      console.log(reponse.data.message);
+      setDataSiteDepart(reponse.dataSiteDepart)
+      // setDonnees(reponse.data);
+    } catch (erreur) {
+      
+      console.error("Erreur lors de la récupération des sites :", erreur);
+    }
+  };
+
+
+
+  
+  // Appel de la fonction pour effectuer la requête lors du montage du composant
+  fetchData();
+},[]); // Le tableau vide en second argument assure que useEffect s'exécute une seule fois lors du montage du composant
+
+
+
+
 
   const handleDateSelection = (date) => {
     setSelectedDate(date);
@@ -97,27 +166,29 @@ export function AcceuilSreen() {
   };
   const [visible, setVisible] = React.useState(false);
 
-// test
+  // test
 
-useEffect(()=>{
-  console.log("Date : "+selectedDate);
-  console.log("Heure: "+selectedTime);
-console.log("SelectedAgence: "+SelectedAgence);
-console.log("SelectedClasseVoyage: "+SelectedClasseVoyage);
-console.log("SelectedSitesAgences: "+SelectedSitesAgences);
-
-})
+  useEffect(() => {
+    console.log("Date : " + selectedDate);
+    console.log("Heure: " + selectedTime);
+    console.log("SelectedVilleDepart: " + SelectedVilleDepart);
+    console.log("SelectedVilleArrive: " + SelectedVilleArrive);
+    console.log("SelectedClasseVoyage: " + SelectedClasseVoyage);
+    console.log("SelectedSitesAgencesDepart: " + SelectedSitesAgencesDepart);
+  });
 
   return (
-    <ScrollView contentContainerStyle={{
-      flex: 1,
-      flexDirection: 'column',
-      width: '100%',
-      height: '100%',
-      backgroundColor: 'white',
-      justifyContent: 'center',
-      alignItems: 'center',
-    }}>
+    <ScrollView
+      contentContainerStyle={{
+        flex: 1,
+        flexDirection: "column",
+        width: "100%",
+        height: "100%",
+        backgroundColor: "white",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <View className=" flex    flex-col w-full h-64 bg-white content-center justify-center items-center ">
         <View
           className=" w-full h-64 mb-3  flex-grow flex-shrink  flex-nowrap items-center  justify-start "
@@ -195,7 +266,7 @@ console.log("SelectedSitesAgences: "+SelectedSitesAgences);
                     className="text-white text-3xl font-bold self-center whitespace-nowrap mt-0"
                     style={{ fontFamily: FontFamily.Laila }}
                   >
-                    Mvan
+                    {SelectedSitesAgencesDepart}
                   </Text>
                 </View>
                 <View className="w-100 items-center justify-center">
@@ -203,7 +274,7 @@ console.log("SelectedSitesAgences: "+SelectedSitesAgences);
                     className=" text-white text-lg whitespace-nowrap mt-1"
                     style={{ fontFamily: FontFamily.Laila }}
                   >
-                    Yaounde, CMR
+                    {SelectedVilleDepart}
                   </Text>
                 </View>
               </View>
@@ -238,7 +309,7 @@ console.log("SelectedSitesAgences: "+SelectedSitesAgences);
                     className="text-white text-3xl font-bold self-center whitespace-nowrap mt-0"
                     style={{ fontFamily: FontFamily.Laila }}
                   >
-                    Akwa
+                    {SelectedSitesAgencesArrive}
                   </Text>
                 </View>
                 <View className="w-100 items-center justify-center">
@@ -246,105 +317,90 @@ console.log("SelectedSitesAgences: "+SelectedSitesAgences);
                     className=" text-white text-lg whitespace-nowrap mt-1"
                     style={{ fontFamily: FontFamily.Laila }}
                   >
-                    Douala, CMR
+                    {SelectedVilleArrive} 
                   </Text>
                 </View>
               </View>
             </View>
           </View>
         </View>
-        </View>
-        {/* Contenu scrollable */}
-        <ScrollView nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
-          <View
-            style={{
-              width: "100%",
-              top: "2%",
-              height: "full",
-              alignItems: "center",
-              alignContent: "space-between",
-            }}
-          >
-            <View className="my-1">
-              <MyDatePicker
-                onDateSelected={handleDateSelection}
-                name={selectedDate ? selectedDate : "Date de depart"}
-              />
-            </View>
-            <View className="my-1">
-              <MyTimePicker
-                onDateSelected={handleTimeSelection}
-                name={selectedTime ? selectedTime : "Heure de Depart"}
-              />
-            </View>
-
-            {/* <TextInput
-              theme={{ colors: { primary: "rgba(0,129,199,1)" } }}
-              style={{
-                marginTop: 0,
-                width: 320,
-                height: 50,
-                backgroundColor: "white",
-              }}
-              mode="outlined"
-              label="Agence"
-              placeholder="Entrer votre agence de voyage"
-              right={<TextInput.Affix text="" />}
-            /> */}
-            {/* <TextInput
-              theme={{
-                colors: {
-                  text: "rgba(0,129,199,1)",
-                  primary: "rgba(0,129,199,1)",
-                  placeholder: "rgba(0,129,199,1)",
-                },
-                roundness: 5,
-                fonts: {
-                  regular: {
-                    fontFamily: FontFamily.Salsa,
-                  },
-                },
-              }}
-              style={{
-                marginTop: 0,
-                width: 320,
-                height: 50,
-                backgroundColor: "white",
-              }}
-              mode="outlined"
-              label="Site d'agence"
-              placeholder="Choisir un site"
-              right={<TextInput.Affix text="" />}
-            /> */}
-            {/* <View> */}
-
-
-            <CustomSelect options={Agence} onChange={setSelectedAgence} placeholder ="Agence" />
-
-            <CustomSelect options={sitesAgence} onChange={setSelectedSitesAgences} placeholder ="Sites de l'agence" />
-
-            <CustomSelect options={classeVoyage} onChange={setSelectedClasseVoyage}  placeholder ="Vip / Classique"/>
-            {/* </View> */}
-            <Button 
-              labelStyle={customFont3}
-              theme={{ colors: { primary: "rgba(0,129,199,1)" }, roundness: 1 }}
-              style={{
-                marginTop: 10,
-                marginBottom: 50,
-                width: 320,
-                height: 50,
-                justifyContent: "center",
-              }}
-              buttonColor="rgba(0,129,199,1)"
-              mode="contained"
-              onPress={() => console.log("Pressed")}
-            >
-              Rechercher
-            </Button>
-            <View className="h-64"></View>
+      </View>
+      {/* Contenu scrollable */}
+      <ScrollView
+        nestedScrollEnabled={true}
+        showsVerticalScrollIndicator={false}
+      >
+        <View
+          style={{
+            width: "100%",
+            top: "2%",
+            height: "full",
+            alignItems: "center",
+            alignContent: "space-between",
+          }}
+        >
+          <View className="my-1">
+            <MyDatePicker
+              onDateSelected={handleDateSelection}
+              name={selectedDate ? selectedDate : "Date de depart"}
+            />
           </View>
-        </ScrollView>
-      
+          <View className="my-1">
+            <MyTimePicker
+              onDateSelected={handleTimeSelection}
+              name={selectedTime ? selectedTime : "Heure de Depart"}
+            />
+          </View>
+
+          <>
+            <CustomSelect
+              options={data}
+              onChange={setSelectedVilleDepart}
+              placeholder="VilleDepart depart"
+            />
+           <CustomSelect
+              options={data}
+              onChange={setSelectedVilleArrive}
+              placeholder="Ville  Arrive"
+            />
+          </>
+
+       
+            <CustomSelect
+              options={dataSiteDepart} 
+              onChange={setSelectedSitesAgencesDepart}
+              placeholder="Sites de l'agence Depart"
+            />
+            
+          
+          
+            <CustomSelect
+              options={data}
+              onChange={setSelectedClasseVoyage}
+              placeholder="Vip / Classique"
+            />
+         
+
+          {/* </View> */}
+          <Button
+            labelStyle={customFont3}
+            theme={{ colors: { primary: "rgba(0,129,199,1)" }, roundness: 1 }}
+            style={{
+              marginTop: 10,
+              marginBottom: 50,
+              width: 320,
+              height: 50,
+              justifyContent: "center",
+            }}
+            buttonColor="rgba(0,129,199,1)"
+            mode="contained"
+            onPress={() => {console.log("Pressed"); navigation.navigate("trajet");  } }
+          >
+            Rechercher
+          </Button>
+          <View className="h-64"></View>
+        </View>
+      </ScrollView>
     </ScrollView>
   );
 }

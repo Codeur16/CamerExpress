@@ -1,6 +1,6 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { LandingSreen } from "../views/landingScreen";
+import { LandingSreen,  } from "../views/landingScreen";
 import { LogoTitle } from "../components/logoTitle";
 import { FontFamily } from "../../GlobalStyles";
 import { HomeRoot } from "./HomeRoot";
@@ -8,7 +8,7 @@ import { AuthRoot } from "./AuthRoot";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity, View } from "react-native";
 import { NotificationScreen } from "../views/Notification";
-
+import {TrajetsScreen } from "../views/Reservation/Trajet"
 import { useNavigation } from "@react-navigation/native";
 // import DropdownMenu from "../components/DropdwonMenu";
 const Stack = createNativeStackNavigator();
@@ -138,6 +138,11 @@ export default function MainRoot() {
       <Stack.Screen
         name="Notification"
         component={NotificationScreen}
+        // options={{ headerShown: false }}
+      />
+       <Stack.Screen
+        name="trajet"
+        component={TrajetsScreen}
         // options={{ headerShown: false }}
       />
     </Stack.Navigator>

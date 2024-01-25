@@ -6,7 +6,8 @@ import food1 from "../assets/images/ellipse-1.png";
 import * as Animatable from "react-native-animatable";
 import { useNavigation } from "@react-navigation/native";
 import { styled } from "nativewind";
-import {FontFamily} from "../../GlobalStyles";
+import {FontFamily, colors} from "../../GlobalStyles";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 const StyledView = styled(View);
 const StyledText = styled(Text);
 
@@ -22,7 +23,7 @@ export function LandingSreen() {
 
     // N'oubliez pas de nettoyer le timer pour éviter les fuites de mémoire
     return () => clearTimeout(timer);
-  });
+  });         
 
   
 
@@ -60,7 +61,7 @@ export function LandingSreen() {
 const styles = StyleSheet.create({
   container: {
     display: "block",
-    backgroundColor: "#29C752",
+    backgroundColor: colors.Limeblue9 ,
     height: "100%",
     width: "100%",
     // ...Platform.select({

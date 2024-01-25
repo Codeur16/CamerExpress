@@ -6,7 +6,7 @@ export default function ImagePickerComponent() {
   const [image, setImage] = useState(null);
   async function getPermission() {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-  
+    
     if (status !== 'granted') {
       alert('Permission to access image library is required!');
     }

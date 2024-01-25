@@ -18,11 +18,10 @@ import { FontFamily } from "../../GlobalStyles";
 import { SvgXml } from 'react-native-svg';
 
 // Thanks for watching
-import {
-  HomeSreen,
-  RecommendationSreen,
-  AcceuilSreen,
-  SearchSreen,
+import { 
+  BilletsSreen,
+  ReservationSreen,
+  AgendaSreen,
   SettingSreen,
 } from "../views/index";
 const svgIcon = `
@@ -66,12 +65,12 @@ const AnimatedIcon = Animated.createAnimatedComponent(AntDesign);
 
 export function HomeRoot() {
   return (
-    <Tab.Navigator screenOptions={screenOptions} initialRouteName="Annotation   ">
+    <Tab.Navigator screenOptions={screenOptions} initialRouteName="Annotation">
      
       <Tab.Screen
       
         name="Acceuil"
-        component={AcceuilSreen}
+        component={ReservationSreen}
         options={{
           tabBarLabel: 'Details',
           tabBarIcon: ({ focused }) => {
@@ -137,7 +136,7 @@ export function HomeRoot() {
       />
       <Tab.Screen
         name="Recommendation"
-        component={RecommendationSreen}
+        component={BilletsSreen}
         options={{
           tabBarIcon: ({ focused }) => {
             return (
@@ -200,7 +199,7 @@ export function HomeRoot() {
       />
       <Tab.Screen
         name="Search"
-        component={SearchSreen}
+        component={AgendaSreen}
         options={{
           tabBarIcon: ({ focused }) => {
             return (
