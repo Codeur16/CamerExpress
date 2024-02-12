@@ -19,4 +19,5 @@ export default Couleur = {
     Black7: 'rgba(0, 0, 0, 0.7) ',
     Black8: 'rgba(0, 0, 0, 0.8) ',
     Black9: 'rgba(0, 0, 0, 0.8) ',
+    White:  '#ffffff',
   };

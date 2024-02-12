@@ -10,6 +10,7 @@ import { TouchableOpacity, View } from "react-native";
 import { NotificationScreen } from "../views/Notification";
 import {TrajetsScreen } from "../views/Reservation/Trajet"
 import { useNavigation } from "@react-navigation/native";
+import Couleur from "../utils/color";
 // import DropdownMenu from "../components/DropdwonMenu";
 const Stack = createNativeStackNavigator();
 
@@ -92,22 +93,21 @@ export default function MainRoot() {
         name="HomeRoot"
         component={HomeRoot}
         options={{
-          headerShown:true,
+          headerShown: true,
           title: "CamerExpress",
           headerTitleAlign: "center",
           headerStyle: {
-            backgroundColor: "#ffff",
-          
+            backgroundColor: Couleur.Limeblue9,
           },
-          headerTintColor: "#000000",
+          headerTintColor: Couleur.White,
           headerTitleStyle: {
             fontWeight: "bold",
           },
           headerTitleAlign: "left",
           headerTitleStyle: {
-            fontFamily: FontFamily.Laila,
-            fontSize: 18,
-            fontWeight: "600",
+            fontFamily: FontFamily.Poppins,
+            fontSize: 20,
+            fontWeight: "500",
           },
           headerLeft: (props) => <LogoTitle {...props} />,
           headerRight: () => (
@@ -120,7 +120,7 @@ export default function MainRoot() {
             >
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate("Notification")
+                  navigation.navigate("Notification");
                 }}
               >
                 <Ionicons
@@ -130,7 +130,6 @@ export default function MainRoot() {
                   style={{ marginRight: 10 }}
                 />
               </TouchableOpacity>
-            
             </View>
           ),
         }}
@@ -138,12 +137,70 @@ export default function MainRoot() {
       <Stack.Screen
         name="Notification"
         component={NotificationScreen}
-        // options={{ headerShown: false }}
+        options={{
+          headerShown: true,
+          title: "Notification",
+          headerTitleAlign: "center",
+          headerStyle: {
+            backgroundColor: Couleur.Limeblue9,
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+          headerTitleAlign: "left",
+          headerTitleStyle: {
+            fontFamily: FontFamily.Poppins,
+            fontSize: 18,
+            fontWeight: "600",
+          },
+        }}
       />
-       <Stack.Screen
+      <Stack.Screen
         name="trajet"
         component={TrajetsScreen}
-        // options={{ headerShown: false }}
+        options={{
+          headerShown: true,
+          title: "Trajets",
+          headerTitleAlign: "center",
+          headerStyle: {
+            backgroundColor: Couleur.Limeblue9,
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+          headerTitleAlign: "left",
+          headerTitleStyle: {
+            fontFamily: FontFamily.Poppins,
+            fontSize: 18,
+            fontWeight: "600",
+          },
+          // headerLeft: (props) => <LogoTitle {...props} />,
+
+          // headerRight: () => (
+          //   <View
+          //     style={{
+          //       flexDirection: "row",
+          //       alignItems: "center",
+          //       marginRight: 10,
+          //     }}
+          //   >
+          //     <TouchableOpacity
+          //       onPress={() => {
+          //         navigation.navigate("Notification");
+          //       }}
+          //     >
+          //       <Ionicons
+          //         name="notifications"
+          //         size={24}
+          //         color={Couleur.Black4}
+          //         style={{ marginRight: 10 }}
+          //       />
+          //     </TouchableOpacity>
+          //   </View>
+          // ),
+        }}
       />
     </Stack.Navigator>
   );

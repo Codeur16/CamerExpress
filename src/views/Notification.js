@@ -6,7 +6,7 @@ import color from '../utils/color';
 export const NotificationScreen = () => {
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.message}>Notification</Text>
+            <Text style={styles.message}>Aucune Notification</Text>
 
             <Text style={styles.message}>
                 
@@ -27,8 +27,8 @@ const styles = StyleSheet.create({
     message: {
         fontSize: 16,
         fontWeight: 'medium',
-        color: color.Black3 ,
+        color: color.Black2 ,
         fontFamily: FontFamily.Poppins,
-        fontSize: 30,
+        fontSize: 20,
     },
 });

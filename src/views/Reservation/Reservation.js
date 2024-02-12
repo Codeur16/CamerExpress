@@ -31,8 +31,9 @@ import MyTimePicker from "../../components/TimePicked";
 import axios from "axios";
 import { Button } from "react-native-paper";
 import Couleur from "../../utils/color";
+import ActionSheet from "../../components/ActionnSheet";
 // export function AnnotationSreen({ route, navigation }) {
-
+import { AntDesign } from "@expo/vector-icons";
 export function ReservationSreen() {
   const [focus, setFocus] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
@@ -44,7 +45,7 @@ export function ReservationSreen() {
     useState("Mvan");
   const [SelectedSitesAgencesArrive, setSelectedSitesAgencesArrive] =
     useState("Akwa");
-  const [data, setdata] = useState(VilleDepart);
+  const [data, setdata] = useState();
   const navigation = useNavigation();
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="#0081c7" d="M18 10a1 1 0 0 0-1-1H5.41l2.3-2.29a1 1 0 0 0-1.42-1.42l-4 4a1 1 0 0 0-.21 1.09A1 1 0 0 0 3 11h14a1 1 0 0 0 1-1m3.92 3.62A1 1 0 0 0 21 13H7a1 1 0 0 0 0 2h11.59l-2.3 2.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0l4-4a1 1 0 0 0 .21-1.09"/></svg>`;
   const customFont = {
@@ -66,7 +67,7 @@ export function ReservationSreen() {
   const customFont3 = {
     fontFamily: FontFamily.Poppins, // Remplacez 'VotrePolice' par le nom réel de votre police
     letterSpacing: 1,
-    fontWeight: "ligth",
+    // fontWeight: "ligth",
     lineHeight: 20,
     fontSize: 18,
     color: "white",
@@ -129,6 +130,7 @@ export function ReservationSreen() {
         setdata(reponse.data);
         // setDonnees(reponse.data);
       } catch (erreur) {
+        setdata(VilleDepart);
         console.error("Erreur lors de la récupération des données :", erreur);
       }
     };
@@ -164,10 +166,21 @@ export function ReservationSreen() {
   };
   // Rechaercher
 
-  const rechercher = (villeDepart, villeArrivee, siteAgence) => {
+  const rechercher = (
+    villeDepart,
+    villeArrivee,
+    SelectedSitesAgencesDepart,
+    SelectedSitesAgencesArrivee,
+    selectedDate
+  ) => {
     // Naviguer vers l'écran en utilisant les données fournies
-    // Exemple de code de navigation :
-    navigation.navigate("trajet", { villeDepart, villeArrivee, siteAgence });
+    navigation.navigate("trajet", {
+      villeDepart,
+      villeArrivee,
+      SelectedSitesAgencesDepart,
+      SelectedSitesAgencesArrivee,
+      selectedDate,
+    });
   };
 
   return (
@@ -232,24 +245,15 @@ export function ReservationSreen() {
             onChange={setSelectedSitesAgencesDepart}
             placeholder="Site Depart"
           />
-          <Text
+          {/* Trait de separation */}
+          <View
+            className="w-80 h-4 shadow-lg shadow-Black2  rounded"
             style={{
-              marginTop: 5,
-              marginBottom: -5,
-              fontSize: 15,
-              fontWeight: "ligth",
-              color: Couleur.Limeblue7,
-              fontFamily: FontFamily.Poppins,
+              borderBottomWidth: 1,
+              borderBottomColor: Couleur.Black1,
             }}
-          >
-            Date de depart:
-          </Text>
-          <View className="my-1">
-            <MyDatePicker
-              onDateSelected={handleDateSelection}
-              name={selectedDate ? selectedDate : "Date de depart"}
-            />
-          </View>
+          ></View>
+
           <Text
             style={{
               marginTop: 5,
@@ -282,9 +286,35 @@ export function ReservationSreen() {
           </Text>
           <CustomSelect
             options={dataSiteDepart}
-            onChange={setSelectedSitesAgencesDepart}
+            onChange={setSelectedSitesAgencesArrive}
             placeholder="Site d'arrivee"
           />
+          {/* Trait de separation */}
+          <View
+            className="w-80 h-4 shadow-lg shadow-Black2  rounded"
+            style={{
+              borderBottomWidth: 1,
+              borderBottomColor: Couleur.Black1,
+            }}
+          ></View>
+          <Text
+            style={{
+              marginTop: 25,
+              marginBottom: -5,
+              fontSize: 15,
+              fontWeight: "ligth",
+              color: Couleur.Limeblue7,
+              fontFamily: FontFamily.Poppins,
+            }}
+          >
+            Date de depart:
+          </Text>
+          <View className="my-1">
+            <MyDatePicker
+              onDateSelected={handleDateSelection}
+              name={selectedDate ? selectedDate : "Date de depart"}
+            />
+          </View>
         </>
         {/* <CustomSelect
             options={data}
@@ -294,7 +324,8 @@ export function ReservationSreen() {
 
         {/* </View> */}
         <Button
-          idStyle={customFont3}
+          icon={<AntDesign name="search1" size={24} color="black" />}
+          labelStyle={customFont3}
           theme={{ colors: { primary: "rgba(0,129,199,1)" }, roundness: 1 }}
           style={{
             marginTop: 10,
@@ -306,13 +337,22 @@ export function ReservationSreen() {
           buttonColor="rgba(0,129,199,1)"
           mode="contained"
           onPress={() => {
-            console.log("Pressed");
-            navigation.navigate("trajet");
+            // console.log("Pressed");
+            // navigation.navigate("trajet");
+            rechercher(
+              SelectedVilleDepart,
+              SelectedVilleArrive,
+              SelectedSitesAgencesDepart,
+              SelectedSitesAgencesArrive,
+              selectedDate
+            );
           }}
         >
           Rechercher
         </Button>
-        <View className="h-64"></View>
+        <View className="h-64">
+          <ActionSheet />
+        </View>
       </View>
     </ScrollView>
     // {/* </ScrollView> */}
