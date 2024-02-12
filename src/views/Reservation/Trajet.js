@@ -2,23 +2,28 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import axios from 'axios';
 
-export const TrajetsScreen = () => {
+export const TrajetsScreen = ({ route, navigation }) => {
+  const { villeDepart, villeArrivee, siteAgence } = route.params;
   const [trajets, setTrajets] = useState([]);
 
   useEffect(() => {
-    // Fonction pour effectuer la requête Axios et récupérer les trajets
     const fetchTrajets = async () => {
       try {
-        const response = await axios.get('URL_DE_VOTRE_API/trajets');
+        const response = await axios.get('URL_DE_VOTRE_API/trajets', {
+          params: {
+            villeDepart,
+            villeArrivee,
+            siteAgence
+          }
+        });
         setTrajets(response.data);
       } catch (error) {
         console.error("Erreur lors de la récupération des trajets :", error);
       }
     };
 
-    // Appel de la fonction pour effectuer la requête lors du montage du composant
     fetchTrajets();
-  }, []); // Le tableau vide en second argument assure que useEffect s'exécute une seule fois lors du montage du composant
+  }, [villeDepart, villeArrivee, siteAgence]);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -54,5 +59,3 @@ const styles = StyleSheet.create({
   },
   // Ajoutez d'autres styles selon vos besoins
 });
-
-

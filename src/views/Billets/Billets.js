@@ -2,8 +2,6 @@ import React, { useState} from 'react'
 import {View, Text, ScrollView, StyleSheet} from 'react-native';
 // import { Select, VStack, CheckIcon, Center, NativeBaseProviderBox, Text } from "native-base";
 import { CustomSelect } from "../../components/select";
-import LoginModel from '../../components/Model';
-import ModelSelect from '../../components/ModelSelect';
 import MyDatePicker from '../../components/DatePicker';
 import { FontFamily } from '../../../GlobalStyles';
 

@@ -45,11 +45,11 @@ const CustomSelect = ({ options, onChange, placeholder }) => {
           backgroundColor="white"
           accessibilityLabel="Classe de voyage"
           placeholder={placeholder}
-          fontSize="16"
-          paddingLeft="4"
+          fontSize="18"
+          paddingLeft="20%"
           marginTop="2"
           fontFamily={FontFamily.Poppins}
-          color={Couleur.Black6}
+          color={Couleur.Black8}
           _selectedItem={{
             bg: "rgba(0,129,199,0.65)",
             endIcon: <CheckIcon size="15" />,
@@ -77,7 +77,7 @@ const CustomSelect = ({ options, onChange, placeholder }) => {
             onChange && onChange(itemValue); // Appel de la fonction de rappel
           }}
         >
-          {options.map((option) => (
+          {options && options.map((option) => (
             <Select.Item
               key={option.id}
               label={option.nom}
