@@ -8,9 +8,11 @@ import { AuthRoot } from "./AuthRoot";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity, View } from "react-native";
 import { NotificationScreen } from "../views/Notification";
+import { AgenceScreen } from "../views/index"
 import {TrajetsScreen } from "../views/Reservation/Trajet"
 import { useNavigation } from "@react-navigation/native";
 import Couleur from "../utils/color";
+
 // import DropdownMenu from "../components/DropdwonMenu";
 const Stack = createNativeStackNavigator();
 
@@ -39,6 +41,7 @@ export default function MainRoot() {
         },
       }}
     >
+      
       {/* <Stack.Screen
         name="Landing"
         component={LandingSreen}
@@ -93,11 +96,13 @@ export default function MainRoot() {
         name="HomeRoot"
         component={HomeRoot}
         options={{
-          headerShown: true,
-          title: "CamerExpress",
+          headerShown: false,
+          title: "",
           headerTitleAlign: "center",
           headerStyle: {
             backgroundColor: Couleur.Limeblue9,
+            // width: Dimensions.get('window').width ,
+            height: 12,
           },
           headerTintColor: Couleur.White,
           headerTitleStyle: {
@@ -105,33 +110,100 @@ export default function MainRoot() {
           },
           headerTitleAlign: "left",
           headerTitleStyle: {
+            // headerLeft: (props) => <LogoTitle {...props} />,
+            // headerRight: () => (
+            //   <View
+            //     style={{
+            //       flexDirection: "row", // headerLeft: (props) => <LogoTitle {...props} />,
+            // headerRight: () => (
+            //   <View
+            //     style={{
+            //       flexDirection: "row",
+            //       alignItems: "center",
+            //       marginRight: 10,
+            //     }}
+            //   > // headerLeft: (props) => <LogoTitle {...props} />,
+            // headerRight: () => (
+            //   <View
+            //     style={{
+            //       flexDirection: "row",
+            //       alignItems: "center",
+            //       marginRight: 10,
+            //     }}
+            //   >
+            //     <TouchableOpacity
+            //       onPress={() => {
+            //         navigation.navigate("Notification");
+            //       }}
+            //     >
+            //       <Ionicons
+            //         name="notifications"
+            //         size={24}
+            //         color="#fff"
+            //         style={{ marginRight: 10 }}
+            //       />
+            //     </TouchableOpacity>
+            //   </View>
+            // ),
+            //     <TouchableOpacity
+            //       onPress={() => {
+            //         navigation.navigate("Notification");
+            //       }}
+            //     >
+            //       <Ionicons
+            //         name="notifications"
+            //         size={24}
+            //         color="#fff"
+            //         style={{ marginRight: 10 }}
+            //       />
+            //     </TouchableOpacity>
+            //   </View>
+            // ),
+            //       alignItems: "center",
+            //       marginRight: 10,
+            //     }}
+            //   >
+            //     <TouchableOpacity
+            //       onPress={() => {
+            //         navigation.navigate("Notification");
+            //       }}
+            //     >
+            //       <Ionicons
+            //         name="notifications"
+            //         size={24}
+            //         color="#fff"
+            //         style={{ marginRight: 10 }}
+            //       />
+            //     </TouchableOpacity>
+            //   </View>
+            // ),
             fontFamily: FontFamily.Poppins,
             fontSize: 20,
             fontWeight: "500",
           },
-          headerLeft: (props) => <LogoTitle {...props} />,
-          headerRight: () => (
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginRight: 10,
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("Notification");
-                }}
-              >
-                <Ionicons
-                  name="notifications"
-                  size={24}
-                  color="#fff"
-                  style={{ marginRight: 10 }}
-                />
-              </TouchableOpacity>
-            </View>
-          ),
+          // headerLeft: (props) => <LogoTitle {...props} />,
+          // headerRight: () => (
+          //   <View
+          //     style={{
+          //       flexDirection: "row",
+          //       alignItems: "center",
+          //       marginRight: 10,
+          //     }}
+          //   >
+          //     <TouchableOpacity
+          //       onPress={() => {
+          //         navigation.navigate("Notification");
+          //       }}
+          //     >
+          //       <Ionicons
+          //         name="notifications"
+          //         size={24}
+          //         color="#fff"
+          //         style={{ marginRight: 10 }}
+          //       />
+          //     </TouchableOpacity>
+          //   </View>
+          // ),
         }}
       />
       <Stack.Screen
@@ -157,11 +229,33 @@ export default function MainRoot() {
         }}
       />
       <Stack.Screen
+        name="Agences"
+        component={AgenceScreen}
+        options={{
+          headerShown: true,
+          title: "Agences",
+          headerTitleAlign: "center",
+          headerStyle: {
+            backgroundColor: Couleur.Limeblue9,
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+          headerTitleAlign: "left",
+          headerTitleStyle: {
+            fontFamily: FontFamily.Poppins,
+            fontSize: 18,
+            fontWeight: "600",
+          },
+        }}
+      />
+      <Stack.Screen
         name="trajet"
         component={TrajetsScreen}
         options={{
           headerShown: true,
-          title: "Trajets",
+          title: "Trajets disponibles",
           headerTitleAlign: "center",
           headerStyle: {
             backgroundColor: Couleur.Limeblue9,

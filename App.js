@@ -12,6 +12,10 @@ export default function App() {
     laila: require("./assets/fonts/Laila-Light.ttf"),
     Ubuntu: require("./assets/fonts/Ubuntu-Light.ttf"),
     plento: require("./assets/fonts/PLENTO.ttf"),
+    RobotoThin: require("./assets/fonts/Roboto/Roboto-Thin1.ttf"),
+    RobotoMedium: require("./assets/fonts/Roboto/Roboto-Medium3.ttf"),
+    RobotoItalic: require("./assets/fonts/Roboto/Roboto-Italic3.ttf"),
+    RobotoBold: require("./assets/fonts/Roboto/Roboto-Bold3.ttf"),
   });
   if (!fontsLoaded && !error) {
     return null;

@@ -5,7 +5,12 @@ const FontFamily = {
   Laila: 'laila',
   Ubuntu:'Ubuntu',
   Salsa:'salsa',
-  Plento:'plento'
+  Plento:'plento',
+  RobotoThin:'RobotoThin',
+  RobotoMedium:'RobotoMedium',
+  RobotoItalic:'RobotoItalic',
+  RobotoBold:'RobotoBold',
+
 
  
 };

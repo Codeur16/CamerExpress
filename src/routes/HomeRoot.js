@@ -7,6 +7,8 @@ import {
   Button,
   View,
   Animated,
+  TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { Entypo } from "@expo/vector-icons";
@@ -15,15 +17,19 @@ import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { FontFamily } from "../../GlobalStyles";
-import { SvgXml } from 'react-native-svg';
-
-// Thanks for watching
-import { 
-  BilletsSreen,
+import { SvgXml } from "react-native-svg";
+import { LogoTitle } from "../components/logoTitle";
+import { useNavigation } from "@react-navigation/native";
+import {
+  AcceuilSreen,
   ReservationSreen,
   AgendaSreen,
   SettingSreen,
 } from "../views/index";
+import { ReservationRoot } from "./ReserveRoot";
+import Couleur from "../utils/color";
+import { Width, Height } from "../utils/DimensionScreen";
+
 const svgIcon = `
 <svg xmlns="http://www.w3.org/2000/svg" width="17" height="18" viewBox="0 0 17 18" fill="none">
   <path d="M9.47325 0.379597C9.21022 0.15025 8.86197 0.0224609 8.5 0.0224609C8.13803 0.0224609 7.78978 0.15025 7.52675 0.379597L0.664418 6.36099C0.4543 6.54437 0.286991 6.76539 0.172743 7.0105C0.0584957 7.2556 -0.00028556 7.51965 1.04302e-06 7.78644V15.0639C0.000376603 15.5835 0.224426 16.0816 0.6229 16.4489C1.02137 16.8162 1.56166 17.0225 2.125 17.0225H4.25C4.81359 17.0225 5.35409 16.816 5.7526 16.4484C6.15112 16.0809 6.375 15.5824 6.375 15.0626V11.7963C6.375 11.623 6.44963 11.4568 6.58247 11.3343C6.7153 11.2118 6.89547 11.143 7.08333 11.143H9.91667C10.1045 11.143 10.2847 11.2118 10.4175 11.3343C10.5504 11.4568 10.625 11.623 10.625 11.7963V15.0626C10.625 15.5824 10.8489 16.0809 11.2474 16.4484C11.6459 16.816 12.1864 17.0225 12.75 17.0225H14.875C15.4386 17.0225 15.9791 16.816 16.3776 16.4484C16.7761 16.0809 17 15.5824 17 15.0626V7.78514C16.9999 7.51846 16.9408 7.25461 16.8263 7.00974C16.7118 6.76486 16.5444 6.54411 16.3342 6.36099L9.47325 0.379597Z" fill="#0081C7"/>
@@ -31,44 +37,160 @@ const svgIcon = `
 `;
 const Tab = createBottomTabNavigator();
 
-const screenOptions = {
-  tabBarShowLabel: false,
-  headerShown: false,
-  tabBarStyle: {
-    borderStyle: "solid",
-    borderColor: "rgba(0, 0, 0, 0.09)",
-    // borderColor: "rgba(41, 199, 82, 0.5)",
-    borderTopWidth: 1,
-    borderLeftWidth: 0,
-    borderRightWidth: 0,
-    position: "absolute",
-    bottom: 0,
-    right: 0,
-    left: 0,
-    elevation: 0,
-    height: 60,
-    background: "#fff",
-    width: Platform.select({
-      ios: "100%",
-      android: "100%",
-      web: "100%",
-    }),
-    left: Platform.select({
-      // web: "10%",
-    }),
-
-
-  },
-};
-
 const AnimatedIcon = Animated.createAnimatedComponent(AntDesign);
 
 export function HomeRoot() {
+  // Obtenez la hauteur de l'écran
+  const screenHeight = Height;
+  const screenWidth = Width;
+  /*
+  const screenOptions = {
+    tabBarShowLabel: false,
+    headerShown: true,
+    tabBarStyle: {
+      fontFamily: FontFamily.RobotoMedium,
+      borderStyle: "solid",
+      borderColor: "rgba(0, 0, 0, 0.09)",
+      // borderColor: "rgba(41, 199, 82, 0.5)",
+      borderBottomWidth: 1, // Remplace borderTopWidth par borderBottomWidth
+      borderLeftWidth: 0,
+      borderRightWidth: 0,
+      //position: "absolute", // Remplace "top" par "absolute"
+      top: 0, // Remplace "b // borderColor: "rgba(41, 199, 82, 0.5)",
+      left: 0,
+      elevation: 0,
+      height: screenHeight*0.08,
+      background: "#fff",
+      width: Platform.select({
+        ios: "100%",
+        android: "100%",
+        web: "100%",
+      }),
+      left: Platform.select({
+        // web: "10%",
+      }),
+    },
+    headerStyle: {
+      backgroundColor: "#ffff",
+      borderTopWidth: screenHeight * 0.065, // Utilisez la hauteur de l'écran pour calculer la valeur de borderTopWidth
+      borderTopColor: Couleur.Limeblue9,
+      borderBottomWidth: 0.5,
+      borderBottomColor: Couleur.Black0,
+      elevation: 5,
+      shadowColor: "rgba(0, 0, 0, 0.6)", // Couleur de l'ombre
+    },
+    headerTitleAlign: "center",
+    headerTintColor: Couleur.Black7,
+    headerTitleStyle: {
+      fontFamily: FontFamily.RobotoBold,
+      paddingTop: 10,
+    },
+    headerLeft: (props) => (
+      <View style={{ paddingTop: 10 }}>
+        <LogoTitle {...props} />
+      </View>
+    ),
+    headerRight: () => (
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          marginRight: 10,
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Notification");
+          }}
+        >
+          <Ionicons
+            name="notifications"
+            size={20}
+            color={Couleur.Limeblue9}
+            style={{ marginRight: 10 }}
+          />
+        </TouchableOpacity>
+      </View>
+    ),
+    headerPressColorAndroid: Couleur.Limeblue9,
+  };
+*/
+  const screenOptions = {
+    tabBarShowLabel: false,
+    headerShown: true,
+    tabBarStyle: {
+      fontFamily: FontFamily.RobotoMedium,
+      borderStyle: "solid",
+      borderColor: "rgba(0, 0, 0, 0.09)",
+      // borderColor: "rgba(41, 199, 82, 0.5)",
+      borderBottomWidth: 1, // Remplace borderTopWidth par borderBottomWidth
+      borderLeftWidth: 0,
+      borderRightWidth: 0,
+      //position: "absolute", // Remplace "top" par "absolute"
+      top: 0, // Remplace "b // borderColor: "rgba(41, 199, 82, 0.5)",
+      left: 0,
+      elevation: 0,
+      height: 60,
+      background: "#fff",
+      width: Platform.select({
+        ios: "100%",
+        android: "100%",
+        web: "100%",
+      }),
+      left: Platform.select({
+        // web: "10%",
+      }),
+    },
+    headerStyle: {
+      backgroundColor: "#ffff",
+      borderTopWidth: 50,
+      borderTopColor: Couleur.Limeblue9,
+      borderBottomWidth: 0.5,
+      borderBottomColor: Couleur.Black0,
+      elevation: 5,
+      shadowColor: "rgba(0, 0, 0, 0.6)", // Couleur de l'ombre
+    },
+    headerTitleAlign: "center",
+    headerTintColor: Couleur.Black7,
+    headerTitleStyle: {
+      fontFamily: FontFamily.RobotoBold,
+      paddingTop: 10,
+    },
+    headerLeft: (props) => (
+      <View style={{ paddingTop: 10 }}>
+        <LogoTitle {...props} />
+      </View>
+    ),
+    headerRight: () => (
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          marginRight: 10,
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Notification");
+          }}
+        >
+          <Ionicons
+            name="notifications"
+            size={20}
+            color={Couleur.Limeblue9}
+            style={{ marginRight: 10 }}
+          />
+        </TouchableOpacity>
+      </View>
+    ),
+    headerPressColorAndroid: Couleur.Limeblue9,
+  };
+  const navigation = useNavigation();
   return (
-    <Tab.Navigator screenOptions={screenOptions} initialRouteName="Reservation">
+    <Tab.Navigator screenOptions={screenOptions} initialRouteName="Acceuil">
       <Tab.Screen
         name="Acceuil"
-        component={BilletsSreen}
+        component={AcceuilSreen}
         options={{
           tabBarIcon: ({ focused }) => {
             return (
@@ -76,7 +198,7 @@ export function HomeRoot() {
                 style={
                   focused
                     ? {
-                        backgroundColor: "rgba(41, 199, 82, 0)",
+                        backgroundColor: "rgba(0,129,199,0.1)",
                         flex: 1,
                         width: Platform.select({
                           ios: "100%",
@@ -88,8 +210,10 @@ export function HomeRoot() {
                           android: "100%",
                           web: 100,
                         }),
+
                         alignItems: "center",
                         justifyContent: "center",
+                        borderRadius: 50,
                       }
                     : {
                         backgroundColor: "#FFFFFF",
@@ -112,10 +236,12 @@ export function HomeRoot() {
                 />
                 <Text
                   style={{
-                    fontSize: 16,
+                    fontSize: screenWidth * 0.045,
                     color: focused ? "#0081C7" : "#9A999F",
-                    fontFamily: FontFamily.Salsa,
-                    fontWeight: "bold",
+                    fontFamily: focused
+                      ? FontFamily.RobotoBold
+                      : FontFamily.RobotoMedium,
+                    // fontWeight: "bold",
                   }}
                 >
                   Acceuil
@@ -136,11 +262,11 @@ export function HomeRoot() {
                 style={
                   focused
                     ? {
-                        backgroundColor: "rgba(0, 129, 199, 0)",
+                        backgroundColor: "rgba(0,129,199,0.1)",
                         flex: 1,
                         width: Platform.select({
                           ios: "100%",
-                          android: "100%",
+                          android: "120%",
                           web: 110,
                         }),
                         height: Platform.select({
@@ -150,6 +276,7 @@ export function HomeRoot() {
                         }),
                         alignItems: "center",
                         justifyContent: "center",
+                        borderRadius: 50,
                       }
                     : {
                         backgroundColor: "#FFFFFF",
@@ -186,13 +313,15 @@ export function HomeRoot() {
                   height={17}
                   fill={focused ? "#0081C7" : "#9A999F"}
                 />
-                
+
                 <Text
                   style={{
-                    fontSize: 16,
+                    fontSize: screenWidth * 0.045,
                     color: focused ? "#0081C7" : "#9A999F",
-                    fontFamily: FontFamily.Salsa,
-                    fontWeight: "bold",
+                    fontFamily: focused
+                      ? FontFamily.RobotoBold
+                      : FontFamily.RobotoMedium,
+                    // fontWeight: "bold",
                   }}
                 >
                   Reservations
@@ -213,7 +342,7 @@ export function HomeRoot() {
                 style={
                   focused
                     ? {
-                        backgroundColor: "rgba(41, 199, 82, 0)",
+                        backgroundColor: "rgba(0,129,199,0.1)",
                         flex: 1,
                         width: Platform.select({
                           ios: "100%",
@@ -225,6 +354,7 @@ export function HomeRoot() {
                           android: "100%",
                           web: 100,
                         }),
+                        borderRadius: 50,
                         alignItems: "center",
                         justifyContent: "center",
                       }
@@ -251,10 +381,12 @@ export function HomeRoot() {
                 />
                 <Text
                   style={{
-                    fontSize: 16,
+                    fontSize: screenWidth * 0.045,
                     color: focused ? "#0081C7" : "#9A999F",
-                    fontFamily: FontFamily.Salsa,
-                    fontWeight: "bold",
+                    fontFamily: focused
+                      ? FontFamily.RobotoBold
+                      : FontFamily.RobotoMedium,
+                    // fontWeight: "bold",
                   }}
                 >
                   Agenda
@@ -315,10 +447,12 @@ export function HomeRoot() {
                 />
                 <Text
                   style={{
-                    fontSize: 16,
+                    fontSize: screenWidth * 0.045,
                     color: focused ? "#0081C7" : "#9A999F",
-                    fontFamily: FontFamily.Salsa,
-                    fontWeight: "bold",
+                    fontFamily: focused
+                      ? FontFamily.RobotoBold
+                      : FontFamily.RobotoMedium,
+                    // fontWeight: "bold",
                   }}
                 >
                   Profil

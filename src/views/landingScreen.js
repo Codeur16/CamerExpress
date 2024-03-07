@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Platform, StyleSheet, Text, Image, View } from "react-native";
 import { ActivityIndicator } from "react-native";
-import logo from "../assets/images/icon.512.png";
-import food1 from "../assets/images/ellipse-1.png";
+import logo from "../assets/logo.png";
 import * as Animatable from "react-native-animatable";
 import { useNavigation } from "@react-navigation/native";
 import { styled } from "nativewind";
@@ -47,7 +46,7 @@ export function LandingSreen() {
             <></>
           ) : (
             <>
-              <Image source={food1} className="w-full h-40 " />
+              {/* <Image source={1food} className="w-full h-40 " /> */}
             </>
           )}
         </StyledView>

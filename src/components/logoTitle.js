@@ -4,16 +4,16 @@ import logo from "../assets/logo.png";
 
 export function LogoTitle() {
   return (
-    <View style={styles.container}>
+    // <View style={styles.container}>
       <Image style={styles.image} source={logo} />
-    </View>
+    // {/* </View> */}
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    width: 35,
-    height: 35,
+    width: 45,
+    height: 45,
     borderRadius: 50,
     backgroundColor: "white",
     justifyContent: "center",
@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 30,
-    height: 30,
+    height: 35,
+    marginLeft:5
   },
 });

@@ -1,18 +1,20 @@
 {
   "expo": {
     "name": "CamerExpress",
-    "slug": "CamerExpress",
+    "slug": "camerexpress",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
     "userInterfaceStyle": "light",
+    "androidStatusBar": {
+      "translucent": true
+    },
+    "backgroundColor":"#fff",
     "splash": {
-      "image": "./assets/logo.png",
-      "resizeMode": "contain",
+      "image": "./assets/logo1.png",
       "backgroundColor": "#fff"
     },
-    "assetBundlePatterns": ["./assets/fonts/"] ,
-    
+    "assetBundlePatterns": ["./assets/fonts/"],
     "ios": {
       "supportsTablet": true
     },
@@ -20,12 +22,14 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo.png",
         "backgroundColor": "#fff"
-      }
+      },
+      "permissions": ["android.permission.RECORD_AUDIO"],
+      "package": "com.tokoss.camerexpress"
     },
     "web": {
       "favicon": "./assets/logo.png",
       "bundler": "metro",
-      "backgroundColor":"#fff"
+      "backgroundColor": "#fff"
     },
     "plugins": [
       [
@@ -34,6 +38,12 @@
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "5bd32775-b166-4eed-8af0-ca5afee5df90"
+      }
+    },
+    "owner": "tokoss"
   }
 }
