@@ -45,9 +45,7 @@ export function LandingSreen() {
           {Platform.OS === "web" ? (
             <></>
           ) : (
-            <>
-              {/* <Image source={1food} className="w-full h-40 " /> */}
-            </>
+            <>{/* <Image source={1food} className="w-full h-40 " /> */}</>
           )}
         </StyledView>
       </StyledView>
@@ -86,11 +84,10 @@ const styles = StyleSheet.create({
   StyledText: {
     title: {
       color: "#ffff",
-      fontWeight: "bold",
       alignItems: "center",
       justifyContent: "center",
       fontSize: 17,
-      fontFamily: FontFamily.Poppins,
+      fontFamily: FontFamily.RobotoMedium,
       textAlign: "center",
     },
     title2: {

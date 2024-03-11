@@ -4,147 +4,114 @@
 
 import React, { useState, useEffect } from "react";
 import {
-  // Text,
-  Image,
   View,
   Platform,
   Pressable,
   StyleSheet,
-  Alert,
   Text,
-  SafeAreaView,
   ScrollView,
-  DatePickerAndroid,
-  Touchable,
-  TouchableOpacity,
-
+  ToastAndroid,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import * as ImagePicker from "expo-image-picker";
-import {
-  FontAwesome,
-  Ionicons,
-  Feather,
-  MaterialIcons,
-  Fontisto,
-} from "@expo/vector-icons";
+import { Fontisto } from "@expo/vector-icons";
 import { FontFamily } from "../../../GlobalStyles";
-import bus from "../../assets/bus.jpg";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { CustomSelect } from "../../components/select";
-import MyDatePicker from "../../components/DatePicker";
-import MyTimePicker from "../../components/TimePicked";
-import axios from "axios";
-import { Button } from "react-native-paper";
+import axios, { AxiosError } from "axios";
 import Couleur from "../../utils/color";
-// export function AnnotationSreen({ route, navigation }) {
-import { AntDesign } from "@expo/vector-icons";
 import Dropdown from "../../components/select-picker";
 import { Width, Height } from "../../utils/DimensionScreen";
+import { TouchButton } from "../../components/TouchableButton";
+import url from "../../utils/url";
 //=============================================
 //         Ecran
 //=============================================
 
-
-
-
-
-
-
-
 export function ReservationForm() {
-
-
-
-
-
-
-
-
-
-
-
   //============================================
   //           Declaration des constantes
   //============================================
 
-  const [selectedDate, setSelectedDate] = useState("");
-  const [selectedTime, setSelectedTime] = useState("");
-  const [SelectedClasseVoyage, setSelectedClasseVoyage] = useState("");
-  const [SelectedVilleArrive, setSelectedVilleArrive] = useState("Douala");
-  const [SelectedVilleDepart, setSelectedVilleDepart] = useState("Yaounde");
-   const [isPressed, setIsPressed] = useState(false);
-  const [SelectedSitesAgencesDepart, setSelectedSitesAgencesDepart] =
-    useState("Mvan");
-  const [SelectedSitesAgencesArrive, setSelectedSitesAgencesArrive] =
-    useState("Akwa");
-  const [data, setdata] = useState();
-  const navigation = useNavigation();
-  const [isLoading, setIsLoading] = useState(false);
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="#0081c7" d="M18 10a1 1 0 0 0-1-1H5.41l2.3-2.29a1 1 0 0 0-1.42-1.42l-4 4a1 1 0 0 0-.21 1.09A1 1 0 0 0 3 11h14a1 1 0 0 0 1-1m3.92 3.62A1 1 0 0 0 21 13H7a1 1 0 0 0 0 2h11.59l-2.3 2.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0l4-4a1 1 0 0 0 .21-1.09"/></svg>`;
-  const customFont = {
-    fontFamily: FontFamily.RobotoMedium, // Remplacez 'VotrePolice' par le nom réel de votre police
-    letterSpacing: 0,
-    fontWeight: "ligth",
-    lineHeight: 15,
-    fontSize: 16,
-    color: "white",
-  };
-  const customFont2 = {
-    fontFamily: FontFamily.RobotoMedium, // Remplacez 'VotrePolice' par le nom réel de votre police
-    letterSpacing: 0,
-    fontWeight: "ligth",
-    lineHeight: 15,
-    fontSize: 16,
-    color: "red",
-  };
-  const customFont3 = {
-    fontFamily: FontFamily.RobotoBold, // Remplacez 'VotrePolice' par le nom réel de votre police
-    letterSpacing: 1,
-    // fontWeight: "ligth",
-    lineHeight: 20,
-    fontSize: 16,
-    color: "white",
-  };
-
+  const [selectedDate, setSelectedDate] = useState(date);
+  const [SelectedVilleArrive, setSelectedVilleArrive] = useState(null);
+  const [SelectedVilleDepart, setSelectedVilleDepart] = useState(null);
+  const [selectedSitesAgencesDepart, setSelectedSitesAgencesDepart] =
+    useState(null);
+  const [selectedClasse, setSelectedClasse] = useState(null);
   const [classeVoyage, setClasseVoyage] = useState([
-    { id: "1", nom: "VIP" },
-    { id: "2", nom: "Classique" },
+    { id: "VIP", nom: "VIP" },
+    { id: "CLASSIQUE", nom: "CLASSIQUE" },
   ]);
-
+  const navigation = useNavigation();
+  const [focus, setFocus] = useState(false);
+  const [SiteDepart, setSiteDepart] = useState([
+    { id: "Generale Mvan", nom: "Generale Mvan" },
+    { id: "Generale Akwa", nom: "Generale Akwa" },
+  ]);
   const [VilleDepart, setVilleDepart] = useState([
     { id: "Yaounde", nom: "Yaounde" },
     { id: "Douala", nom: "Douala" },
   ]);
-
-  const [VilleArrive, setVilleArrive] = useState([
-    { id: "Yaounde", nom: "Yaounde" },
-    { id: "Douala", nom: "Douala" },
+  // Parametre de requette
+  const [Trajets, setTrajets] = useState([
+    {
+      id: 1,
+      itineraire: {
+        id: 1,
+        site: {
+          id: 1,
+          agence: {
+            id: 3,
+            nom: "General",
+          },
+          ville: {
+            id: 6,
+            nom: "Yaounde",
+          },
+          quartier: "Mvan",
+          prixReservationSimple: 4000,
+          prixReservationVip: 7000,
+          prixAnnulation: 1000,
+        },
+        villeDepart: {
+          id: 6,
+          nom: "Yaounde",
+        },
+        villeDestination: {
+          id: 1,
+          nom: "Douala",
+        },
+      },
+      bus: {
+        id: 1,
+        site: {
+          id: 1,
+          agence: {
+            id: 3,
+            nom: "General",
+          },
+          ville: {
+            id: 6,
+            nom: "Yaounde",
+          },
+          quartier: "Mvan",
+          prixReservationSimple: 4000,
+          prixReservationVip: 7000,
+          prixAnnulation: 1000,
+        },
+        capacite: 70,
+        code: "B1",
+      },
+      classe: "SIMPLE",
+      code: "V001",
+      prixReservation: 4000,
+      dateDepart: "2024-12-04T15:40:10",
+      dateArriver: "2024-12-04T23:30:00",
+    },
   ]);
 
-  const [sitesAgence, setSitesAgence] = useState([
-    { id: "Mvan", nom: "Generale Mvan" },
-    { id: "Akwa", nom: "Generale Akwa" },
-  ]);
-  const [Agence, setAgence] = useState([
-    { id: "Generale", nom: "Generale Voyage" },
-    { id: "Finex", nom: "Finex Voyage" },
-    { id: "Pricess", nom: "Pricess Voyage" },
-    { id: "Global", nom: "Global Voyage" },
-  ]);
-
-  /** Recherche dans le tables */
-  const rechercherIdParNom = (tableau, nomRecherche) => {
-    // Utilisation de la méthode find pour rechercher le premier objet par nom
-    const objetTrouve = tableau.find((objet) => objet.nom === nomRecherche);
-
-    // Retourne l'id si l'objet est trouvé, sinon retourne null
-    return objetTrouve ? objetTrouve.id : null;
-  };
+  //================================================================
 
   /*   Requette de recupperer   les sites de depart*/
-  const [dataSiteDepart, setDataSiteDepart] = useState(sitesAgence);
 
   const getColor = (val) => {
     if (val === "Date de depart") {
@@ -155,66 +122,61 @@ export function ReservationForm() {
   };
   //***********     GESTION  DES DATES       ************/
   const [valueDate, setValueDate] = useState("Date de depart");
-  const [date, setDate] = useState(
-    valueDate instanceof Date ? valueDate : new Date()
-  );
+  const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [focus, setFocus] = useState(false);
 
   const onChangeDate = (event, selectedDate) => {
     setShowDatePicker(Platform.OS === "ios"); // Cacher le sélecteur sur iOS
     const currentDate = selectedDate || date;
     setDate(currentDate);
-    // setValueDate(currentDate);
-    setValueDate(formatDate(currentDate));
-    console.log(currentDate);
+    setSelectedDate(currentDate);
+    setValueDate(formatDate(selectedDate));
+
+    // console.log("Date: " + valueDate);
+    // console.log(currentDate);
+    // console.log("Date: " + valueDate);
 
     // Appel de la fonction de rappel avec la date sélectionnée
     onDateSelected(currentDate);
   };
-  const customFontDate = {
-    fontFamily: FontFamily.RobotoMedium,
-    letterSpacing: 0,
-    lineHeight: 20,
-    fontSize: 16,
-    color: getColor(valueDate),
-  };
+
   const showDatepicker = () => {
     setShowDatePicker(true);
   };
+  useEffect(() => {
+    console.log("Date net: " + valueDate);
+  }, [valueDate]);
   /**********************************************************/
 
   //===================================================
-  //        Effect asychrones
+  //        Effect asychrones et Services
   //===================================================
 
   /*   Requette  */
   useEffect(() => {
     const GetSite = async () => {
       try {
-        const reponse = await axios.get(
-          "http://192.168.43.63:8080/api/site/?ville=" +
-            rechercherIdParNom(SelectedVilleDepart)
-        );
-        console.log(reponse.data);
+        const reponse = await axios.get(url + "/api/site", {
+          params: { ville: SelectedVilleDepart },
+        });
+        console.log("Sites de AGENCES: " + JSON.stringify(reponse.data));
         console.log(reponse.data.message);
-        setDataSiteDepart(reponse.dataSiteDepart);
+        setSiteDepart(reponse.data);
         // setDonnees(reponse.data);
       } catch (erreur) {
         console.error("Erreur lors de la récupération des sites :", erreur);
       }
     };
-   
 
     const GetVille = async () => {
       try {
-        const reponse = await axios.get("http://192.168.43.63:8080/api/ville");
-        console.log(reponse.data);
-        console.log(reponse.data.message);
-        setdata(reponse.data);
-        // setDonnees(reponse.data);
+        const reponse = await axios.get(url + "/api/ville");
+        // console.log(reponse.data);
+        // console.log(reponse.data.message);
+        setVilleDepart(reponse.data);
+        console.log("Selected ville depart: " + SelectedVilleDepart);
+        console.log("Villes departs:" + JSON.stringify(VilleDepart));
       } catch (erreur) {
-        setdata(VilleDepart);
         console.error("Erreur lors de la récupération des données :", erreur);
       }
     };
@@ -224,98 +186,70 @@ export function ReservationForm() {
     GetVille();
 
     // Logs
-    LOGS();
-  }, []);
+  }, [SelectedVilleDepart]);
 
-
-
-    useEffect(() => {
-      const unsubscribe = navigation.addListener("focus", () => {
-        setIsPressed(false); // Réinitialiser l'état lorsque l'écran est en focus
-      });
-
-      return unsubscribe;
-    }, [navigation]);
- useEffect(() => {
-   if (isPressed) {
-     setIsPressed(false); // Réinitialiser l'état lorsque l'écran est en focus
-   }
- }, [isPressed]);
+  // useEffect(() => {
+  //   setSelectedSitesAgencesDepart("");
+  // }, [SelectedVilleDepart]);
 
   //================================================
   //              FONCTIONS
   //================================================
-
-  const handleDateSelection = (date) => {
-    setSelectedDate(date);
-    console.log(selectedDate);
+  const handleSearchTrajet = () => {
+    if (SelectedVilleDepart == null || SelectedVilleArrive == null) {
+      return ToastAndroid.show(
+        "Ville de depart ou d'arrivée non renseigné !!!",
+        ToastAndroid.SHORT
+      );
+    } else if (SelectedVilleDepart === SelectedVilleArrive) {
+      return ToastAndroid.show(
+        "La ville de depart doit etre différente de la ville d'arrivée !!!",
+        ToastAndroid.SHORT
+      );
+    } else {
+      const data = {
+        de: SelectedVilleDepart,
+        vers: SelectedVilleArrive,
+        site: selectedSitesAgencesDepart,
+        classe: selectedClasse,
+        date: date,
+      };
+      console.log(data);
+      axios
+        .get(url + "/api/voyage", {
+          params: {
+            de: SelectedVilleDepart,
+            vers: SelectedVilleArrive,
+            site: selectedSitesAgencesDepart,
+            classe: selectedClasse,
+            date: selectedDate,
+          },
+        })
+        .then((res) => {
+          console.log("TRAJETS" + JSON.stringify(res.data.data));
+          setTrajets(JSON.stringify(res.data.data));
+          navigation.navigate("trajet", Trajets);
+        })
+        .catch((err) => {
+          console.error("Erreur ! \n veillez reessayer");
+          console.error(err);
+          navigation.navigate("trajet", { trajets: Trajets });
+          console.log(typeof Trajets);
+        });
+    }
   };
 
-  // manege time picker
-  const handleTimeSelection = (time) => {
-    setSelectedTime(time);
-  };
-  const [visible, setVisible] = React.useState(false);
-
-  // test
-
-  const LOGS = () => {
-    console.log("Date : " + selectedDate);
-    console.log("Heure: " + selectedTime);
-    console.log("SelectedVilleDepart: " + SelectedVilleDepart);
-    console.log("SelectedVilleArrive: " + SelectedVilleArrive);
-    console.log("SelectedClasseVoyage: " + SelectedClasseVoyage);
-    console.log("SelectedSitesAgencesDepart: " + SelectedSitesAgencesDepart);
-  };
-  // Rechaercher
-
-  const rechercher = (
-    villeDepart,
-    villeArrivee,
-    SelectedSitesAgencesDepart,
-    SelectedSitesAgencesArrivee,
-    selectedDate
-  ) => {
-    // Naviguer vers l'écran en utilisant les données fournies
-    navigation.navigate("trajet", {
-      villeDepart,
-      villeArrivee,
-      SelectedSitesAgencesDepart,
-      SelectedSitesAgencesArrivee,
-      selectedDate,
-    });
-  };
+  //============================================
+  //      Formatage de la date
+  //==========================================
   const formatDate = (date) => {
-    // if(typeof(date===String)){
     const options = {
       weekday: "long",
-      day: "numeric",
-      month: "numeric",
+      day: "2-digit",
+      month: "2-digit",
       year: "numeric",
     };
-    return date.toLocaleDateString("fr-FR", options); // Utilisez le format 'fr-FR' pour le français
-    // }
-    // else{
-    //     return date;
-    // }
-  };
-
-
-
-  /** Gestion des dropdown */
-  const [selectedItem, setSelectedItem] = useState(null);
-
-  // Définir la liste de données pour le dropdown
-  const Data = [
-    { id: "Option 1", nom: "option1" },
-    { id: "Option 2", nom: "option2" },
-    { id: "Option 3", nom: "option3" },
-  ];
-
-  // Fonction pour gérer le changement de sélection
-  const handleChange = (value) => {
-    setSelectedItem(value);
-    console.log("Selected item:", value);
+    return date.toLocaleDateString("fr-FR", options);
   };
 
   //=======================================
@@ -327,8 +261,6 @@ export function ReservationForm() {
       <View
         Style={{
           width: "100%",
-          // top: "2%",
-          minHeight: 700,
 
           alignItems: "center",
           alignContent: "center",
@@ -336,7 +268,7 @@ export function ReservationForm() {
           paddingLeft: 0,
           height: "auto",
         }}
-        className=" flex-col my-4"
+        className=" flex-col mb-0 pb-0"
       >
         <View
           className=" flex-col my-4"
@@ -398,7 +330,7 @@ export function ReservationForm() {
                   Vers:
                 </Text>
                 <Dropdown
-                  data={VilleArrive}
+                  data={VilleDepart}
                   onChange={setSelectedVilleArrive}
                   placeholder="Ville Arrive"
                 />
@@ -406,13 +338,14 @@ export function ReservationForm() {
             </View>
           </View>
 
-          <View className="w-full flex  flex-row">
+          <View className="w-full flex  flex-row ml-8">
             <View
-              className=" w-1/2 flex-wrap flex-col"
+              className=" w-full flex-wrap flex-col"
               style={{
-                alignItems: "center",
+                alignItems: "start",
                 justifyContent: "center",
                 alignContent: "center",
+                // margingLeft: 10,
               }}
             >
               <View className="flex-1">
@@ -426,40 +359,13 @@ export function ReservationForm() {
                     fontFamily: FontFamily.RobotoMedium,
                   }}
                 >
-                  De:
+                  Agence:
                 </Text>
                 <Dropdown
-                  data={dataSiteDepart}
+                  data={SiteDepart}
                   onChange={setSelectedSitesAgencesDepart}
                   placeholder="Site Depart"
-                />
-              </View>
-            </View>
-            <View
-              className=" w-1/2 flex-wrap flex-col"
-              style={{
-                alignItems: "center",
-                justifyContent: "center",
-                alignContent: "center",
-              }}
-            >
-              <View className="flex-1">
-                <Text
-                  style={{
-                    marginTop: 5,
-                    marginBottom: 0,
-                    fontSize: 15,
-                    fontWeight: "ligth",
-                    color: Couleur.Black10,
-                    fontFamily: FontFamily.RobotoMedium,
-                  }}
-                >
-                  Vers:
-                </Text>
-                <Dropdown
-                  data={dataSiteDepart}
-                  onChange={setSelectedSitesAgencesArrive}
-                  placeholder="Site d'arrivee"
+                  width={330}
                 />
               </View>
             </View>
@@ -545,7 +451,7 @@ export function ReservationForm() {
           </View>
 
           {/* Agences */}
-          <View className="w-full  flex  flex-row ">
+          {/* <View className="w-full  flex  flex-row ">
             <View
               className=" w-full flex-col"
               style={{
@@ -575,6 +481,39 @@ export function ReservationForm() {
                 />
               </View>
             </View>
+          </View> */}
+
+          <View className="w-full flex  flex-row ml-8">
+            <View
+              className=" w-full flex-wrap flex-col"
+              style={{
+                alignItems: "start",
+                justifyContent: "center",
+                alignContent: "center",
+                // margingLeft: 10,
+              }}
+            >
+              <View className="flex-1">
+                <Text
+                  style={{
+                    marginTop: 5,
+                    marginBottom: 0,
+                    fontSize: 15,
+                    fontWeight: "ligth",
+                    color: Couleur.Black10,
+                    fontFamily: FontFamily.RobotoMedium,
+                  }}
+                >
+                  Classe:
+                </Text>
+                <Dropdown
+                  data={classeVoyage}
+                  onChange={setSelectedClasse}
+                  placeholder="Classe de voyage"
+                  width={330}
+                />
+              </View>
+            </View>
           </View>
         </View>
 
@@ -586,40 +525,14 @@ export function ReservationForm() {
             marginBottom: 20,
           }}
         >
-          <TouchableOpacity
-            activeOpacity={1}
+          <TouchButton
+            title="Recherche"
             onPress={() => {
-              navigation.navigate("trajet");
+              console.log("Press");
+              handleSearchTrajet();
+              // navigation.navigate("trajet");
             }}
-            onPressIn={() => setIsPressed(true)}
-            className="flex-row items-center content-center "
-            style={{
-              backgroundColor: isPressed
-                ? Couleur.Limeblue7
-                : Couleur.Limeblue9,
-
-              width: isPressed ? "89%" : "90%",
-              height: 45,
-              borderRadius: 5,
-              borderStyle: "solid",
-              borderWidth: 1,
-              borderColor: Couleur.Limeblue1,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: FontFamily.RobotoBold,
-                letterSpacing: 0.5,
-                lineHeight: Width * 0.05,
-                fontSize: Width * 0.049,
-                color: isPressed ? Couleur.White : Couleur.White,
-              }}
-            >
-              Rechercher
-            </Text>
-          </TouchableOpacity>
+          />
           {/* </View> */}
           {/* ******************************************* */}
         </View>
@@ -661,107 +574,3 @@ const styles = StyleSheet.create({
     padding: 10, // L'espacement intérieur
   },
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- {
-   /* <Button
-            mode="contained"
-            onPress={() => navigation.navigate("trajet")}
-          >
-            Rechercher
-          </Button> */
- }
-
- {
-   /* <Button
-            // icon={<AntDesign name="search1" size={24} color="black" />}
-            // icon="login"
-            labelStyle={customFont3}
-            theme={{ colors: { primary: "rgba(0,129,199,1)" }, roundness: 1 }}
-            style={{
-              marginTop: 10,
-              marginBottom: 50,
-              width: 320,
-              height: 50,
-              justifyContent: "center",
-            }}
-            // loading={isLoading}
-            buttonColor="rgba(0,129,199,1)"
-            mode="contained"
-            onPress={() => {
-              navigation.navigate("trajet");
-              //setIsLoading(true);
-              // console.log("Pressed");
-              // navigation.navigate("trajet");
-              // rechercher(
-              //   SelectedVilleDepart,
-              //   SelectedVilleArrive,
-              //   SelectedSitesAgencesDepart,
-              //   SelectedSitesAgencesArrive,
-              //   selectedDate
-              // );
-            }}
-          >
-            Rechercher
-          </Button> */
- }
- {
-   /* <Button
-            mode="contained"
-            theme={{ colors: { primary: "rgba(0,129,199,1)" }, roundness: 1 }}
-            labelStyle={customFont3}
-            style={{
-              marginTop: 10,
-              marginBottom: 50,
-              width: 320,
-              height: 50,
-              justifyContent: "center",
-            }}
-            onPress={() => {
-              navigation.navigate("trajet");
-            }}
-          >
-            Recherche
-          </Button> */
- }
- {
-   /* <Pressable style={styles.pressable} onPress={navigation.navigate("trajet")}>
-            <Text>Rechercher</Text>
-          </Pressable> */
- }
- {
-   /* <View className="my-1 w-full items-center content-center"> */
- }
- {
-   /* <MyDatePicker
-                  onDateSelected={handleDateSelection}
-                  name={selectedDate ? selectedDate : "Date de depart"}
-                /> */
- }
-
- {
-   /* ********************DATE******************* */
- }
- {
-   /* <View> */
- }

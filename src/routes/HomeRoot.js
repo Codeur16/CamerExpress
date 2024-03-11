@@ -63,7 +63,7 @@ export function HomeRoot() {
       background: "#fff",
       width: Platform.select({
         ios: "100%",
-        android: "100%",
+        android: "auto",
         web: "100%",
       }),
       left: Platform.select({
@@ -134,7 +134,7 @@ export function HomeRoot() {
       background: "#fff",
       width: Platform.select({
         ios: "100%",
-        android: "100%",
+        android: "auto",
         web: "100%",
       }),
       left: Platform.select({
@@ -143,7 +143,7 @@ export function HomeRoot() {
     },
     headerStyle: {
       backgroundColor: "#ffff",
-      borderTopWidth: 50,
+      borderTopWidth: Width * 0.09,
       borderTopColor: Couleur.Limeblue9,
       borderBottomWidth: 0.5,
       borderBottomColor: Couleur.Black0,
@@ -198,16 +198,16 @@ export function HomeRoot() {
                 style={
                   focused
                     ? {
-                        backgroundColor: "rgba(0,129,199,0.1)",
+                        // backgroundColor: "rgba(0,129,199,0.1)",
                         flex: 1,
                         width: Platform.select({
                           ios: "100%",
-                          android: "100%",
+                          android: "auto",
                           web: 110,
                         }),
                         height: Platform.select({
                           ios: "100%",
-                          android: "100%",
+                          android: "auto",
                           web: 100,
                         }),
 
@@ -241,7 +241,6 @@ export function HomeRoot() {
                     fontFamily: focused
                       ? FontFamily.RobotoBold
                       : FontFamily.RobotoMedium,
-                    // fontWeight: "bold",
                   }}
                 >
                   Acceuil
@@ -262,7 +261,7 @@ export function HomeRoot() {
                 style={
                   focused
                     ? {
-                        backgroundColor: "rgba(0,129,199,0.1)",
+                        // backgroundColor: "rgba(0,129,199,0.1)",
                         flex: 1,
                         width: Platform.select({
                           ios: "100%",
@@ -271,7 +270,7 @@ export function HomeRoot() {
                         }),
                         height: Platform.select({
                           ios: "100%",
-                          android: "100%",
+                          android: "auto",
                           web: 100,
                         }),
                         alignItems: "center",
@@ -321,7 +320,6 @@ export function HomeRoot() {
                     fontFamily: focused
                       ? FontFamily.RobotoBold
                       : FontFamily.RobotoMedium,
-                    // fontWeight: "bold",
                   }}
                 >
                   Reservations
@@ -342,16 +340,16 @@ export function HomeRoot() {
                 style={
                   focused
                     ? {
-                        backgroundColor: "rgba(0,129,199,0.1)",
+                        // backgroundColor: "rgba(0,129,199,0.1)",
                         flex: 1,
                         width: Platform.select({
                           ios: "100%",
-                          android: "100%",
+                          android: "auto",
                           web: 110,
                         }),
                         height: Platform.select({
                           ios: "100%",
-                          android: "100%",
+                          android: "auto",
                           web: 100,
                         }),
                         borderRadius: 50,
@@ -386,7 +384,6 @@ export function HomeRoot() {
                     fontFamily: focused
                       ? FontFamily.RobotoBold
                       : FontFamily.RobotoMedium,
-                    // fontWeight: "bold",
                   }}
                 >
                   Agenda
@@ -406,16 +403,16 @@ export function HomeRoot() {
                 style={
                   focused
                     ? {
-                        backgroundColor: "rgba(0,129,199,0.1)",
+                        // backgroundColor: "rgba(0,129,199,0.1)",
                         flex: 1,
                         width: Platform.select({
                           ios: "100%",
-                          android: "100%",
+                          android: "auto",
                           web: 110,
                         }),
                         height: Platform.select({
                           ios: "100%",
-                          android: "100%",
+                          android: "auto",
                           web: 100,
                         }),
                         borderRadius: 50,
@@ -452,7 +449,6 @@ export function HomeRoot() {
                     fontFamily: focused
                       ? FontFamily.RobotoBold
                       : FontFamily.RobotoMedium,
-                    // fontWeight: "bold",
                   }}
                 >
                   Profil

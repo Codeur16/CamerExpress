@@ -11,12 +11,11 @@ const MonDropdown = ({ data, onChange, placeholder, width }) => {
       return Couleur.Black9;
     } else {
       return Couleur.Black9;
-      
     }
   };
   const [selectedValue, setSelectedValue] = useState(placeholder);
   const placeholderStyle = StyleSheet.create({
-    color: {color:"#000", backgroundColor:'#000'},
+    color: { color: "#000", backgroundColor: "#000" },
   });
   const pickerSelectStyles = StyleSheet.create({
     inputIOS: {
@@ -37,11 +36,11 @@ const MonDropdown = ({ data, onChange, placeholder, width }) => {
       borderWidth: 1,
       borderColor: Couleur.Black3,
       borderRadius: 4,
-      elevation:2,
+      elevation: 2,
       color: colore(selectedValue, placeholder),
       paddingRight: 30, // to ensure the text is never behind the icon
       width: width,
-      minWidth:150,
+      minWidth: 150,
       backgroundColor: Couleur.White,
     },
   });
@@ -54,13 +53,12 @@ const MonDropdown = ({ data, onChange, placeholder, width }) => {
           onChange(value);
         }}
         items={data?.map((item) => ({
-          label: item.id,
-          value: item.nom,
+          label: item.nom ? item.nom : item.agence.nom + "\t" + item.quartier,
+          value: item.id,
         }))}
         placeholder={{
           label: placeholder,
           value: null,
-          
         }}
         useNativeAndroidPickerStyle={false}
         value={selectedValue}
@@ -94,8 +92,5 @@ const styles = StyleSheet.create({
     // backgroundColor: Couleur.White,
   },
 });
-
-
-
 
 export default MonDropdown;

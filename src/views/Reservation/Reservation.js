@@ -25,28 +25,79 @@ import {
   Fontisto,
 } from "@expo/vector-icons";
 import Couleur from "../../utils/color";
+import { FontFamily } from "../../../GlobalStyles";
+import { Width, Height } from "../../utils/DimensionScreen";
+import { TextInput } from "react-native-paper";
+import { TouchButton } from "../../components/TouchableButton";
 //=============================================
 //         Ecran
 //=============================================
-
-
 
 export function ReservationSreen() {
   //============================================
   //           Declaration des constantes
   //============================================
 
-
-
-
-
   //=======================================
   //            RENDU
   //======================================
   return (
     // {/* Contenu scrollable */}
-    <ScrollView nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
-    <Text>Listes des reservations</Text>
+    <ScrollView
+      nestedScrollEnabled={true}
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{
+        backgroundColor: Couleur.White,
+        height: "100%",
+        width: Width,
+      }}
+    >
+      <View
+        className="flex flex-col items-start justify-center mt-5 ml-5"
+        style={{
+          width: Width * 1,
+          height: Height / 3,
+        }}
+      >
+        <View className="flex flex-row items-start justify-center my-2">
+          <Ionicons name="square" size={24} color={Couleur.Limeblue9} />
+          <Text
+            style={{
+              textAlign: "left",
+              fontFamily: FontFamily.RobotoBold,
+              fontSize: Width * 0.06,
+              color: Couleur.Black7,
+            }}
+          >
+            Votre numero de reservation
+          </Text>
+        </View>
+        <Text
+          style={{
+            textAlign: "left",
+            fontFamily: FontFamily.RobotoBold,
+            fontSize: Width * 0.045,
+            color: Couleur.Black4,
+            width: Width * 0.8,
+          }}
+        >
+          Entrez le numero de reservation qui vous a ete donne dans le message
+          de confirmation
+        </Text>
+
+        <TextInput
+          mode="outlined"
+          label="Numero de réservation"
+          placeholder="Numero de réservation"
+          style={{ width: Width * 0.85, marginTop: 10 }}
+        />
+        <View
+          style={{ width: Width * 0.95 }}
+          className="items-start justify-center mt-5"
+        >
+          <TouchButton title="Rechercher" />
+        </View>
+      </View>
     </ScrollView>
     // {/* </ScrollView> */}
   );

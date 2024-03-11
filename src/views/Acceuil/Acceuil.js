@@ -33,21 +33,22 @@ export function AcceuilSreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff", paddingTop: -20 }}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: "#fff", paddingTop: -Height * 0.04 }}
+    >
       <View style={styles.container}>
         {/* <View className=" flex    flex-col w-full h-64 bg-white content-center justify-center items-center "> */}
         <View
-          className=" w-full min-h-64  flex-grow  items-center"
-          style={{ position: "fixed" }}
+          className=" w-full   flex-grow  items-center justify-center"
+          style={{ position: "fixed", height: Height * 0.25 }}
         >
           <Image
             source={Bus}
             // className=" w-full   max-h-64 "
             style={{
-              position: "fixed",
-              width: "97%",
-              minHeight: 200,
-              height: "30%",
+              // position: "fixed",5
+              width: Width * 0.95,
+              height: "100%",
               resizeMode: "contain",
               marginTop: 0,
               objectFit: "cover",
@@ -75,11 +76,11 @@ export function AcceuilSreen() {
             }}
           >
             <View
-              className="w-full h-4 shadow-lg  shadow-Black5  rounded-sm"
+              className="w-full  rounded-sm"
               style={{
                 borderBottomWidth: 3,
                 borderBottomColor: Couleur.Black2,
-                marginTop: -50,
+                // marginTop: -80,
               }}
             ></View>
           </View>
@@ -91,14 +92,12 @@ export function AcceuilSreen() {
             }}
           >
             <Text
-              className="mt-5 pb-5 m-1"
+              className="pt-2 pb-2 m-1"
               style={{
-                fontSize: Width ** 0.545,
+                fontSize: Width * 0.055,
                 color: Couleur.Limeblue8,
                 fontFamily: FontFamily.Poppins,
-                borderBottomWidth: 5,
-                borderBottomColor: Couleur.Black2,
-                textAlign:'center'
+                textAlign: "center",
               }}
             >
               Decouvrez nos Agences et leurs sites
@@ -109,16 +108,16 @@ export function AcceuilSreen() {
               alt="carte"
               style={{
                 // position: "fixed",
-                width: Width*0.9,
-                height: Height*0.5,
-               resizeMode:"cover",
+                width: Width * 0.9,
+                height: Height * 0.5,
+                resizeMode: "cover",
                 marginTop: 0,
                 objectFit: "cover",
                 borderRadius: 20,
               }}
             />
           </Pressable>
-          <View className="w-full h-80"></View>
+          <View className="w-full h-36"></View>
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -136,9 +135,8 @@ const styles = StyleSheet.create({
   },
   message: {
     fontSize: 16,
-    fontWeight: "medium",
     color: "rgba(0, 0, 0, 0.2)",
-    fontFamily: FontFamily.Poppins,
+    fontFamily: FontFamily.RobotoMedium,
     fontSize: 30,
   },
 });

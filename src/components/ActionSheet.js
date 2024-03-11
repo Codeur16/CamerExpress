@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -27,24 +27,34 @@ import { Icon } from "react-native-elements";
 import { Width, Height } from "../utils/DimensionScreen";
 import { FontFamily } from "../../GlobalStyles";
 import Svg, { Ellipse, Path, Line, Circle } from "react-native-svg";
+import { TouchButton } from "./TouchableButton";
+import { useNavigation } from "@react-navigation/core";
+
 export default function ActionSheet({
   BottomSheetRef,
   height,
   openDuration,
   contentSheet,
   data,
+  index,
+  NextStep,
+  subtractTime,
+  getFormattedTime,
+  getFormattedDate,
 }) {
   //   const bottomSheetRef = useRef();
+  const navigation = useNavigation();
 
+  const [press, setPress] = useState(false);
   return (
     <BottomSheet
       ref={BottomSheetRef}
       closeOnDragDown={false}
-      height={Height * 0.7}
-      openDuration={openDuration ? openDuration : 250}
+      height={Height * 0.8}
+      openDuration={350}
       animationType="slide"
-      minClosingHeight={50}
-      closeDuration={50}
+      minClosingHeight={0}
+      closeDuration={20}
       closeOnPressMask={true}
       customStyles={{
         wrapper: { backgroundColor: Couleur.Limeblue3 },
@@ -61,7 +71,7 @@ export default function ActionSheet({
       <View
         style={{
           width: "100%",
-          height: "16%",
+          height: "12%",
           borderBottomWidth: 1,
           borderBottomColor: Couleur.Black4,
           display: "flex",
@@ -77,9 +87,15 @@ export default function ActionSheet({
               width: "90%",
             }}
           >
-            SAM.12 FEV
+            {getFormattedDate(data[index].dateDepart)}
           </Text>
-          <AntDesign name="close" size={25} color={Couleur.Black6} />
+          <Pressable
+            onPress={() => {
+              BottomSheetRef.current.close();
+            }}
+          >
+            <AntDesign name="close" size={25} color={Couleur.Black6} />
+          </Pressable>
         </View>
         <View>
           <Text
@@ -90,26 +106,34 @@ export default function ActionSheet({
               width: "90%",
             }}
           >
-            Durée: 5:00h
+            Durée:{" "}
+            {subtractTime(
+              getFormattedTime(data[index].dateArriver),
+              getFormattedTime(data[index].dateDepart)
+            )}
           </Text>
         </View>
       </View>
       <ScrollView
+        nestedScrollEnabled={true}
+        showsVerticalScrollIndicator={true}
         contentContainerStyle={{
           width: "100%",
-          height: "84%",
+          height: "100%",
           alignItems: "center",
         }}
       >
         <View
           style={{
             width: "100%",
-            height: "50%",
+            height: "45%",
           }}
         >
           <View className="w-1/2 h-full flex-row pl-5 pt-5">
             <View className="h-full w-1/3 justify-between">
-              <Text style={styles.text}>12:00</Text>
+              <Text style={styles.text}>
+                {getFormattedTime(data[index].dateDepart)}
+              </Text>
               <Text
                 className="color-Black6 "
                 style={{
@@ -117,9 +141,15 @@ export default function ActionSheet({
                   fontSize: Width * 0.039,
                 }}
               >
-                5h:00min
+                {subtractTime(
+                  getFormattedTime(data[index].dateArriver),
+                  getFormattedTime(data[index].dateDepart)
+                )}
               </Text>
-              <Text style={styles.text}>16:00</Text>
+              <Text style={styles.text}>
+                {" "}
+                {getFormattedTime(data[index].dateArriver)}
+              </Text>
             </View>
             <View className="h-full w-1/4 flex-col items-center justify-center">
               {/* <FontAwesome name="circle-thin" size={14} color="black" />
@@ -169,7 +199,8 @@ export default function ActionSheet({
               <View className="flex-row">
                 <Entypo name="location-pin" size={20} color={Couleur.Black5} />
                 <Text style={styles.text} className="">
-                  Yaounde
+                  {data[index].itineraire.villeDepart.nom}
+                  {""}
                 </Text>
               </View>
               <View>
@@ -224,7 +255,10 @@ export default function ActionSheet({
               </View>
               <View className="flex-row">
                 <Entypo name="location-pin" size={20} color={Couleur.Black5} />
-                <Text style={styles.text}>Douala</Text>
+                <Text style={styles.text}>
+                  {data[index].itineraire.villeDestination.nom}
+                  {""}
+                </Text>
               </View>
             </View>
           </View>
@@ -285,9 +319,17 @@ export default function ActionSheet({
               }}
               className="text-center"
             >
-              7000 XAF
+              {data[index].prixReservation} XAF
             </Text>
           </View>
+        </View>
+        <View className=" w-full items-center justify-center mb-5 ">
+          <TouchButton
+            title="Selectionner ce trajet"
+            onPress={() => {
+              NextStep();
+            }}
+          />
         </View>
       </ScrollView>
     </BottomSheet>

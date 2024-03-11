@@ -88,7 +88,8 @@ export function pickImage({ route, navigation }) {
             >
               Upload a food Image
             </Text>
-          </Pressable>
+          \
+          </Pressable>         
         </>
       ) : (
         <>

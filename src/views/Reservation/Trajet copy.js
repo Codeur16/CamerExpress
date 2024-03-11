@@ -16,7 +16,6 @@ import Couleur from "../../utils/color";
 import { FontFamily } from "../../../GlobalStyles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
-  Ionicons,
   MaterialIcons,
   FontAwesome5,
   AntDesign,
@@ -26,13 +25,13 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import ActionSheet from "../../components/ActionSheet";
 import { Width, Height } from "../../utils/DimensionScreen";
+import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import Swiper from "react-native-swiper";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { useRoute } from "@react-navigation/native";
 import Svg, { Ellipse, Path, Line, Circle } from "react-native-svg";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
-import { EffectuerReservationScreen } from "./EffectuerReservation";
-
+const Tab = createMaterialTopTabNavigator();
 //===========================================================
 //            Fonction
 //===========================================================
@@ -262,23 +261,7 @@ function getFormattedTime(dateDepart) {
   const minutes = date.getMinutes().toString().padStart(2, "0");
   return `${hours}:${minutes}`;
 }
-function subtractTime(time1, time2) {
-  const [hours1, minutes1] = time1.split(":");
-  const [hours2, minutes2] = time2.split(":");
-
-  const totalMinutes1 = parseInt(hours1) * 60 + parseInt(minutes1);
-  const totalMinutes2 = parseInt(hours2) * 60 + parseInt(minutes2);
-
-  const differenceMinutes = totalMinutes1 - totalMinutes2;
-
-  const hours =
-    Math.floor(differenceMinutes / 60)
-      .toString()
-      .padStart(2, "0") + "h";
-  const minutes = (differenceMinutes % 60).toString().padStart(2, "0") + "mn";
-
-  return `${hours}:${minutes}`;
-}
+console.log(getFormattedTime(Trajets[0].dateDepart));
 function getFormattedDate(dateDepart) {
   const date = new Date(dateDepart);
   const daysOfWeek = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
@@ -288,7 +271,9 @@ function getFormattedDate(dateDepart) {
   return `${day} ${dayOfMonth}-${month}`;
 }
 
-export function Step1({ nextStep }) {
+console.log(getFormattedDate(Trajets[0].dateDepart));
+
+export function TabA() {
   const [ShowAction, setShowAction] = useState(true);
   const bottomSheetRef = useRef();
   const navigation = useNavigation();
@@ -460,7 +445,7 @@ export function Step1({ nextStep }) {
             <View className="items-end justify-center ">
               <View className="w-1/2 h-auto flex-row justify-end items-center pr-1">
                 <Text style={styles.text2} className="text-left ">
-                  {Trajets[0].prixReservation} XAF
+                  {Trajets[0].prixReservation} Fcfa
                 </Text>
                 <Pressable
                   style={{
@@ -498,15 +483,6 @@ export function Step1({ nextStep }) {
           BottomSheetRef={bottomSheetRef}
           height={Height * 0.7}
           openDuration={600}
-          data={Trajets}
-          index={0}
-          NextStep={() => {
-            bottomSheetRef.current.close();
-            nextStep();
-          }}
-          subtractTime={subtractTime}
-          getFormattedDate={getFormattedDate}
-          getFormattedTime={getFormattedTime}
         />
       </ScrollView>
     </SafeAreaView>
@@ -569,143 +545,109 @@ export function TabC() {
     </SafeAreaView>
   );
 }
+let TabScreens = [
+  { name: "Tab A", component: TabA, tabBarLabel: "Mar 13-02" },
+  { name: "Tab B", component: TabB, tabBarLabel: "Mar 13-03" },
+  { name: "Tab C", component: TabC, tabBarLabel: "Mar 13-04" },
+  { name: "Tab d", component: TabC, tabBarLabel: "Mar 13-05" },
+];
+const generateTabComponent = (tabName, tabComponents) => {
+  const existingTab = tabComponents.find((tab) => tab.name === tabName);
+
+  if (existingTab) {
+    const TabComponent = () => {
+      return (
+        <View style={styles.container}>
+          <Text style={styles.text}>{tabName}</Text>
+        </View>
+      );
+    };
+
+    existingTab.component = TabComponent;
+  } else {
+    const TabComponent = ({ rendu }) => {
+      return (
+        <View style={styles.container}>
+          <Text style={styles.text}>{tabName}</Text>
+        </View>
+      );
+    };
+
+    tabComponents.push({
+      name: tabName,
+      component: TabComponent,
+      tabBarLabel: tabName,
+    });
+  }
+
+  // return existingTab ? existingTab.component : TabComponent;
+};
 
 export const TrajetsScreen = () => {
   const navigation = useNavigation();
   // Inside your component
   const route = useRoute();
   const [trajets, setTrajets] = useState(route.params.trajets);
-  const handleNextStep = () => {
-    setCurrentStep((prevStep) => prevStep + 1);
-  };
+  // Trajets = route.params.trajets;
+  // Now you can use the paramName variable in your component
+  console.log("Trajets Params: " + typeof Trajets);
+  let tabComponents = [];
+  function searchElement(arr, element) {
+    const index = arr.indexOf(element);
+    return index !== -1 ? index : false;
+  }
+  function reach(tab) {
+    let result = [];
+    let liste = {},
+      j;
+    for (var i = 0; i < tab.length; i++) {
+      const date = getFormattedDate(tab[i].dateDepart);
+      j = i;
+      while (getFormattedDate(tab[j].dateDepart) === date && j < tab.length) {
+        liste.push(tab[j].id);
+        j++;
+      }
+    }
+  }
+  Trajets.forEach((tab, index) => {
+    generateTabComponent(getFormattedDate(tab.dateDepart), tabComponents);
+    // TabScreens[index].component = TabComponent;
+    // TabScreens[index].tabBarLabel = getFormattedDate(tab.dateDepart);
+    // TabScreens[index].name = getFormattedDate(tab.dateDepart);
+  });
 
-  const [currentStep, setCurrentStep] = useState(0);
+  console.log("TabScreens: ", TabScreens);
+  console.log("tabComponents: ", tabComponents);
+  console.table(TabScreens);
+  console.table(tabComponents);
   return (
-    <View
-      style={{
-        flex: 1,
-        width: "100%",
-        overflow: "scroll",
-        // backgroundColor:,
+    <Tab.Navigator
+      screenOptions={{
+        style: {
+          backgroundColor: "#00000",
+          width: "100%",
+        },
+        tabBarScrollEnabled: true,
+        // tabBarIndicatorStyle: {
+
+        //   width: "auto",
+        // },
+        tabBarStyle: {
+          width: "100%",
+          overflow: "scroll",
+        },
       }}
     >
-      <ProgressSteps
-        progressBarColor={Couleur.Black1}
-        completedStepIconColor={Couleur.Limeblue9}
-        activeStepIconColor={Couleur.White}
-        // activeStep={0}
-        activeStepIconBorderColor={Couleur.Limeblue8}
-        activeLabelColor={Couleur.Limeblue9}
-        labelColor={Couleur.Black7}
-        borderWidth={2}
-        borderPadding={0}
-        activeStepNumColor={Couleur.Black9}
-        completedProgressBarColor={Couleur.Limeblue9}
-        completedCheckColor={Couleur.White}
-        completedStepNumColor={Couleur.Black9}
-        completedLabelColor={Couleur.Limeblue9}
-        disabledStepIconColor={Couleur.Black3}
-        disabledStepNumColor={Couleur.White}
-        disabledStepNumBorderColor={Couleur.Black9}
-        activeStep={currentStep}
-        // activeStepIconBorderColor={Couleur.Limeblue9}
-      >
-        <ProgressStep
-          scrollable={true}
-          label="Voyages"
-          removeBtnRow={true}
-          // nextBtnText={<View className="w-0 h-0"></View>}
-        >
-          <Step1 nextStep={handleNextStep} />
-        </ProgressStep>
-        <ProgressStep
-          onPrevious={() => {
-            setCurrentStep(currentStep - 1);
-          }}
-          scrollable={true}
-          nextBtnText={
-            <AntDesign
-              name="rightcircle"
-              size={Width * 0.12}
-              color={Couleur.Limeblue9}
-            />
-          }
-          previousBtnText={
-            <AntDesign
-              name="leftcircle"
-              size={Width * 0.12}
-              color={Couleur.Limeblue9}
-            />
-          }
-          label="Details de voyages"
-        >
-          <EffectuerReservationScreen
-            index={0}
-            Trajets={Trajets}
-            getFormattedTime={getFormattedTime}
-            getFormattedDate={getFormattedDate}
-            subtractTime={subtractTime}
-          />
-        </ProgressStep>
-        <ProgressStep
-          onPrevious={() => {
-            setCurrentStep(currentStep - 1);
-          }}
-          scrollable={true}
-          label="Third Step"
-          nextBtnText={
-            <AntDesign
-              name="rightcircle"
-              size={Width * 0.12}
-              color={Couleur.Limeblue9}
-            />
-          }
-          previousBtnText={
-            <AntDesign
-              name="leftcircle"
-              size={Width * 0.12}
-              color={Couleur.Limeblue9}
-            />
-          }
-        >
-          <View style={{ alignItems: "center" }}>
-            <Text>This is the content within step 3!</Text>
-          </View>
-        </ProgressStep>
-        <ProgressStep
-          onPrevious={() => {
-            setCurrentStep(currentStep - 1);
-          }}
-          scrollable={true}
-          label="Fourt Step"
-          nextBtnText={
-            <AntDesign
-              name="rightcircle"
-              size={Width * 0.12}
-              color={Couleur.Limeblue9}
-            />
-          }
-          previousBtnText={
-            <AntDesign
-              name="leftcircle"
-              size={Width * 0.12}
-              color={Couleur.Limeblue9}
-            />
-          }
-          finishBtnText={
-            <Ionicons
-              name="checkmark-done-circle"
-              size={Width * 0.12}
-              color={Couleur.Limeblue9}
-            />
-          }
-        >
-          <View style={{ alignItems: "center" }}>
-            <Text>This is the content within step 3!</Text>
-          </View>
-        </ProgressStep>
-      </ProgressSteps>
-    </View>
+      <Tab.Screen
+        key={index}
+        name={getFormattedDate(Trajets[0].dateDepart)}
+        component={TabA}
+        options={{
+          tabBarLabel: getFormattedDate(Trajets[0].dateDepart),
+        }}
+      />
+      {/* ))} */}
+    </Tab.Navigator>
   );
 };
 
@@ -724,15 +666,5 @@ const styles = StyleSheet.create({
 
     // fontWeight: "",
     fontFamily: FontFamily.Poppins,
-  },
-  buttonTextStyle: {
-    // backgroundColor: Couleur.Limeblue9,
-    // color: Couleur.White,
-    // fontSize: 16,
-    // fontFamily: FontFamily.RobotoBold,
-    // width: "auto",
-    // height: 30,
-    // borderRadius: 5,
-    // textAlign: "center",
   },
 });
