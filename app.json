@@ -9,14 +9,15 @@
     "androidStatusBar": {
       "translucent": true
     },
-    "backgroundColor":"#fff",
+    "backgroundColor": "#fff",
     "splash": {
       "image": "./assets/logo1.png",
       "backgroundColor": "#fff"
     },
     "assetBundlePatterns": ["./assets/fonts/"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tokoss.camerexpress"
     },
     "android": {
       "adaptiveIcon": {
@@ -41,7 +42,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "5bd32775-b166-4eed-8af0-ca5afee5df90"
+        "projectId": "8fd761ab-a4ee-4acf-b9e7-06aea3718a0b"
       }
     },
     "owner": "tokoss"

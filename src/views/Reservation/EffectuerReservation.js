@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   Alert,
   Image,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FontFamily } from "../../../GlobalStyles";
 import Couleur from "../../utils/color";
 import { useNavigation } from "@react-navigation/native";
@@ -28,6 +29,10 @@ import {
 } from "@expo/vector-icons";
 import { TouchButton } from "../../components/TouchableButton";
 import * as ImagePicker from "expo-image-picker";
+import ButtomSheet from "../../components/ButtomSheet";
+import carte from "../../assets/carte3.png";
+import momo from "../../assets/momo1.png";
+import om from "../../assets/om1.png";
 
 export const EffectuerReservationScreen = ({
   Trajets,
@@ -35,7 +40,11 @@ export const EffectuerReservationScreen = ({
   getFormattedTime,
   getFormattedDate,
   subtractTime,
+  NextStep,
+  prevStep,
+  onTotalChange,
 }) => {
+  const bottomSheetRef = useRef();
   const [image, setImage] = useState(null);
   async function getPermission() {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -62,7 +71,9 @@ export const EffectuerReservationScreen = ({
       }
     }
   }
-
+  const saveMode = (mode) => {
+    AsyncStorage.setItem("modePaiement", mode);
+  };
   useEffect(() => {
     (async () => {
       if (Platform.OS !== "web") {
@@ -171,8 +182,55 @@ export const EffectuerReservationScreen = ({
     // Retirer l'écouteur d'événement lorsque le composant est démonté
     return () => backHandler.remove();
   }, [navigation]);
+  useEffect(() => {
+    setTotal(Trajets[index].prixReservation * passager);
+    onTotalChange(Trajets[index].prixReservation * passager);
+  }, [passager]);
   const [disabled, setDisabled] = useState(true);
   const [total, setTotal] = useState(Trajets[index].prixReservation * passager);
+  const [modePaiement, setModePaiement] = useState([
+    { id: "OM", value: "Orange Money", image: om },
+    { id: "MOMO", value: "Mobile Money", image: momo },
+    { id: "CARTE", value: "Carte bancaire", image: carte },
+  ]);
+
+  // return (
+  //   <SafeAreaView>
+  //     {!showNext && (
+  //       <ScrollView
+  //         adjustsScrollViewInsets={false}
+  //         contentContainerStyle={styles.container}
+  //       >
+  //         {/* Ajoutez le contenu supplémentaire de votre écran ici */}
+
+  //         <View
+  //           style={{
+  //             width: Width * 0.95,
+  //             height: Height / 6,
+  //             alignItems: "center",
+  //             justifyContent: "flex-start",
+  //             flexDirection: "column",
+  //             borderWidth: 1,
+  //             borderRadius: 8,
+  //             borderColor: Couleur.Black3,
+  //             shadowOpacity: 0.4,
+  //             shadowColor: Couleur.Black4,
+  //             backgroundColor: "#fff",
+  //           }}
+  //         >
+  //           <View className="w-full h-auto flex flex-row items-center border-b-0.5 p-1.5">
+  //             {modePaiement.map((item) => (
+  //               <View key={item.id}>
+  //                 <Text>{item.value}</Text>
+  //                 <Image source={item.image} />
+  //               </View>
+  //             ))}
+  //           </View>
+  //         </View>
+  //       </ScrollView>
+  //     )}
+  //   </SafeAreaView>
+  // );
   return (
     <SafeAreaView>
       {!showNext && (
@@ -481,6 +539,14 @@ export const EffectuerReservationScreen = ({
               setShowNext(true);
             }}
           />
+          <View className="h-3"></View>
+          <TouchButton
+            title="Retour"
+            onPress={() => {
+              prevStep();
+            }}
+            color={Couleur.Black2}
+          />
           {/* </View> */}
           <View className="h-10"></View>
         </ScrollView>
@@ -680,7 +746,8 @@ export const EffectuerReservationScreen = ({
                   <TouchButton
                     title="Proceder au paiment"
                     onPress={() => {
-                      navigation.navigate("Paiement");
+                      bottomSheetRef.current.open();
+                      // navigation.navigate("Paiement");
                     }}
                   />
                   <TouchButton
@@ -696,6 +763,13 @@ export const EffectuerReservationScreen = ({
           </View>
         </ScrollView>
       )}
+      <ButtomSheet
+        BottomSheetRef={bottomSheetRef}
+        title="Mode Paiement"
+        modePaiement={modePaiement}
+        NextStep={NextStep}
+        selectMode={saveMode}
+      />
     </SafeAreaView>
   );
 };

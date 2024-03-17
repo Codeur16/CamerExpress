@@ -26,6 +26,7 @@ export const TouchButton = ({
   radius,
   font,
   color,
+  width,
 }) => {
   const navigation = useNavigation();
   const [isPressed, setIsPressed] = useState(false);
@@ -50,7 +51,7 @@ export const TouchButton = ({
         onPress();
       }}
       onPressIn={() => setIsPressed(true)}
-      className="flex-row items-center content-center "
+      className="flex "
       style={{
         backgroundColor: isPressed ? Couleur.Limeblue7 : col,
 
@@ -71,6 +72,7 @@ export const TouchButton = ({
           lineHeight: Width * 0.05,
           fontSize: Width * 0.049,
           color: isPressed ? Couleur.White : Couleur.White,
+          textAlign: "center",
         }}
       >
         {title}

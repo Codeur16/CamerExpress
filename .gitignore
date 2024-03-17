@@ -1,8 +1,10 @@
-<<<<<<< HEAD
+
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
 # dependencies
 node_modules/
+# ignores all .env files
+.env*
 
 # Expo
 .expo/
@@ -174,6 +176,3 @@ node_modules
 *.swj
 *.swk
 *.swi
-
-
->>>>>>> d2664ec992b82a5b7c3ca6095d1291f9e1c5957f

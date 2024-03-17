@@ -29,6 +29,9 @@ import { FontFamily } from "../../GlobalStyles";
 import Svg, { Ellipse, Path, Line, Circle } from "react-native-svg";
 import { TouchButton } from "./TouchableButton";
 import { useNavigation } from "@react-navigation/core";
+import carte from "../assets/carte3.png";
+import momo from "../assets/momo1.png";
+import om from "../assets/om1.png";
 
 export default function ButtomSheet({
   BottomSheetRef,
@@ -37,15 +40,21 @@ export default function ButtomSheet({
   contentSheet,
   data,
   index,
-  NextStep,
   title,
+  modePaiement,
+  NextStep,
+  selectMode,
 }) {
   //   const bottomSheetRef = useRef();
   const navigation = useNavigation();
-
-  //
-
+  const [onSelect, setOnSelect] = useState(false);
   const [press, setPress] = useState(false);
+  const [Index, setIndex] = useState(null);
+  const [mode, setMode] = useState("");
+  const selected = (indexMode, mode) => {
+    setIndex(indexMode);
+    setMode(mode);
+  };
   return (
     <BottomSheet
       ref={BottomSheetRef}
@@ -97,22 +106,6 @@ export default function ButtomSheet({
             <AntDesign name="close" size={25} color={Couleur.Black6} />
           </Pressable>
         </View>
-        <View>
-          <Text
-            className="  color-Black4 text-left pl-4"
-            style={{
-              fontFamily: FontFamily.RobotoBold,
-              fontSize: Width * 0.035,
-              width: "90%",
-            }}
-          >
-            Durée:{" "}
-            {subtractTime(
-              getFormattedTime(data[index].dateArriver),
-              getFormattedTime(data[index].dateDepart)
-            )}
-          </Text>
-        </View>
       </View>
       <ScrollView
         nestedScrollEnabled={true}
@@ -121,8 +114,74 @@ export default function ButtomSheet({
           width: "100%",
           height: "100%",
           alignItems: "center",
+          justifyContent: "flex-start",
         }}
-      ></ScrollView>
+      >
+        {/* //  */}
+
+        {/* // Iterate over the ModePaiement array and display each item */}
+        <View className="flex flex-row flex-wrap justify-betwen items-center">
+          {modePaiement.map((item, index) => {
+            // console.log(item.id, item.value);
+            // You can also render the items in your JSX code
+            return (
+              <Pressable
+                key={index}
+                className={
+                  onSelect && Index === index
+                    ? "   flex flex-col items-center justify-start border-4 m-1 border-Limeblue7 rounded-xl shadow-inner-lg shadow-Black2"
+                    : " flex flex-col items-center justify-start border-2 m-1 mt-10 border-Black2 rounded-xl  shadow-inner-lg shadow-Black2"
+                }
+                style={{ width: Width * 0.3, height: Height * 0.2 }}
+                onPressIn={() => {
+                  setOnSelect(true);
+                  console.log("Press");
+                }}
+                onPress={() => {
+                  selected(index, item.value);
+                }}
+              >
+                <Image
+                  className="w-full rounded-t-lg"
+                  source={item.image}
+                  style={{
+                    width: "100%",
+                    height: "60%",
+                    // borderRadius: 10,
+                  }}
+                />
+                <Text
+                  style={{
+                    width: "100%",
+                    fontFamily:
+                      onSelect && Index === index
+                        ? FontFamily.RobotoBold
+                        : FontFamily.RobotoMedium,
+                    fontSize: Width * 0.045,
+                    textAlign: "center",
+                    marginTop: "14%",
+                    color:
+                      onSelect && Index === index
+                        ? Couleur.Limeblue9
+                        : Couleur.Black7,
+                  }}
+                >
+                  {item.value}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+        <View className="h-64 w-full items-center justify-center">
+          <TouchButton
+            title="Selectionner"
+            onPress={() => {
+              NextStep();
+              selectMode(mode);
+            }}
+          />
+        </View>
+      </ScrollView>
     </BottomSheet>
   );
 }
@@ -142,5 +201,10 @@ const styles = StyleSheet.create({
     // fontWeight: "",
     fontFamily: FontFamily.RobotoMedium,
     padding: 2,
+  },
+  container2: {
+    display: "grid",
+    gridTemplateColumns: "repeat(2, 1fr)",
+    gap: 10,
   },
 });

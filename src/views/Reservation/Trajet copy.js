@@ -658,13 +658,10 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 12,
-    // fontWeight: "",
     fontFamily: FontFamily.Poppins,
   },
   text2: {
     fontSize: 13,
-
-    // fontWeight: "",
     fontFamily: FontFamily.Poppins,
   },
 });

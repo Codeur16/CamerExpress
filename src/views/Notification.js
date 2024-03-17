@@ -44,7 +44,6 @@ const styles = StyleSheet.create({
   },
   message: {
     fontSize: 16,
-    fontWeight: "medium",
     color: color.Black2,
     fontFamily: FontFamily.Poppins,
     fontSize: 20,

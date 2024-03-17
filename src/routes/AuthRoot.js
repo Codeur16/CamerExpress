@@ -15,13 +15,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { FontFamily } from "../../GlobalStyles";
-import { SimpleLineIcons } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';   
+import { SimpleLineIcons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 // Thanks for watching
-import {
-    SignupSreen,
-  LoginScreen
-} from "../views/index";
+import { SignupSreen, LoginScreen } from "../views/index";
 
 const Tab = createBottomTabNavigator();
 
@@ -50,8 +47,6 @@ const screenOptions = {
     left: Platform.select({
       // web: "10%",
     }),
-
-
   },
 };
 
@@ -60,10 +55,9 @@ const AnimatedIcon = Animated.createAnimatedComponent(AntDesign);
 export function AuthRoot() {
   return (
     <Tab.Navigator screenOptions={screenOptions} initialRouteName="login">
-     
       <Tab.Screen
         name="login"
-        component={ LoginScreen }
+        component={LoginScreen}
         options={{
           tabBarIcon: ({ focused }) => {
             return (
@@ -103,9 +97,12 @@ export function AuthRoot() {
                   size={24}
                   color={focused ? "#29C752" : "rgba(0, 0, 0, 0.7)"}
                 /> */}
-                
-                <SimpleLineIcons name="login" size={24} 
-                color={focused ? "#29C752" : "rgba(0, 0, 0, 0.7)"} />
+
+                <SimpleLineIcons
+                  name="login"
+                  size={24}
+                  color={focused ? "#29C752" : "rgba(0, 0, 0, 0.7)"}
+                />
 
                 <Text
                   style={{
@@ -123,7 +120,7 @@ export function AuthRoot() {
       />
       <Tab.Screen
         name="signup"
-        component={ SignupSreen }
+        component={SignupSreen}
         options={{
           tabBarIcon: ({ focused }) => {
             return (
@@ -163,7 +160,11 @@ export function AuthRoot() {
                   size={24}
                   color={focused ? "#29C752" : "rgba(0, 0, 0, 0.7)"}
                 /> */}
-                <Feather name="user-plus" size={24} color={focused ? "#29C752" : "rgba(0, 0, 0, 0.7)"} />
+                <Feather
+                  name="user-plus"
+                  size={24}
+                  color={focused ? "#29C752" : "rgba(0, 0, 0, 0.7)"}
+                />
                 <Text
                   style={{
                     fontSize: 14,
@@ -178,7 +179,6 @@ export function AuthRoot() {
           },
         }}
       />
-
     </Tab.Navigator>
   );
 }

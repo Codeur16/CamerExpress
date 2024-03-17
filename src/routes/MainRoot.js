@@ -280,7 +280,7 @@ export default function MainRoot() {
           // ),
         }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="Effectuer Reservation"
         component={EffectuerReservationScreen}
         options={{
@@ -365,7 +365,7 @@ export default function MainRoot() {
           //   </View>
           // ),
         }}
-      />
+      /> */}
     </Stack.Navigator>
   );
 }

@@ -293,7 +293,6 @@ export function ReservationForm() {
                     marginTop: 5,
                     marginBottom: 0,
                     fontSize: 15,
-                    fontWeight: "ligth",
                     color: Couleur.Black10,
                     fontFamily: FontFamily.RobotoMedium,
                   }}
@@ -322,7 +321,6 @@ export function ReservationForm() {
                     marginTop: 5,
                     marginBottom: 0,
                     fontSize: 15,
-                    fontWeight: "ligth",
                     color: Couleur.Black10,
                     fontFamily: FontFamily.RobotoMedium,
                   }}
@@ -354,7 +352,7 @@ export function ReservationForm() {
                     marginTop: 5,
                     marginBottom: 0,
                     fontSize: 15,
-                    fontWeight: "ligth",
+                    
                     color: Couleur.Black10,
                     fontFamily: FontFamily.RobotoMedium,
                   }}
@@ -383,7 +381,7 @@ export function ReservationForm() {
               <Text
                 style={{
                   fontSize: 15,
-                  fontWeight: "ligth",
+                  
                   color: Couleur.Black10,
                   fontFamily: FontFamily.RobotoMedium,
                 }}
@@ -466,7 +464,7 @@ export function ReservationForm() {
                     marginTop: 5,
                     marginBottom: 0,
                     fontSize: 15,
-                    fontWeight: "ligth",
+                    
                     color: Couleur.Black10,
                     fontFamily: FontFamily.RobotoMedium,
                   }}
@@ -499,7 +497,7 @@ export function ReservationForm() {
                     marginTop: 5,
                     marginBottom: 0,
                     fontSize: 15,
-                    fontWeight: "ligth",
+                    
                     color: Couleur.Black10,
                     fontFamily: FontFamily.RobotoMedium,
                   }}

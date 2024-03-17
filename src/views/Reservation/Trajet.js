@@ -21,6 +21,7 @@ import {
   FontAwesome5,
   AntDesign,
   Entypo,
+  MaterialCommunityIcons,
 } from "@expo/vector-icons";
 
 import { useNavigation } from "@react-navigation/native";
@@ -32,7 +33,7 @@ import { useRoute } from "@react-navigation/native";
 import Svg, { Ellipse, Path, Line, Circle } from "react-native-svg";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import { EffectuerReservationScreen } from "./EffectuerReservation";
-
+import { PaimentScreen } from "../paiement";
 //===========================================================
 //            Fonction
 //===========================================================
@@ -266,10 +267,10 @@ function subtractTime(time1, time2) {
   const [hours1, minutes1] = time1.split(":");
   const [hours2, minutes2] = time2.split(":");
 
-  const totalMinutes1 = parseInt(hours1) * 60 + parseInt(minutes1);
-  const totalMinutes2 = parseInt(hours2) * 60 + parseInt(minutes2);
+  const totalMontantMinutes1 = parseInt(hours1) * 60 + parseInt(minutes1);
+  const totalMontantMinutes2 = parseInt(hours2) * 60 + parseInt(minutes2);
 
-  const differenceMinutes = totalMinutes1 - totalMinutes2;
+  const differenceMinutes = totalMontantMinutes1 - totalMontantMinutes2;
 
   const hours =
     Math.floor(differenceMinutes / 60)
@@ -513,63 +514,6 @@ export function Step1({ nextStep }) {
   );
 }
 
-export function TabB() {
-  const [ShowAction, setShowAction] = useState(true);
-  const bottomSheetRef = useRef();
-  const navigation = useNavigation();
-
-  return (
-    <SafeAreaView style={{ backgroundColor: "#fff", paddingTop: -50 }}>
-      <ScrollView
-        nestedScrollEnabled={true}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          flexDirection: "column",
-          width: "100%",
-          height: "100%",
-          backgroundColor: "white",
-          justifyContent: "flex-start ",
-          alignItems: "center",
-        }}
-      >
-        <ActionSheet
-          BottomSheetRef={bottomSheetRef}
-          height={Height * 0.7}
-          openDuration={600}
-        />
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
-export function TabC() {
-  const [ShowAction, setShowAction] = useState(true);
-  const bottomSheetRef = useRef();
-  const navigation = useNavigation();
-
-  return (
-    <SafeAreaView style={{ backgroundColor: "#fff", paddingTop: -50 }}>
-      <ScrollView
-        nestedScrollEnabled={true}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          flexDirection: "column",
-          width: "100%",
-          height: "100%",
-          backgroundColor: "white",
-          justifyContent: "flex-start ",
-          alignItems: "center",
-        }}
-      >
-        <ActionSheet
-          BottomSheetRef={bottomSheetRef}
-          height={Height * 0.7}
-          openDuration={600}
-        />
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
-
 export const TrajetsScreen = () => {
   const navigation = useNavigation();
   // Inside your component
@@ -578,7 +522,11 @@ export const TrajetsScreen = () => {
   const handleNextStep = () => {
     setCurrentStep((prevStep) => prevStep + 1);
   };
-
+  const handlePrevStep = () => {
+    setCurrentStep((prevStep) => prevStep - 1);
+  };
+  const [totalMontant, settotalMontant] = useState(0);
+  console.log("totalMontant = " + totalMontant);
   const [currentStep, setCurrentStep] = useState(0);
   return (
     <View
@@ -619,24 +567,28 @@ export const TrajetsScreen = () => {
           <Step1 nextStep={handleNextStep} />
         </ProgressStep>
         <ProgressStep
+          removeBtnRow={true}
           onPrevious={() => {
             setCurrentStep(currentStep - 1);
           }}
+          onNext={() => {
+            return setCurrentStep(currentStep - 1);
+          }}
           scrollable={true}
-          nextBtnText={
-            <AntDesign
-              name="rightcircle"
-              size={Width * 0.12}
-              color={Couleur.Limeblue9}
-            />
-          }
-          previousBtnText={
-            <AntDesign
-              name="leftcircle"
-              size={Width * 0.12}
-              color={Couleur.Limeblue9}
-            />
-          }
+          // nextBtnText={
+          //   <AntDesign
+          //     name="rightcircle"
+          //     size={Width * 0.12}
+          //     color={Couleur.Limeblue9}
+          //   />
+          // }
+          // previousBtnText={
+          //   <AntDesign
+          //     name="leftcircle"
+          //     size={Width * 0.12}
+          //     color={Couleur.Limeblue9}
+          //   />
+          // }
           label="Details de voyages"
         >
           <EffectuerReservationScreen
@@ -645,6 +597,9 @@ export const TrajetsScreen = () => {
             getFormattedTime={getFormattedTime}
             getFormattedDate={getFormattedDate}
             subtractTime={subtractTime}
+            NextStep={handleNextStep}
+            prevStep={handlePrevStep}
+            onTotalChange={settotalMontant}
           />
         </ProgressStep>
         <ProgressStep
@@ -652,56 +607,80 @@ export const TrajetsScreen = () => {
             setCurrentStep(currentStep - 1);
           }}
           scrollable={true}
-          label="Third Step"
-          nextBtnText={
-            <AntDesign
-              name="rightcircle"
-              size={Width * 0.12}
-              color={Couleur.Limeblue9}
-            />
-          }
-          previousBtnText={
-            <AntDesign
-              name="leftcircle"
-              size={Width * 0.12}
-              color={Couleur.Limeblue9}
-            />
-          }
+          label="Paiement"
+          // nextBtnText={
+          //   <AntDesign
+          //     name="rightcircle"
+          //     size={Width * 0.12}
+          //     color={Couleur.Limeblue9}
+          //   />
+          // }
+          // previousBtnText={
+          //   <AntDesign
+          //     name="leftcircle"
+          //     size={Width * 0.12}
+          //     color={Couleur.Limeblue9}
+          //   />
+          // }
+          removeBtnRow={true}
+          // removeBtnNext={true}
         >
-          <View style={{ alignItems: "center" }}>
-            <Text>This is the content within step 3!</Text>
-          </View>
+          <PaimentScreen MontanTotal={totalMontant} NexStep={handleNextStep} />
         </ProgressStep>
         <ProgressStep
+          removeBtnRow={true}
           onPrevious={() => {
             setCurrentStep(currentStep - 1);
           }}
           scrollable={true}
-          label="Fourt Step"
-          nextBtnText={
-            <AntDesign
-              name="rightcircle"
-              size={Width * 0.12}
-              color={Couleur.Limeblue9}
-            />
-          }
-          previousBtnText={
-            <AntDesign
-              name="leftcircle"
-              size={Width * 0.12}
-              color={Couleur.Limeblue9}
-            />
-          }
-          finishBtnText={
-            <Ionicons
-              name="checkmark-done-circle"
-              size={Width * 0.12}
-              color={Couleur.Limeblue9}
-            />
-          }
+          label="Confirmation"
+          // nextBtnText={
+          //   <AntDesign
+          //     name="rightcircle"
+          //     size={Width * 0.12}
+          //     color={Couleur.Limeblue9}
+          //   />
+          // }
+          // previousBtnText={
+          //   <View style={{ width: 0.0001, height: 0.0001 }}></View>
+          // }
+          // finishBtnText={
+          //   <Ionicons
+          //     name="checkmark-done-circle"
+          //     size={Width * 0.12}
+          //     color={Couleur.Limeblue9}
+          //   />
+          // }
         >
-          <View style={{ alignItems: "center" }}>
-            <Text>This is the content within step 3!</Text>
+          <View
+            style={{
+              alignItems: "center",
+              backgroundColor: Couleur.White,
+              height: Height * 0.7,
+              width: Width,
+              justifyContent: "flex-start",
+              alignItems: "center",
+              paddingTop: Height * 0.2,
+            }}
+          >
+            <MaterialCommunityIcons
+              name="cellphone-check"
+              size={60}
+              color={Couleur.Limeblue9}
+            />
+
+            <Text
+              style={{
+                fontFamily: FontFamily.RobotoItalic,
+                fontSize: Width * 0.055,
+                color: Couleur.L,
+                textAlign: "center",
+                marginVertical: Height * 0.05,
+                width: Width * 0.8,
+              }}
+            >
+              Félicitation Votre paiement a été effectuée avec succes
+            </Text>
           </View>
         </ProgressStep>
       </ProgressSteps>
@@ -716,13 +695,11 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 12,
-    // fontWeight: "",
     fontFamily: FontFamily.Poppins,
   },
   text2: {
     fontSize: 13,
 
-    // fontWeight: "",
     fontFamily: FontFamily.Poppins,
   },
   buttonTextStyle: {

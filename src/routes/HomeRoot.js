@@ -143,7 +143,7 @@ export function HomeRoot() {
     },
     headerStyle: {
       backgroundColor: "#ffff",
-      borderTopWidth: Width * 0.09,
+      borderTopWidth: Width * 0.111,
       borderTopColor: Couleur.Limeblue9,
       borderBottomWidth: 0.5,
       borderBottomColor: Couleur.Black0,
@@ -154,7 +154,9 @@ export function HomeRoot() {
     headerTintColor: Couleur.Black7,
     headerTitleStyle: {
       fontFamily: FontFamily.RobotoBold,
-      paddingTop: 10,
+      width: "auto",
+      fontSize: Width * 0.05,
+      // paddingTop: 10,
     },
     headerLeft: (props) => (
       <View style={{ paddingTop: 10 }}>
@@ -251,10 +253,10 @@ export function HomeRoot() {
         }}
       />
       <Tab.Screen
-        name="Reservation"
+        name="Consulte vos Reservations"
         component={ReservationSreen}
         options={{
-          tabBarLabel: "Details",
+          tabBarLabel: "Consulte vos Reservations",
           tabBarIcon: ({ focused }) => {
             return (
               <View

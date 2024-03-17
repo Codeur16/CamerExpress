@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, ToastAndroid } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { FontFamily } from "../../GlobalStyles";
 import color from "../utils/color";
 import { useNavigation } from "@react-navigation/native";
@@ -9,16 +9,13 @@ import { Feather, FontAwesome } from "@expo/vector-icons";
 import { TextInput } from "react-native-paper";
 import { MaterialIcons } from "@expo/vector-icons";
 import { TouchButton } from "../components/TouchableButton";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-let mode = AsyncStorage.getItem("modePaiement");
-
-export const PaimentScreen = ({ MontanTotal, NexStep }) => {
+export const PaimentConfirm = () => {
   const navigation = useNavigation();
   useEffect(() => {
     // Naviguer automatiquement vers Ecran2 après un délai de 2 secondes (2000 ms)
     const timer = setTimeout(() => {
-      showTrans ? NexStep() : null;
-    }, 6000);
+      NexStep();
+    }, 600);
 
     // N'oubliez pas de nettoyer le timer pour éviter les fuites de mémoire
     return () => clearTimeout(timer);
@@ -30,7 +27,7 @@ export const PaimentScreen = ({ MontanTotal, NexStep }) => {
       navigation.goBack();
       return true; // Indiquer que l'action de retour a été gérée
     };
-    console.log("Mode" + JSON.stringify(mode));
+
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       backAction
@@ -112,12 +109,7 @@ export const PaimentScreen = ({ MontanTotal, NexStep }) => {
           <TouchButton
             title={"Payer"}
             onPress={() => {
-              numero === null
-                ? ToastAndroid.show(
-                    "Veuillez saisir le numéro de votre carte.",
-                    ToastAndroid.SHORT
-                  )
-                : setShowTrans(true);
+              setShowTrans(true);
             }}
           />
           {/* Ajoutez le contenu supplémentaire de votre écran ici */}
