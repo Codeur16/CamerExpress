@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, ToastAndroid } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { FontFamily } from "../../GlobalStyles";
 import color from "../utils/color";
 import { useNavigation } from "@react-navigation/native";
@@ -11,7 +11,14 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { TouchButton } from "../components/TouchableButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 let mode = AsyncStorage.getItem("modePaiement");
-
+const showToast = (message) => {
+  if (Platform.OS === "android") {
+    const { ToastAndroid } = require("react-native");
+    ToastAndroid.show(message, ToastAndroid.LONG);
+  } else {
+    console.log(message);
+  }
+};
 export const PaimentScreen = ({ MontanTotal, NexStep }) => {
   const navigation = useNavigation();
   useEffect(() => {
@@ -113,10 +120,7 @@ export const PaimentScreen = ({ MontanTotal, NexStep }) => {
             title={"Payer"}
             onPress={() => {
               numero === null
-                ? ToastAndroid.show(
-                    "Veuillez saisir le numéro de votre carte.",
-                    ToastAndroid.SHORT
-                  )
+                ? showToast("Veuillez saisir le numéro de votre carte.")
                 : setShowTrans(true);
             }}
           />

@@ -29,7 +29,7 @@ import {
 } from "@expo/vector-icons";
 import { TouchButton } from "../../components/TouchableButton";
 import * as ImagePicker from "expo-image-picker";
-import ButtomSheet from "../../components/ButtomSheet";
+import ButtomSheet from "../../components/BottomSheetForPaiement";
 import carte from "../../assets/carte3.png";
 import momo from "../../assets/momo1.png";
 import om from "../../assets/om1.png";
@@ -45,7 +45,9 @@ export const EffectuerReservationScreen = ({
   onTotalChange,
 }) => {
   const bottomSheetRef = useRef();
-  const [image, setImage] = useState(null);
+
+  // ========================pick image========================
+  const [images, setImages] = useState([]);
   async function getPermission() {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
@@ -53,7 +55,7 @@ export const EffectuerReservationScreen = ({
       alert("Permission to access image library is required!");
     }
   }
-  async function pickImage() {
+  const pickImage = async () => {
     let result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -62,15 +64,11 @@ export const EffectuerReservationScreen = ({
     });
 
     if (!result.canceled) {
-      if (result.assets && result.assets.length > 0) {
-        // Access the selected asset's URI from the assets array
-        const selectedImageURI = result.assets[0].uri;
-        setImage(result.assets[0].uri);
-        console.log(selectedImageURI);
-        // You can also upload the image to a server or display it in your UI.
-      }
+      setImages((prevImages) => [...prevImages, result.uri]);
     }
-  }
+  };
+
+  //================save paiement==============================
   const saveMode = (mode) => {
     AsyncStorage.setItem("modePaiement", mode);
   };
@@ -183,16 +181,23 @@ export const EffectuerReservationScreen = ({
     return () => backHandler.remove();
   }, [navigation]);
   useEffect(() => {
-    setTotal(Trajets[index].prixReservation * passager);
-    onTotalChange(Trajets[index].prixReservation * passager);
+    setTotal(Trajets?.prixReservation * passager);
+    onTotalChange(Trajets?.prixReservation * passager);
   }, [passager]);
   const [disabled, setDisabled] = useState(true);
-  const [total, setTotal] = useState(Trajets[index].prixReservation * passager);
+  const [total, setTotal] = useState(0);
+  useEffect(() => {
+    if (Trajets) {
+      setTotal(Trajets.prixReservation * passager);
+    }
+  });
   const [modePaiement, setModePaiement] = useState([
     { id: "OM", value: "Orange Money", image: om },
     { id: "MOMO", value: "Mobile Money", image: momo },
     { id: "CARTE", value: "Carte bancaire", image: carte },
   ]);
+
+  //==========================ORC========================
 
   // return (
   //   <SafeAreaView>
@@ -239,7 +244,6 @@ export const EffectuerReservationScreen = ({
           contentContainerStyle={styles.container}
         >
           {/* Ajoutez le contenu supplémentaire de votre écran ici */}
-
           <View
             style={{
               width: Width * 0.95,
@@ -512,7 +516,30 @@ export const EffectuerReservationScreen = ({
                   />
                 </View>
               </View>
-              <View>
+              {/* ====================================Affichages des images==================================== */}
+
+              <ScrollView horizontal>
+                {images.map((image, index) => (
+                  <Pressable
+                    key={index}
+                    onPress={() => console.log("Image", index, "pressed")}
+                  >
+                    <Image
+                      source={{ uri: image }}
+                      style={{
+                        width: Width * 0.75,
+                        height: Height * 0.3,
+                        maxHeight: 200,
+                        resizeMode: "contain",
+                        borderRadius: 10,
+                        marginHorizontal: 5,
+                      }}
+                    />
+                  </Pressable>
+                ))}
+              </ScrollView>
+
+              {/* <View>
                 {image && (
                   <Image
                     source={{ uri: image }}
@@ -525,7 +552,7 @@ export const EffectuerReservationScreen = ({
                     }}
                   />
                 )}
-              </View>
+              </View> */}
             </View>
           </View>
           {/* <View className=" w-full h-auto  justify-center items-center mt-5"> */}
@@ -548,7 +575,7 @@ export const EffectuerReservationScreen = ({
             color={Couleur.Black2}
           />
           {/* </View> */}
-          <View className="h-10"></View>
+          <View className="h-100"></View>
         </ScrollView>
       )}
       {showNext && (
@@ -615,17 +642,16 @@ export const EffectuerReservationScreen = ({
                   >
                     De
                     <Text style={{ fontFamily: FontFamily.RobotoBold }}>
-                      {" "}
-                      {Trajets[index].itineraire.villeDepart.nom} {`\t`}
+                      {Trajets?.itineraire.villeDepart.nom} {`\t`}
                     </Text>
                     <AntDesign
                       name="arrowright"
                       size={17}
                       color={Couleur.Black7}
-                    />{" "}
-                    {`\t`} vers{" "}
+                    />
+                    {`\t`} vers
                     <Text style={{ fontFamily: FontFamily.RobotoBold }}>
-                      {Trajets[0].itineraire.villeDestination.nom}{" "}
+                      {Trajets?.itineraire.villeDestination.nom}
                     </Text>
                   </Text>
                 </View>
@@ -685,16 +711,16 @@ export const EffectuerReservationScreen = ({
                       color: Couleur.Black7,
                     }}
                   >
-                    vous souhaitez effectuer votre Voyage de{" "}
+                    vous souhaitez effectuer votre Voyage de
                     <Text style={{ fontFamily: FontFamily.RobotoBold }}>
-                      {getFormattedTime(Trajets[0].dateDepart)} a{" "}
-                      {getFormattedTime(Trajets[0].dateArriver)}
-                    </Text>{" "}
-                    donc une duree de{" "}
+                      {getFormattedTime(Trajets?.dateDepart)} a
+                      {getFormattedTime(Trajets?.dateArriver)}
+                    </Text>
+                    donc une duree de
                     <Text style={{ fontFamily: FontFamily.RobotoBold }}>
                       {subtractTime(
-                        getFormattedTime(Trajets[0].dateArriver),
-                        getFormattedTime(Trajets[0].dateDepart)
+                        getFormattedTime(Trajets?.dateArriver),
+                        getFormattedTime(Trajets?.dateDepart)
                       )}
                     </Text>
                   </Text>
@@ -727,11 +753,10 @@ export const EffectuerReservationScreen = ({
                       color: Couleur.Black7,
                     }}
                   >
-                    votre Reservation comprends{" "}
+                    votre Reservation comprends
                     <Text style={{ fontFamily: FontFamily.RobotoBold }}>
-                      {" "}
-                      {convertNumberToWords(passager)}({passager}){" "}
-                    </Text>{" "}
+                      {convertNumberToWords(passager)}({passager})
+                    </Text>
                     Passagers
                   </Text>
                 </View>

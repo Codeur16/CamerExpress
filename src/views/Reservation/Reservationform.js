@@ -22,11 +22,12 @@ import Dropdown from "../../components/select-picker";
 import { Width, Height } from "../../utils/DimensionScreen";
 import { TouchButton } from "../../components/TouchableButton";
 import url from "../../utils/url";
+
 //=============================================
 //         Ecran
 //=============================================
 
-export function ReservationForm() {
+export function ReservationForm({ onClick }) {
   //============================================
   //           Declaration des constantes
   //============================================
@@ -207,6 +208,7 @@ export function ReservationForm() {
         ToastAndroid.SHORT
       );
     } else {
+      onClick(true);
       const data = {
         de: SelectedVilleDepart,
         vers: SelectedVilleArrive,
@@ -226,14 +228,23 @@ export function ReservationForm() {
           },
         })
         .then((res) => {
-          console.log("TRAJETS" + JSON.stringify(res.data.data));
-          setTrajets(JSON.stringify(res.data.data));
-          navigation.navigate("trajet", Trajets);
+          console.log(
+            "\n\t\t==================================== Trajets Disponibles ===============================\n\n"
+          );
+          console.log(JSON.stringify(res.data.data));
+          console.log(
+            "\n\t\t=======================================================================================\n"
+          );
+          setTrajets(res.data.data);
+
+          navigation.navigate("Voyages", { trajets: Trajets });
+          onClick(false);
         })
         .catch((err) => {
           console.error("Erreur ! \n veillez reessayer");
           console.error(err);
-          navigation.navigate("trajet", { trajets: Trajets });
+          navigation.navigate("Voyages", { trajets: Trajets });
+          onClick();
           console.log(typeof Trajets);
         });
     }
@@ -251,6 +262,7 @@ export function ReservationForm() {
     };
     return date.toLocaleDateString("fr-FR", options);
   };
+  // ==========================Loading==========================
 
   //=======================================
   //            RENDU
@@ -260,7 +272,7 @@ export function ReservationForm() {
     <ScrollView nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
       <View
         Style={{
-          width: "100%",
+          width: Width * 0.9,
 
           alignItems: "center",
           alignContent: "center",
@@ -278,13 +290,15 @@ export function ReservationForm() {
             alignContent: "center",
           }}
         >
-          <View className="w-full flex  flex-row ">
+          {/* =======================Villes============================ */}
+          <View className=" flex  flex-row  justify-between">
             <View
-              className=" w-1/2 flex-wrap flex-col"
+              className="flex-col"
               style={{
                 alignItems: "center",
                 justifyContent: "center",
                 alignContent: "center",
+                width: "49.2%",
               }}
             >
               <View className="flex-1 ">
@@ -308,11 +322,12 @@ export function ReservationForm() {
             </View>
 
             <View
-              className=" w-1/2 flex-wrap flex-col"
+              className="  flex-col"
               style={{
                 alignItems: "center",
                 justifyContent: "center",
                 alignContent: "center",
+                width: "49.2%",
               }}
             >
               <View className="flex-1">
@@ -336,39 +351,29 @@ export function ReservationForm() {
             </View>
           </View>
 
-          <View className="w-full flex  flex-row ml-8">
-            <View
-              className=" w-full flex-wrap flex-col"
+          {/* =========================Agences==================== */}
+          <View className="  flex flex-1 mt-2" style={{ width: Width * 0.9 }}>
+            <Text
               style={{
-                alignItems: "start",
-                justifyContent: "center",
-                alignContent: "center",
-                // margingLeft: 10,
+                marginTop: 0,
+                marginBottom: 0,
+                fontSize: 15,
+                textAlign: "left",
+
+                color: Couleur.Black10,
+                fontFamily: FontFamily.RobotoMedium,
               }}
             >
-              <View className="flex-1">
-                <Text
-                  style={{
-                    marginTop: 5,
-                    marginBottom: 0,
-                    fontSize: 15,
-                    
-                    color: Couleur.Black10,
-                    fontFamily: FontFamily.RobotoMedium,
-                  }}
-                >
-                  Agence:
-                </Text>
-                <Dropdown
-                  data={SiteDepart}
-                  onChange={setSelectedSitesAgencesDepart}
-                  placeholder="Site Depart"
-                  width={330}
-                />
-              </View>
-            </View>
+              Agence:
+            </Text>
+            <Dropdown
+              data={SiteDepart}
+              onChange={setSelectedSitesAgencesDepart}
+              placeholder="Site Depart"
+              width={Width * 0.9}
+            />
           </View>
-
+          {/* =====================Date de depart================== */}
           <View
             className="mt-2"
             style={{
@@ -381,7 +386,7 @@ export function ReservationForm() {
               <Text
                 style={{
                   fontSize: 15,
-                  
+
                   color: Couleur.Black10,
                   fontFamily: FontFamily.RobotoMedium,
                 }}
@@ -406,7 +411,7 @@ export function ReservationForm() {
                     style={{
                       backgroundColor: Couleur.White,
                       fontSize: 12,
-                      width: 330,
+                      width: Width * 0.9,
                       height: 45,
                       borderRadius: 5,
                       justifyContent: "flex-start",
@@ -447,81 +452,38 @@ export function ReservationForm() {
               </View>
             </View>
           </View>
-
-          {/* Agences */}
-          {/* <View className="w-full  flex  flex-row ">
-            <View
-              className=" w-full flex-col"
+          {/* =======================Classe======================= */}
+          <View className="  flex flex-1" style={{ width: Width * 0.9 }}>
+            <Text
               style={{
-                alignItems: "center",
-                justifyContent: "center",
-                alignContent: "center",
+                marginTop: 5,
+                marginBottom: 0,
+                fontSize: 15,
+
+                color: Couleur.Black10,
+                fontFamily: FontFamily.RobotoMedium,
+                textAlign: "left",
               }}
             >
-              <View className="flex-1 ">
-                <Text
-                  style={{
-                    marginTop: 5,
-                    marginBottom: 0,
-                    fontSize: 15,
-                    
-                    color: Couleur.Black10,
-                    fontFamily: FontFamily.RobotoMedium,
-                  }}
-                >
-                  Agence:
-                </Text>
-                <Dropdown
-                  width={330}
-                  data={Agence}
-                  onChange={setSelectedVilleDepart}
-                  placeholder="Nom Agence"
-                />
-              </View>
-            </View>
-          </View> */}
-
-          <View className="w-full flex  flex-row ml-8">
-            <View
-              className=" w-full flex-wrap flex-col"
-              style={{
-                alignItems: "start",
-                justifyContent: "center",
-                alignContent: "center",
-                // margingLeft: 10,
-              }}
-            >
-              <View className="flex-1">
-                <Text
-                  style={{
-                    marginTop: 5,
-                    marginBottom: 0,
-                    fontSize: 15,
-                    
-                    color: Couleur.Black10,
-                    fontFamily: FontFamily.RobotoMedium,
-                  }}
-                >
-                  Classe:
-                </Text>
-                <Dropdown
-                  data={classeVoyage}
-                  onChange={setSelectedClasse}
-                  placeholder="Classe de voyage"
-                  width={330}
-                />
-              </View>
-            </View>
+              Classe:
+            </Text>
+            <Dropdown
+              data={classeVoyage}
+              onChange={setSelectedClasse}
+              placeholder="Classe de voyage"
+              width={Width * 0.9}
+            />
           </View>
         </View>
 
+        {/* ============= Bouton Rechercher=========================== */}
         <View
           style={{
             alignItems: "center",
             justifyContent: "center",
             alignContent: "center",
-            marginBottom: 20,
           }}
+          className=" my-3"
         >
           <TouchButton
             title="Recherche"
@@ -535,6 +497,7 @@ export function ReservationForm() {
           {/* ******************************************* */}
         </View>
       </View>
+
       {/* </View> */}
     </ScrollView>
     // {/* </ScrollView> */}
@@ -561,7 +524,7 @@ const styles = StyleSheet.create({
     flexDirection: "colum",
     justifyContent: "space-around",
     alignItems: "center",
-    width: 330,
+    width: Width,
     height: 39,
     marginTop: 20,
     borderRadius: 5,

@@ -19,10 +19,8 @@ import {
   FontAwesome5,
   MaterialIcons,
 } from "@expo/vector-icons";
-// npm i react-native-raw-bottom-sheet
 import BottomSheet from "react-native-raw-bottom-sheet";
 import Couleur from "../utils/color";
-// npm i react-native-elements
 import { Icon } from "react-native-elements";
 import { Width, Height } from "../utils/DimensionScreen";
 import { FontFamily } from "../../GlobalStyles";
@@ -35,7 +33,7 @@ export default function ActionSheet({
   height,
   openDuration,
   contentSheet,
-  data,
+  trajet,
   index,
   NextStep,
   subtractTime,
@@ -49,7 +47,7 @@ export default function ActionSheet({
   return (
     <BottomSheet
       ref={BottomSheetRef}
-      closeOnDragDown={false}
+      closeOnDragDown={true}
       height={Height * 0.8}
       openDuration={350}
       animationType="slide"
@@ -57,7 +55,7 @@ export default function ActionSheet({
       closeDuration={20}
       closeOnPressMask={true}
       customStyles={{
-        wrapper: { backgroundColor: Couleur.Limeblue3 },
+        wrapper: { backgroundColor: Couleur.Black5 },
         container: {
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
@@ -87,7 +85,7 @@ export default function ActionSheet({
               width: "90%",
             }}
           >
-            {getFormattedDate(data[index].dateDepart)}
+            {getFormattedDate(trajet?.dateDepart)}
           </Text>
           <Pressable
             onPress={() => {
@@ -108,8 +106,8 @@ export default function ActionSheet({
           >
             Durée:{" "}
             {subtractTime(
-              getFormattedTime(data[index].dateArriver),
-              getFormattedTime(data[index].dateDepart)
+              getFormattedTime(trajet?.dateArriver),
+              getFormattedTime(trajet?.dateDepart)
             )}
           </Text>
         </View>
@@ -132,7 +130,7 @@ export default function ActionSheet({
           <View className="w-1/2 h-full flex-row pl-5 pt-5">
             <View className="h-full w-1/3 justify-between">
               <Text style={styles.text}>
-                {getFormattedTime(data[index].dateDepart)}
+                {getFormattedTime(trajet?.dateDepart)}
               </Text>
               <Text
                 className="color-Black6 "
@@ -142,13 +140,13 @@ export default function ActionSheet({
                 }}
               >
                 {subtractTime(
-                  getFormattedTime(data[index].dateArriver),
-                  getFormattedTime(data[index].dateDepart)
+                  getFormattedTime(trajet?.dateArriver),
+                  getFormattedTime(trajet?.dateDepart)
                 )}
               </Text>
               <Text style={styles.text}>
                 {" "}
-                {getFormattedTime(data[index].dateArriver)}
+                {getFormattedTime(trajet?.dateArriver)}
               </Text>
             </View>
             <View className="h-full w-1/4 flex-col items-center justify-center">
@@ -199,11 +197,13 @@ export default function ActionSheet({
               <View className="flex-row">
                 <Entypo name="location-pin" size={20} color={Couleur.Black5} />
                 <Text style={styles.text} className="">
-                  {data[index].itineraire.villeDepart.nom}
-                  {""}
+                  {trajet?.itineraire.villeDepart.nom} {""}
                 </Text>
               </View>
-              <View>
+
+              {/* ========================Arrets======================== */}
+
+              {/* <View>
                 <View
                   className="  h-8 border-Black1 border shadow-sm  bg-white shadow-Black5 rounded-2xl mt-2 ml-1 flex-row items-center justify-around"
                   style={{ width: "90%" }}
@@ -252,11 +252,12 @@ export default function ActionSheet({
                     <AntDesign name="down" size={20} color={Couleur.Black4} />
                   </Pressable>
                 </View>
-              </View>
+              </View> */}
+
               <View className="flex-row">
                 <Entypo name="location-pin" size={20} color={Couleur.Black5} />
                 <Text style={styles.text}>
-                  {data[index].itineraire.villeDestination.nom}
+                  {trajet?.itineraire.villeDestination.nom}
                   {""}
                 </Text>
               </View>
@@ -319,13 +320,13 @@ export default function ActionSheet({
               }}
               className="text-center"
             >
-              {data[index].prixReservation} XAF
+              {trajet?.prixReservation} XAF
             </Text>
           </View>
         </View>
         <View className=" w-full items-center justify-center mb-5 ">
           <TouchButton
-            title="Selectionner ce trajet"
+            title="Selectionner ce trajet?"
             onPress={() => {
               NextStep();
             }}

@@ -9,11 +9,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity, View } from "react-native";
 import { NotificationScreen } from "../views/Notification";
 import { AgenceScreen } from "../views/index";
-import { TrajetsScreen } from "../views/Reservation/Trajet";
+import { TrajetsScreen } from "../views/Reservation/TrajetScreen";
 import { useNavigation } from "@react-navigation/native";
 import Couleur from "../utils/color";
 import { EffectuerReservationScreen, PaimentScreen } from "../views/index";
 import { Width } from "../utils/DimensionScreen";
+import { VoyagesDisponible } from "../views/index";
 // import DropdownMenu from "../components/DropdwonMenu";
 const Stack = createNativeStackNavigator();
 
@@ -243,6 +244,49 @@ export default function MainRoot() {
         options={{
           headerShown: true,
           title: "Reservation",
+          headerTitleAlign: "center",
+          headerStyle: {
+            backgroundColor: Couleur.Limeblue9,
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {},
+          headerTitleAlign: "left",
+          headerTitleStyle: {
+            fontFamily: FontFamily.RobotoBold,
+            fontSize: 18,
+          },
+          // headerLeft: (props) => <LogoTitle {...props} />,
+
+          // headerRight: () => (
+          //   <View
+          //     style={{
+          //       flexDirection: "row",
+          //       alignItems: "center",
+          //       marginRight: 10,
+          //     }}
+          //   >
+          //     <TouchableOpacity
+          //       onPress={() => {
+          //         navigation.navigate("Notification");
+          //       }}
+          //     >
+          //       <Ionicons
+          //         name="notifications"
+          //         size={24}
+          //         color={Couleur.Black4}
+          //         style={{ marginRight: 10 }}
+          //       />
+          //     </TouchableOpacity>
+          //   </View>
+          // ),
+        }}
+      />
+      <Stack.Screen
+        name="Voyages"
+        component={VoyagesDisponible}
+        options={{
+          headerShown: true,
+          title: "Voyages Disponible",
           headerTitleAlign: "center",
           headerStyle: {
             backgroundColor: Couleur.Limeblue9,

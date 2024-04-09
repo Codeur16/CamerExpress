@@ -66,7 +66,7 @@ export default function ButtomSheet({
       closeDuration={20}
       closeOnPressMask={true}
       customStyles={{
-        wrapper: { backgroundColor: Couleur.Limeblue3 },
+        wrapper: { backgroundColor: Couleur.Black5 },
         container: {
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,

@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { BackHandler } from "react-native";
 import Couleur from "../../utils/color";
 import { FontFamily } from "../../../GlobalStyles";
-import ActionSheet from "../../components/ActionSheet";
+import ActionSheet from "../../components/BottomSheetForVoyages";
 import { Height, Width } from "../../utils/DimensionScreen";
 import { Searchbar } from "react-native-paper";
 import BusGenerale from "../../assets/general.png";
@@ -12,22 +12,21 @@ import { TouchButton } from "../../components/TouchableButton";
 export const AgenceScreen = () => {
   const navigation = useNavigation();
   const [agences, setAgences] = useState([]);
-  // useEffect(() => {
-  //   const backAction = () => {
-  //     // Naviguer vers l'écran de destination souhaité
-  //     navigation.navigate("HomeRoot");
-  //     return true; // Indiquer que l'action de retour a été gérée
-  //   };
 
-  //   const backHandler = BackHandler.addEventListener(
-  //     "hardwareBackPress",
-  //     backAction
-  //   );
-  // });
-  // Retirer l'écouteur d'événement lorsque le composant est démonté
-  //   return () => backHandler.remove();
-  // })
-  const [searchQuery, setSearchQuery] = React.useState("");
+  useEffect(() => {
+    const backAction = () => {
+      // Naviguer vers l'écran de destination souhaité
+      navigation.navigate("HomeRoot");
+      return true; // Indiquer que l'action de retour a été gérée
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+  });
+
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const getAgences = async () => {
@@ -44,8 +43,13 @@ export const AgenceScreen = () => {
   });
   const card = (
     <View
-      className="flex justify-between items-center flex-col border-0.5 border-Black1 rounded-lg bg-white shadow-lg shadow-Black5 mt-5 ml-2 mr-2 "
-      style={{ width: Width / 2.5, height: Height / 3.1 }}
+      className="flex  overflow-hidden justify-between   flex-col border-0.5 border-Black1 rounded-lg bg-white shadow-lg shadow-Black5 mt-5 ml-2 mr-2 "
+      style={{
+        width: Width / 2.2,
+        height: 250,
+
+        //height: "auto",
+      }}
     >
       <View className="w-full h-autojustify-start items-center bg-white rounded-lg">
         <Image
@@ -53,22 +57,32 @@ export const AgenceScreen = () => {
           width={10}
           height={10}
           source={BusGenerale}
-          style={{ width: Width / 2.5, height: Height / 3.5 / 2 }}
+          style={{ width: Width / 2.2, height: Height / 3.5 / 1.5 }}
           className="rounded-t-lg"
         />
       </View>
-      <View className="flex flex-col pt-2">
-        <Text style={{ fontFamily: FontFamily.RobotoBold }}>
+      <View className=" w-full flex flex-col mt-2 items-start justify-center pl-2">
+        <Text
+          style={{ fontFamily: FontFamily.RobotoBold }}
+          className="text-left text-base"
+          numberOfLines={1}
+        >
           Agence: Generale
         </Text>
-        <Text style={{ fontFamily: FontFamily.RobotoBold }}>Sites: 08</Text>
-        <Text>
+        <Text
+          style={{ fontFamily: FontFamily.RobotoMedium }}
+          numberOfLines={1}
+          className="text-left text-sm"
+        >
+          Nombre de sites: 08
+        </Text>
+        {/* <Text>
           Au Cameroun, le processus de réservation de billets est souvent
           difficile pour les
-        </Text>
+        </Text> */}
       </View>
-      <View className="w-11/12 jus  items-center pt-2">
-        <TouchButton title="voir plus" height={"35%"} radius={30} />
+      <View className="w-full jus  items-center pb-2">
+        <TouchButton title="voir plus" height={32} radius={30} />
       </View>
     </View>
   );
@@ -104,12 +118,26 @@ export const AgenceScreen = () => {
           className="shadow-inner-lg shadow-Black9 border border-Black3"
         />
       </View>
-      <View className="flex flex-row flex-wrap justify-center items-center ">
+      <ScrollView
+        contentContainerStyle={{
+          flexDirection: "row",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          alignItems: "center",
+          overflow: "scroll",
+        }}
+        scrollEnabled={true}
+        showsVerticalScrollIndicator={true}
+      >
         {card}
         {card}
         {card}
         {card}
-      </View>
+        {card}
+        {card}
+        {card}
+        {card}
+      </ScrollView>
 
       {/* Ajoutez le contenu supplémentaire de votre écran ici */}
     </ScrollView>

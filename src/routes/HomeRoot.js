@@ -238,12 +238,13 @@ export function HomeRoot() {
                 />
                 <Text
                   style={{
-                    fontSize: screenWidth * 0.045,
+                    fontSize: screenWidth * 0.042,
                     color: focused ? "#0081C7" : "#9A999F",
                     fontFamily: focused
                       ? FontFamily.RobotoBold
                       : FontFamily.RobotoMedium,
                   }}
+                  numberOfLines={1}
                 >
                   Acceuil
                 </Text>
@@ -267,7 +268,7 @@ export function HomeRoot() {
                         flex: 1,
                         width: Platform.select({
                           ios: "100%",
-                          android: "120%",
+                          android: "auto",
                           web: 110,
                         }),
                         height: Platform.select({
@@ -287,7 +288,7 @@ export function HomeRoot() {
                 }
               >
                 {/* <Entypo
-                  name="form"
+                  name="form" 
                   size={24}
                   color={focused ? "#0081C7" : "#111"}
                 /> */}
@@ -316,13 +317,15 @@ export function HomeRoot() {
                 />
 
                 <Text
+                  className="  text-2xl  "
                   style={{
-                    fontSize: screenWidth * 0.045,
+                    fontSize: screenWidth * 0.042,
                     color: focused ? "#0081C7" : "#9A999F",
                     fontFamily: focused
                       ? FontFamily.RobotoBold
                       : FontFamily.RobotoMedium,
                   }}
+                  numberOfLines={1}
                 >
                   Reservations
                 </Text>
@@ -381,12 +384,13 @@ export function HomeRoot() {
                 />
                 <Text
                   style={{
-                    fontSize: screenWidth * 0.045,
+                    fontSize: screenWidth * 0.042,
                     color: focused ? "#0081C7" : "#9A999F",
                     fontFamily: focused
                       ? FontFamily.RobotoBold
                       : FontFamily.RobotoMedium,
                   }}
+                  numberOfLines={1}
                 >
                   Agenda
                 </Text>
@@ -446,12 +450,13 @@ export function HomeRoot() {
                 />
                 <Text
                   style={{
-                    fontSize: screenWidth * 0.045,
+                    fontSize: screenWidth * 0.042,
                     color: focused ? "#0081C7" : "#9A999F",
                     fontFamily: focused
                       ? FontFamily.RobotoBold
                       : FontFamily.RobotoMedium,
                   }}
+                  numberOfLines={1}
                 >
                   Profil
                 </Text>

@@ -1,13 +1,14 @@
-import { ReservationSreen } from "./Reservation/Reservation";
+import { ReservationSreen } from "./Reservation/ReservationScreen";
 import { AgendaSreen } from "./Agenda/Agenda";
 import { AcceuilSreen } from "./Acceuil/Acceuil";
 import { SettingSreen } from "./Plus/Plus";
 import { SignupSreen } from "./Auth/signup";
 import { LoginScreen } from "./Auth/login";
-import { TrajetsScreen } from "./Reservation/Trajet";
-import { AgenceScreen } from "./Reservation/Agences";
+import { TrajetsScreen } from "./Reservation/TrajetScreen";
+import { AgenceScreen } from "./Reservation/AgencesScreen";
 import { EffectuerReservationScreen } from "./Reservation/EffectuerReservation";
 import { PaimentScreen } from "./paiement";
+import {VoyagesDisponible} from "./Reservation/VoyagesDispolible"
 export {
   ReservationSreen,
   AgendaSreen,
@@ -19,4 +20,5 @@ export {
   LoginScreen,
   EffectuerReservationScreen,
   PaimentScreen,
+  VoyagesDisponible,
 };

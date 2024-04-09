@@ -87,9 +87,9 @@ const styles = StyleSheet.create({
     // width: "90%",
     // // color: Couleur.Black9,
     // height: 45,
-    // // justifyContent: "center",
-    // // alignItems: "center",
-    // backgroundColor: Couleur.White,
+   justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Couleur.White,
   },
 });
 

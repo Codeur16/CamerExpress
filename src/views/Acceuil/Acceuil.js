@@ -18,9 +18,9 @@ import Couleur from "../../utils/color";
 import Carte from "../../assets/carte1.png";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
+import LoadingScreen from "../loading/loadingScreen";
 import { Width, Height } from "../../utils/DimensionScreen";
-
+import Spinner from "react-native-loading-spinner-overlay";
 console.log("Largeur de l'écran : ", Width);
 console.log("Hauteur de l'écran : ", Height);
 
@@ -31,11 +31,33 @@ export function AcceuilSreen() {
     setDate(date);
     console.log(date);
   };
+  // ====================Loading====================
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleButtonClick = () => {
+    setIsLoading(true);
+
+    // Ici, vous pouvez mettre votre logique de chargement
+    // Par exemple, une requête réseau ou un traitement asynchrone.
+
+    // setTimeout(() => {
+    //   setIsLoading(false);
+    // }, 3000); // Simuler une opération asynchrone pendant 3 secondes
+  };
 
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: "#fff", paddingTop: -Height * 0.04 }}
     >
+      <Spinner
+        visible={isLoading}
+        textContent={"Chargement en cours..."}
+        textStyle={styles.spinnerTextStyle}
+        size={80}
+        indicatorStyle={"#fff"}
+        color="#fff"
+        overlayColor="rgba(0,0,0,0.6)"
+      />
       <View style={styles.container}>
         {/* <View className=" flex    flex-col w-full h-64 bg-white content-center justify-center items-center "> */}
         <View
@@ -65,10 +87,15 @@ export function AcceuilSreen() {
           className="bg-white"
           nestedScrollEnabled={true}
           showsVerticalScrollIndicator={true}
-          contentContainerStyle={{ height: "auto" }}
+          contentContainerStyle={{
+            height: "auto",
+            width: Width,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
         >
-          <ReservationForm />
-          <View
+          <ReservationForm onClick={setIsLoading} />
+          {/* <View
             style={{
               alignItems: "center",
               justifyContent: "center",
@@ -83,22 +110,23 @@ export function AcceuilSreen() {
                 // marginTop: -80,
               }}
             ></View>
-          </View>
+          </View> */}
 
           <Pressable
-            className="flex-1 flex-grow items-center content-start"
+            className="flex-1 flex-grow items-center content-start border-t-2 border-t-Black2 w-full"
             onPress={() => {
               navigation.navigate("Agences");
             }}
           >
             <Text
-              className="pt-2 pb-2 m-1"
+              className="pt-2 pb-2 m-1 text-xl"
               style={{
-                fontSize: Width * 0.055,
+                // fontSize: Width * 0.045,
                 color: Couleur.Limeblue8,
                 fontFamily: FontFamily.Poppins,
                 textAlign: "center",
               }}
+              numberOfLines={1}
             >
               Decouvrez nos Agences et leurs sites
             </Text>
@@ -138,5 +166,8 @@ const styles = StyleSheet.create({
     color: "rgba(0, 0, 0, 0.2)",
     fontFamily: FontFamily.RobotoMedium,
     fontSize: 30,
+  },
+  spinnerTextStyle: {
+    color: "#FFF",
   },
 });
