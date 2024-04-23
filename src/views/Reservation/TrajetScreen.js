@@ -302,6 +302,10 @@ const TrajetsScreen = () => {
   // Inside your component
   const route = useRoute();
   const [trajets, setTrajets] = useState(route.params.trajet);
+  const [prixReservation, setPrixReservation] = useState(0);
+  useEffect(() => {
+    setPrixReservation(route.params.prixReservation);
+  });
   const handleNextStep = () => {
     setCurrentStep((prevStep) => prevStep + 1);
   };
@@ -309,7 +313,7 @@ const TrajetsScreen = () => {
     setCurrentStep((prevStep) => prevStep - 1);
   };
   const [totalMontant, settotalMontant] = useState(0);
-  console.log("totalMontant = " + totalMontant);
+  console.log("totalMontant = " + route.params.prixReservation);
   const [currentStep, setCurrentStep] = useState(0);
   return (
     <View
@@ -375,6 +379,7 @@ const TrajetsScreen = () => {
             NextStep={handleNextStep}
             prevStep={handlePrevStep}
             onTotalChange={settotalMontant}
+            prixReservation={prixReservation}
           />
         </ProgressStep>
         <ProgressStep

@@ -9,6 +9,7 @@ import {
   Pressable,
   Alert,
   Image,
+  Button,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FontFamily } from "../../../GlobalStyles";
@@ -27,13 +28,14 @@ import {
   FontAwesome6,
   FontAwesome5,
 } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 import { TouchButton } from "../../components/TouchableButton";
 import * as ImagePicker from "expo-image-picker";
 import ButtomSheet from "../../components/BottomSheetForPaiement";
 import carte from "../../assets/carte3.png";
 import momo from "../../assets/momo1.png";
 import om from "../../assets/om1.png";
-
+import Dialog from "react-native-dialog";
 export const EffectuerReservationScreen = ({
   Trajets,
   index,
@@ -43,6 +45,7 @@ export const EffectuerReservationScreen = ({
   NextStep,
   prevStep,
   onTotalChange,
+  prixReservation,
 }) => {
   const bottomSheetRef = useRef();
 
@@ -88,7 +91,9 @@ export const EffectuerReservationScreen = ({
   const navigation = useNavigation();
   const [name, setName] = useState("Nom");
   const [showNext, setShowNext] = useState(false);
-  const [passager, setPassager] = useState(1);
+  const [passager, setPassager] = useState(0);
+
+  // ================== number to string ==================
   function convertNumberToWords(number) {
     const units = [
       "",
@@ -180,62 +185,150 @@ export const EffectuerReservationScreen = ({
     // Retirer l'écouteur d'événement lorsque le composant est démonté
     return () => backHandler.remove();
   }, [navigation]);
-  useEffect(() => {
-    setTotal(Trajets?.prixReservation * passager);
-    onTotalChange(Trajets?.prixReservation * passager);
-  }, [passager]);
+  // useEffect(() => {
+  //   setTotal(prixReservation * passager);
+  //   onTotalChange(Trajets?.prixReservation * passager);
+  // }, [passager]);
   const [disabled, setDisabled] = useState(true);
   const [total, setTotal] = useState(0);
-  useEffect(() => {
-    if (Trajets) {
-      setTotal(Trajets.prixReservation * passager);
-    }
-  });
+
   const [modePaiement, setModePaiement] = useState([
     { id: "OM", value: "Orange Money", image: om },
     { id: "MOMO", value: "Mobile Money", image: momo },
     { id: "CARTE", value: "Carte bancaire", image: carte },
   ]);
+  const AjouterUser = () => {};
+  //========================== Passenger Management ========================
 
-  //==========================ORC========================
+  const [passagerName, setPassagerName] = useState([]);
+  const ajouterPassager = (name) => {
+    setPassagerName([...passagerName, name]);
+  };
+  useEffect(() => {
+    setTotal(prixReservation * passagerName.length);
+    console.log("Total" + total);
+  }, [passagerName]);
+  //fonction pour convertir un tableau en chaine de caractere
+  const convertArrayToString = (array) => {
+    let string = "";
+    array.forEach((element) => {
+      string += element + ",";
+    });
+    return string;
+  };
+  // console.log("liste des passager:" + convertArrayToString(passagerName));
+  // Fonction pour retirer un passager
+  const supprimerPassagerParIndex = (index) => {
+    const newPassagerList = passagerName.filter((_, i) => i !== index);
+    setPassagerName(newPassagerList);
+  };
 
-  // return (
-  //   <SafeAreaView>
-  //     {!showNext && (
-  //       <ScrollView
-  //         adjustsScrollViewInsets={false}
-  //         contentContainerStyle={styles.container}
-  //       >
-  //         {/* Ajoutez le contenu supplémentaire de votre écran ici */}
+  const [currentPassager, setCurrentPassager] = useState("");
+  const [DialogNewPassager, setDialogNewPassager] = useState(false);
 
-  //         <View
-  //           style={{
-  //             width: Width * 0.95,
-  //             height: Height / 6,
-  //             alignItems: "center",
-  //             justifyContent: "flex-start",
-  //             flexDirection: "column",
-  //             borderWidth: 1,
-  //             borderRadius: 8,
-  //             borderColor: Couleur.Black3,
-  //             shadowOpacity: 0.4,
-  //             shadowColor: Couleur.Black4,
-  //             backgroundColor: "#fff",
-  //           }}
-  //         >
-  //           <View className="w-full h-auto flex flex-row items-center border-b-0.5 p-1.5">
-  //             {modePaiement.map((item) => (
-  //               <View key={item.id}>
-  //                 <Text>{item.value}</Text>
-  //                 <Image source={item.image} />
-  //               </View>
-  //             ))}
-  //           </View>
-  //         </View>
-  //       </ScrollView>
-  //     )}
-  //   </SafeAreaView>
-  // );
+  //===================================================================================
+  //                                        dialog box
+  //===================================================================================
+
+  const [visible, setVisible] = useState(false);
+
+  const showDialog = () => {
+    setVisible(true);
+  };
+
+  const handleCancel = () => {
+    setVisible(false);
+  };
+
+  const handleDelete = () => {
+    // The user has pressed the "Delete" button, so here you can do your own logic.
+    // ...Your logic
+    setVisible(false);
+  };
+
+  const dialogBox = (
+    <View style={styles.container}>
+      {/* <Button title="Show dialog" onPress={showDialog} /> */}
+      <Dialog.Container visible={visible}>
+        <Dialog.Title>Ajouter un passager </Dialog.Title>
+        {/* <Dialog.Description>
+          Do you want to delete this account? You cannot undo this action.
+        </Dialog.Description> */}
+        <View
+          className="flex justify-center items-center p-4 "
+          style={{
+            // height: Height * 0.25,
+            height: "auto",
+            width: "100%",
+            // borderBottomEndRadius: 30,
+          }}
+        >
+          <TextInput
+            mode="outlined"
+            label="nom"
+            placeholder="Votre Nom"
+            value={currentPassager}
+            onChangeText={setCurrentPassager}
+            style={{
+              width: "100%",
+              height: Height / 14,
+              marginHorizontal: "2%",
+            }}
+            theme={{
+              colors: {
+                primary: Couleur.Limeblue9,
+              },
+            }}
+            // right={<TextInput.Affix text="/100" />}
+          />
+          {/* <View className="flex flex-row">
+            <Pressable
+              onPress={() => {
+                setDialogNewPassager(false);
+              }}
+              className="  bg-red-600  w-4/6 h-1/4 justify-center items-center text-white color-white  rounded-3xl "
+            >
+              <Text
+                className="text-white"
+                style={{
+                  fontFamily: FontFamily.RobotoBold,
+                  fontSize: Width * 0.05,
+                }}
+              >
+                Annuler
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                ajouterPassager(currentName);
+                setDialogNewPassager(false);
+              }}
+              className="  bg-red-600  w-4/6 h-1/4 justify-center items-center text-white color-white  rounded-3xl "
+            >
+              <Text
+                className="text-white"
+                style={{
+                  fontFamily: FontFamily.RobotoBold,
+                  fontSize: Width * 0.05,
+                }}
+              >
+                Ajouter
+              </Text>
+            </Pressable>
+          </View> */}
+        </View>
+        <Dialog.Button label="Annuler" onPress={handleCancel} />
+        <Dialog.Button
+          label="Ajouter"
+          onPress={() => {
+            handleDelete();
+            ajouterPassager(currentPassager);
+          }}
+        />
+      </Dialog.Container>
+    </View>
+  );
+
   return (
     <SafeAreaView>
       {!showNext && (
@@ -247,7 +340,7 @@ export const EffectuerReservationScreen = ({
           <View
             style={{
               width: Width * 0.95,
-              height: Height / 6,
+              height: "auto",
               alignItems: "center",
               justifyContent: "flex-start",
               flexDirection: "column",
@@ -274,14 +367,45 @@ export const EffectuerReservationScreen = ({
                 style={{
                   fontFamily: FontFamily.RobotoBold,
                   fontSize: Width * 0.06,
-                  textAlign: "center",
+                  textAlign: "left",
                   paddingLeft: 5,
+                  width: "70%",
                 }}
               >
                 Passagers
               </Text>
+              <Pressable
+                className="flex justify-end items-center w-auto h-auto"
+                onPress={() => {
+                  showDialog();
+                }}
+              >
+                <Ionicons
+                  name="add-circle-sharp"
+                  size={40}
+                  color={Couleur.Limeblue9}
+                />
+              </Pressable>
+              {dialogBox}
             </View>
-            <View className="w-full h-auto flex flex-row items-center">
+            <View className="w-full h-auto flex flex-col items-start">
+              {passagerName.map((name, index) => (
+                <View
+                  key={index}
+                  className=" w-full flex flex-row items-center border-b-0.5 justify-start border-b-Black3"
+                >
+                  <Text className=" w-auto flex m-5 text-lg">{index + 1}</Text>
+                  <Text className=" w-2/3 flex m-5 text-lg ">{name}</Text>
+                  <Pressable onPress={() => supprimerPassagerParIndex(index)}>
+                    <FontAwesome
+                      name="remove"
+                      size={24}
+                      color="red"
+                      className="bg-black"
+                    />
+                  </Pressable>
+                </View>
+              ))}
               {/* <TextInput
                 mode="outlined"
                 label="nom"
@@ -293,7 +417,7 @@ export const EffectuerReservationScreen = ({
                 }}
                 // right={<TextInput.Affix text="/100" />}
               /> */}
-              <TextInput
+              {/* <TextInput
                 className={`  text-l text-black bg-white text-default border-white rounded `}
                 mode="outlined"
                 label="Nom"
@@ -313,8 +437,8 @@ export const EffectuerReservationScreen = ({
                     primary: Couleur.Limeblue9,
                   },
                 }}
-              />
-              <View
+              /> */}
+              {/* <View
                 className="  flex flex-row items-center justify-center rounded border-0.5 mt-1.5 border-Black"
                 style={{ height: Height / 13.5, width: "47%" }}
               >
@@ -342,7 +466,7 @@ export const EffectuerReservationScreen = ({
                     color={Couleur.Limeblue9}
                   />
                 </Pressable>
-              </View>
+              </View> */}
             </View>
           </View>
           <View
@@ -472,7 +596,7 @@ export const EffectuerReservationScreen = ({
                 Plus d'informations
               </Text>
             </View>
-            <View className="w-full h-auto flex  flex-col items-center">
+            {/* <View className="w-full h-auto flex  flex-col items-center">
               <View>
                 <Pressable onPress={pickImage}>
                   <TextInput
@@ -516,7 +640,7 @@ export const EffectuerReservationScreen = ({
                   />
                 </View>
               </View>
-              {/* ====================================Affichages des images==================================== */}
+             
 
               <ScrollView horizontal>
                 {images.map((image, index) => (
@@ -539,21 +663,7 @@ export const EffectuerReservationScreen = ({
                 ))}
               </ScrollView>
 
-              {/* <View>
-                {image && (
-                  <Image
-                    source={{ uri: image }}
-                    style={{
-                      width: Width * 0.85,
-                      height: Height * 0.3,
-                      maxHeight: 200,
-                      resizeMode: "contain",
-                      borderRadius: 10,
-                    }}
-                  />
-                )}
-              </View> */}
-            </View>
+            </View> */}
           </View>
           {/* <View className=" w-full h-auto  justify-center items-center mt-5"> */}
           <View className=" flex flex-row  w-full  justify-between m-5 pl-5 pr-5">
@@ -795,6 +905,78 @@ export const EffectuerReservationScreen = ({
         NextStep={NextStep}
         selectMode={saveMode}
       />
+      {DialogNewPassager && (
+        <Dialog
+          visibleDialogInvalide={DialogNewPassager}
+          title="Nouveau Passager"
+          onTouchOutside={() => {
+            setDialogNewPassager(false);
+          }}
+          overlayStyle={{
+            width: "100%",
+            backgroundColor: Couleur.Black3,
+          }}
+          contentStyle={{ height: "auto" }}
+        >
+          <View
+            className="flex justify-between items-center p-4 "
+            style={{
+              height: Height * 0.25,
+              width: "100%",
+              borderBottomEndRadius: 30,
+            }}
+          >
+            <TextInput
+              mode="outlined"
+              label="nom"
+              placeholder="Votre Nom"
+              value={currentPassager}
+              onChangeText={setCurrentPassager}
+              style={{
+                width: "45%",
+                height: Height / 14,
+                marginHorizontal: "2%",
+              }}
+              // right={<TextInput.Affix text="/100" />}
+            />
+            <View className="flex flex-row">
+              <Pressable
+                onPress={() => {
+                  setDialogNewPassager(false);
+                }}
+                className="  bg-red-600  w-4/6 h-1/4 justify-center items-center text-white color-white  rounded-3xl "
+              >
+                <Text
+                  className="text-white"
+                  style={{
+                    fontFamily: FontFamily.RobotoBold,
+                    fontSize: Width * 0.05,
+                  }}
+                >
+                  Annuler
+                </Text>
+              </Pressable>
+              <Pressable
+                onPress={() => {
+                  ajouterPassager(currentName);
+                  setDialogNewPassager(false);
+                }}
+                className="  bg-red-600  w-4/6 h-1/4 justify-center items-center text-white color-white  rounded-3xl "
+              >
+                <Text
+                  className="text-white"
+                  style={{
+                    fontFamily: FontFamily.RobotoBold,
+                    fontSize: Width * 0.05,
+                  }}
+                >
+                  Ajouter
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </Dialog>
+      )}
     </SafeAreaView>
   );
 };

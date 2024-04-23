@@ -157,7 +157,7 @@ export function ReservationForm({ onClick }) {
   useEffect(() => {
     const GetSite = async () => {
       try {
-        const reponse = await axios.get(url + "/api/site", {
+        const reponse = await axios.get(url + "/api/site/get", {
           params: { ville: SelectedVilleDepart },
         });
         console.log("Sites de AGENCES: " + JSON.stringify(reponse.data));
@@ -171,7 +171,7 @@ export function ReservationForm({ onClick }) {
 
     const GetVille = async () => {
       try {
-        const reponse = await axios.get(url + "/api/ville");
+        const reponse = await axios.get(url + "/api/ville/get");
         // console.log(reponse.data);
         // console.log(reponse.data.message);
         setVilleDepart(reponse.data);
@@ -218,7 +218,7 @@ export function ReservationForm({ onClick }) {
       };
       console.log(data);
       axios
-        .get(url + "/api/voyage", {
+        .get(url + "/api/voyage/get", {
           params: {
             de: SelectedVilleDepart,
             vers: SelectedVilleArrive,
