@@ -29,9 +29,7 @@ import { FontFamily } from "../../GlobalStyles";
 import Svg, { Ellipse, Path, Line, Circle } from "react-native-svg";
 import { TouchButton } from "./TouchableButton";
 import { useNavigation } from "@react-navigation/core";
-import carte from "../assets/carte3.png";
-import momo from "../assets/momo1.png";
-import om from "../assets/om1.png";
+
 
 export default function ButtomSheet({
   BottomSheetRef,
@@ -53,7 +51,7 @@ export default function ButtomSheet({
   const [mode, setMode] = useState("");
   const selected = (indexMode, mode) => {
     setIndex(indexMode);
-    setMode(mode);
+    setMode(mode);   
   };
   return (
     <BottomSheet

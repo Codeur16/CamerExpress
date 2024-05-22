@@ -43,6 +43,63 @@ export default function ActionSheet({
   //   const bottomSheetRef = useRef();
   const navigation = useNavigation();
 
+  function calculateArrivalTime() {
+    const heureDepart = trajet.dateArriver;
+    const duree = trajet.itineraire.duree;
+    getFormattedTime(heureDepart);
+    // const { dateDepart, duree } = itineraire;
+    // const departureTime = new Date(dateDepart);
+    // const arrivalTime = new Date(
+    //   departureTime.getTime() + duree * 60 * 60 * 1000
+    // ); // Ajoute la durée en millisecondes
+    // const hours = arrivalTime.getHours().toString().padStart(2, "0");
+    // const minutes = arrivalTime.getMinutes().toString().padStart(2, "0");
+    // return `${hours}:${minutes}`;
+  }
+
+  const arrivalTime = calculateArrivalTime(trajet);
+  console.log("ArrivalTime" + arrivalTime);
+  const prixReservation = (trajet) => {
+    if (trajet.bus.classe == "VIP") {
+      return trajet.itineraire.prixVip;
+    }
+    if (trajet.bus.classe == "CLASSIQUE") {
+      return trajet.itineraire.prixClassique;
+    }
+  };
+
+  function convertDurationToTime(duration) {
+    const hours = Math.floor(duration); // Obtient le nombre d'heures entières
+    const minutes = Math.round((duration % 1) * 60); // Convertit la partie décimale en minutes
+
+    // Formate les heures et les minutes
+    const formattedHours = hours.toString().padStart(2, "0");
+    const formattedMinutes = minutes.toString().padStart(2, "0");
+
+    return `${formattedHours}:${formattedMinutes}`;
+  }
+
+  function addTime(time1, time2) {
+    const [hours1, minutes1] = time1.split(":").map(Number);
+    const [hours2, minutes2] = time2.split(":").map(Number);
+
+    let totalMinutes = (hours1 + hours2) * 60 + (minutes1 + minutes2);
+
+    // Si le total des minutes dépasse 23h59min, recommencer à 00h00min (24h00min)
+    if (totalMinutes >= 24 * 60) {
+      totalMinutes -= 24 * 60;
+    }
+
+    const hours = Math.floor(totalMinutes / 60)
+      .toString()
+      .padStart(2, "0");
+    const minutes = (totalMinutes % 60).toString().padStart(2, "0");
+
+    return `${hours}:${minutes}`;
+  }
+
+  const dureeFormatted = convertDurationToTime(trajet.itineraire.duree);
+  console.log("datearrive:" + dureeFormatted);
   const [press, setPress] = useState(false);
   return (
     <BottomSheet
@@ -104,11 +161,8 @@ export default function ActionSheet({
               width: "90%",
             }}
           >
-            Durée:{" "}
-            {subtractTime(
-              getFormattedTime(trajet?.dateArriver),
-              getFormattedTime(trajet?.dateDepart)
-            )}
+            Durée: {"\t"}
+            {trajet.itineraire.duree}h : 00min
           </Text>
         </View>
       </View>
@@ -139,14 +193,11 @@ export default function ActionSheet({
                   fontSize: Width * 0.039,
                 }}
               >
-                {subtractTime(
-                  getFormattedTime(trajet?.dateArriver),
-                  getFormattedTime(trajet?.dateDepart)
-                )}
+                {dureeFormatted}
               </Text>
               <Text style={styles.text}>
                 {" "}
-                {getFormattedTime(trajet?.dateArriver)}
+                {addTime(getFormattedTime(trajet?.dateDepart), dureeFormatted)}
               </Text>
             </View>
             <View className="h-full w-1/4 flex-col items-center justify-center">
@@ -320,13 +371,13 @@ export default function ActionSheet({
               }}
               className="text-center"
             >
-              {trajet?.prixReservation} XAF
+              {prixReservation(trajet)} XAF
             </Text>
           </View>
         </View>
         <View className=" w-full items-center justify-center mb-5 ">
           <TouchButton
-            title="Selectionner ce trajet?"
+            title="Reserver ce voyage"
             onPress={() => {
               NextStep();
             }}

@@ -23,6 +23,62 @@ import { Width, Height } from "../../utils/DimensionScreen";
 import { TouchButton } from "../../components/TouchableButton";
 import url from "../../utils/url";
 
+const initialData = [
+  {
+    id: 2,
+    itineraire: {
+      id: 23,
+      site: {
+        id: 1,
+        agence: {
+          id: 3,
+          nom: "General",
+        },
+        ville: {
+          id: 6,
+          nom: "Yaounde",
+        },
+        quartier: "Mvan",
+        prixAnnulation: 1000,
+      },
+      villeDepart: {
+        id: 6,
+        nom: "Yaounde",
+      },
+      villeDestination: {
+        id: 4,
+        nom: "Baffoussam",
+      },
+      duree: 7,
+      prixClassique: 5000,
+      prixVip: 8000,
+      createdAt: "2024-04-09T15:47:54",
+    },
+    bus: {
+      id: 2,
+      site: {
+        id: 2,
+        agence: {
+          id: 1,
+          nom: "Fitnexs",
+        },
+        ville: {
+          id: 6,
+          nom: "Yaounde",
+        },
+        quartier: "Mvan",
+        prixAnnulation: 1000,
+      },
+      capacite: 70,
+      code: "B2",
+      classe: "CLASSIQUE",
+    },
+    code: "N10rX",
+    dateDepart: "2024-12-04T15:40:10",
+  },
+  // Ajoutez les autres objets ici
+];
+
 //=============================================
 //         Ecran
 //=============================================
@@ -53,62 +109,7 @@ export function ReservationForm({ onClick }) {
     { id: "Douala", nom: "Douala" },
   ]);
   // Parametre de requette
-  const [Trajets, setTrajets] = useState([
-    {
-      id: 1,
-      itineraire: {
-        id: 1,
-        site: {
-          id: 1,
-          agence: {
-            id: 3,
-            nom: "General",
-          },
-          ville: {
-            id: 6,
-            nom: "Yaounde",
-          },
-          quartier: "Mvan",
-          prixReservationSimple: 4000,
-          prixReservationVip: 7000,
-          prixAnnulation: 1000,
-        },
-        villeDepart: {
-          id: 6,
-          nom: "Yaounde",
-        },
-        villeDestination: {
-          id: 1,
-          nom: "Douala",
-        },
-      },
-      bus: {
-        id: 1,
-        site: {
-          id: 1,
-          agence: {
-            id: 3,
-            nom: "General",
-          },
-          ville: {
-            id: 6,
-            nom: "Yaounde",
-          },
-          quartier: "Mvan",
-          prixReservationSimple: 4000,
-          prixReservationVip: 7000,
-          prixAnnulation: 1000,
-        },
-        capacite: 70,
-        code: "B1",
-      },
-      classe: "SIMPLE",
-      code: "V001",
-      prixReservation: 4000,
-      dateDepart: "2024-12-04T15:40:10",
-      dateArriver: "2024-12-04T23:30:00",
-    },
-  ]);
+  const [Trajets, setTrajets] = useState(initialData);
 
   //================================================================
 
@@ -172,8 +173,6 @@ export function ReservationForm({ onClick }) {
     const GetVille = async () => {
       try {
         const reponse = await axios.get(url + "/api/ville/get");
-        // console.log(reponse.data);
-        // console.log(reponse.data.message);
         setVilleDepart(reponse.data);
         console.log("Selected ville depart: " + SelectedVilleDepart);
         console.log("Villes departs:" + JSON.stringify(VilleDepart));
@@ -226,6 +225,7 @@ export function ReservationForm({ onClick }) {
             classe: selectedClasse,
             date: selectedDate,
           },
+          timeout: 5, // Timeout en millisecondes (ici 5000 pour 5 secondes)
         })
         .then((res) => {
           console.log(
@@ -235,16 +235,17 @@ export function ReservationForm({ onClick }) {
           console.log(
             "\n\t\t=======================================================================================\n"
           );
+          const currentTrajets = res.data.data;
           setTrajets(res.data.data);
 
-          navigation.navigate("Voyages", { trajets: Trajets });
+          navigation.navigate("Voyages", { trajets: currentTrajets });
           onClick(false);
         })
         .catch((err) => {
           console.error("Erreur ! \n veillez reessayer");
           console.error(err);
           navigation.navigate("Voyages", { trajets: Trajets });
-          onClick();
+          onClick(false);
           console.log(typeof Trajets);
         });
     }
@@ -291,14 +292,17 @@ export function ReservationForm({ onClick }) {
           }}
         >
           {/* =======================Villes============================ */}
-          <View className=" flex  flex-row  justify-between">
+          <View
+            className="  flex  flex-row  justify-between"
+            style={{ width: Width * 0.9 }}
+          >
             <View
-              className="flex-col"
+              className="flex-col w-1/2"
               style={{
-                alignItems: "center",
+                alignItems: "flex-start",
                 justifyContent: "center",
                 alignContent: "center",
-                width: "49.2%",
+                // width: "49.2%",
               }}
             >
               <View className="flex-1 ">
@@ -311,23 +315,24 @@ export function ReservationForm({ onClick }) {
                     fontFamily: FontFamily.RobotoMedium,
                   }}
                 >
-                  De:
+                  De <Text className="color-red-500">*</Text>
                 </Text>
                 <Dropdown
                   data={VilleDepart}
                   onChange={setSelectedVilleDepart}
                   placeholder="Ville Depart"
+                  width={Width * 0.42}
                 />
               </View>
             </View>
 
             <View
-              className="  flex-col"
+              className="  flex-col w-1/2"
               style={{
-                alignItems: "center",
+                alignItems: "flex-end",
                 justifyContent: "center",
                 alignContent: "center",
-                width: "49.2%",
+                // width: "49.2%",
               }}
             >
               <View className="flex-1">
@@ -340,12 +345,13 @@ export function ReservationForm({ onClick }) {
                     fontFamily: FontFamily.RobotoMedium,
                   }}
                 >
-                  Vers:
+                  Vers <Text className="color-red-500">*</Text>
                 </Text>
                 <Dropdown
                   data={VilleDepart}
                   onChange={setSelectedVilleArrive}
                   placeholder="Ville Arrive"
+                  width={Width * 0.42}
                 />
               </View>
             </View>
@@ -364,7 +370,18 @@ export function ReservationForm({ onClick }) {
                 fontFamily: FontFamily.RobotoMedium,
               }}
             >
-              Agence:
+              Agence{" "}
+              <Text
+                className=" color-Black4"
+                style={{
+                  fontSize: 14,
+
+                  color: Couleur.Black5,
+                  fontFamily: FontFamily.RobotoThin,
+                }}
+              >
+                {`\t(`}optionel{`)`}
+              </Text>
             </Text>
             <Dropdown
               data={SiteDepart}
@@ -391,7 +408,18 @@ export function ReservationForm({ onClick }) {
                   fontFamily: FontFamily.RobotoMedium,
                 }}
               >
-                Date de depart:
+                Date de depart
+                <Text
+                  className=" color-Black4"
+                  style={{
+                    fontSize: 14,
+
+                    color: Couleur.Black5,
+                    fontFamily: FontFamily.RobotoThin,
+                  }}
+                >
+                  {`\t(`}optionel{`)`}
+                </Text>
               </Text>
               <View className="my-1 w-full">
                 {/* <MyDatePicker
@@ -418,8 +446,9 @@ export function ReservationForm({ onClick }) {
                       alignItems: "center",
                       display: "flex",
                       borderStyle: "solid",
-                      borderWidth: 1,
-                      borderColor: Couleur.Black4,
+                      borderWidth: 0.5,
+                      borderColor: Couleur.Black1,
+                      elevation: 1,
                       paddingLeft: 10,
                     }}
                   >
@@ -465,7 +494,18 @@ export function ReservationForm({ onClick }) {
                 textAlign: "left",
               }}
             >
-              Classe:
+              Classe{" "}
+              <Text
+                className=" color-Black4"
+                style={{
+                  fontSize: 14,
+
+                  color: Couleur.Black5,
+                  fontFamily: FontFamily.RobotoThin,
+                }}
+              >
+                {`\t(`}optionel{`)`}
+              </Text>
             </Text>
             <Dropdown
               data={classeVoyage}
@@ -482,10 +522,12 @@ export function ReservationForm({ onClick }) {
             alignItems: "center",
             justifyContent: "center",
             alignContent: "center",
+            width: Width * 1,
           }}
-          className=" my-3"
+          className="  my-3"
         >
           <TouchButton
+            // width={Width * 0.9}
             title="Recherche"
             onPress={() => {
               console.log("Press");

@@ -10,6 +10,7 @@ import {
   Alert,
   Image,
   Button,
+  ToastAndroid,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FontFamily } from "../../../GlobalStyles";
@@ -32,10 +33,8 @@ import { FontAwesome } from "@expo/vector-icons";
 import { TouchButton } from "../../components/TouchableButton";
 import * as ImagePicker from "expo-image-picker";
 import ButtomSheet from "../../components/BottomSheetForPaiement";
-import carte from "../../assets/carte3.png";
-import momo from "../../assets/momo1.png";
-import om from "../../assets/om1.png";
 import Dialog from "react-native-dialog";
+
 export const EffectuerReservationScreen = ({
   Trajets,
   index,
@@ -46,6 +45,11 @@ export const EffectuerReservationScreen = ({
   prevStep,
   onTotalChange,
   prixReservation,
+  setNombrePassager,
+  setListePassager,
+  setModePaiement,
+  setMontantTotal,
+  modePaiement,
 }) => {
   const bottomSheetRef = useRef();
 
@@ -73,7 +77,8 @@ export const EffectuerReservationScreen = ({
 
   //================save paiement==============================
   const saveMode = (mode) => {
-    AsyncStorage.setItem("modePaiement", mode);
+    setModePaiement(mode);
+    return mode;
   };
   useEffect(() => {
     (async () => {
@@ -192,21 +197,22 @@ export const EffectuerReservationScreen = ({
   const [disabled, setDisabled] = useState(true);
   const [total, setTotal] = useState(0);
 
-  const [modePaiement, setModePaiement] = useState([
-    { id: "OM", value: "Orange Money", image: om },
-    { id: "MOMO", value: "Mobile Money", image: momo },
-    { id: "CARTE", value: "Carte bancaire", image: carte },
-  ]);
   const AjouterUser = () => {};
   //========================== Passenger Management ========================
 
   const [passagerName, setPassagerName] = useState([]);
   const ajouterPassager = (name) => {
     setPassagerName([...passagerName, name]);
+    setName("");
   };
   useEffect(() => {
     setTotal(prixReservation * passagerName.length);
+    setMontantTotal(prixReservation * passagerName.length);
     console.log("Total" + total);
+  }, [passagerName]);
+  useEffect(() => {
+    setListePassager(JSON.stringify(passagerName));
+    setNombrePassager(passagerName.length);
   }, [passagerName]);
   //fonction pour convertir un tableau en chaine de caractere
   const convertArrayToString = (array) => {
@@ -225,6 +231,40 @@ export const EffectuerReservationScreen = ({
 
   const [currentPassager, setCurrentPassager] = useState("");
   const [DialogNewPassager, setDialogNewPassager] = useState(false);
+
+  //================================================== convert duree ==================================================
+  function convertDurationToTime(duration) {
+    const hours = Math.floor(duration); // Obtient le nombre d'heures entières
+    const minutes = Math.round((duration % 1) * 60); // Convertit la partie décimale en minutes
+
+    // Formate les heures et les minutes
+    const formattedHours = hours.toString().padStart(2, "0");
+    const formattedMinutes = minutes.toString().padStart(2, "0");
+
+    return `${formattedHours}:${formattedMinutes}`;
+  }
+
+  //==================================================AddTime==================================================
+
+  function addTime(time1, time2) {
+    const [hours1, minutes1] = time1.split(":").map(Number);
+    const [hours2, minutes2] = time2.split(":").map(Number);
+
+    let totalMinutes = (hours1 + hours2) * 60 + (minutes1 + minutes2);
+
+    // Si le total des minutes dépasse 23h59min, recommencer à 00h00min (24h00min)
+    if (totalMinutes >= 24 * 60) {
+      totalMinutes -= 24 * 60;
+    }
+
+    const hours = Math.floor(totalMinutes / 60)
+      .toString()
+      .padStart(2, "0");
+    const minutes = (totalMinutes % 60).toString().padStart(2, "0");
+
+    return `${hours}:${minutes}`;
+  }
+  //==============================================================================================================
 
   //===================================================================================
   //                                        dialog box
@@ -323,6 +363,7 @@ export const EffectuerReservationScreen = ({
           onPress={() => {
             handleDelete();
             ajouterPassager(currentPassager);
+            setCurrentPassager("");
           }}
         />
       </Dialog.Container>
@@ -352,12 +393,13 @@ export const EffectuerReservationScreen = ({
               backgroundColor: "#fff",
             }}
           >
-            <View className="w-full h-auto flex flex-row items-center border-b-0.5 p-1.5">
-              <View className=" w-7 h-7 rounded bg-Limeblue8 m-1 p-1 items-center justify-center">
+            <View className="w-full h-auto flex flex-row items-center  p-1.5">
+              <View className=" w-7 h-7 rounded bg-Limeblue8 m-1 items-center justify-center">
                 <Text
                   style={{
                     fontFamily: FontFamily.RobotoBold,
                     fontSize: Width * 0.05,
+                    height: "auto",
                   }}
                 >
                   1
@@ -392,7 +434,13 @@ export const EffectuerReservationScreen = ({
               {passagerName.map((name, index) => (
                 <View
                   key={index}
-                  className=" w-full flex flex-row items-center border-b-0.5 justify-start border-b-Black3"
+                  className=" w-full flex flex-row items-center justify-start "
+                  style={{
+                    flex: 1,
+                    borderBottomColor: "solid",
+                    borderColor: Couleur.Black2,
+                    borderTopWidth: 1,
+                  }}
                 >
                   <Text className=" w-auto flex m-5 text-lg">{index + 1}</Text>
                   <Text className=" w-2/3 flex m-5 text-lg ">{name}</Text>
@@ -486,7 +534,7 @@ export const EffectuerReservationScreen = ({
             }}
           >
             <View className="w-full h-auto flex flex-row items-center border-b-0.5 p-1.5">
-              <View className=" w-7 h-7 rounded bg-Limeblue8 m-1 p-1 items-center justify-center">
+              <View className=" w-7 h-7 rounded bg-Limeblue8 m-1 items-center justify-center">
                 <Text
                   style={{
                     fontFamily: FontFamily.RobotoBold,
@@ -575,7 +623,7 @@ export const EffectuerReservationScreen = ({
             }}
           >
             <View className="w-full  h-auto flex flex-row items-center border-b-0.5 p-1.5">
-              <View className=" w-7 h-7 rounded bg-Limeblue8 m-1 p-1 items-center justify-center">
+              <View className=" w-7 h-7 rounded bg-Limeblue8 m-1  items-center justify-center">
                 <Text
                   style={{
                     fontFamily: FontFamily.RobotoBold,
@@ -673,7 +721,14 @@ export const EffectuerReservationScreen = ({
           <TouchButton
             title="Continuer"
             onPress={() => {
-              setShowNext(true);
+              if (passagerName.length > 0) {
+                setShowNext(true);
+              } else {
+                return ToastAndroid.show(
+                  "Ajoutez au moins 1 passager !!!",
+                  ToastAndroid.SHORT
+                );
+              }
             }}
           />
           <View className="h-3"></View>
@@ -750,7 +805,7 @@ export const EffectuerReservationScreen = ({
                       color: Couleur.Black7,
                     }}
                   >
-                    De
+                    De {"\t"}
                     <Text style={{ fontFamily: FontFamily.RobotoBold }}>
                       {Trajets?.itineraire.villeDepart.nom} {`\t`}
                     </Text>
@@ -759,7 +814,7 @@ export const EffectuerReservationScreen = ({
                       size={17}
                       color={Couleur.Black7}
                     />
-                    {`\t`} vers
+                    {`\t`} vers {"\t"}
                     <Text style={{ fontFamily: FontFamily.RobotoBold }}>
                       {Trajets?.itineraire.villeDestination.nom}
                     </Text>
@@ -789,8 +844,17 @@ export const EffectuerReservationScreen = ({
                       color: Couleur.Black7,
                     }}
                   >
-                    vous souhaitez quitter la ville de Yaounde pour le 16
-                    janvier 2024
+                    vous souhaitez quitter la ville de Yaounde pour le{" "}
+                    <Text
+                      className="h-1/2"
+                      style={{
+                        fontFamily: FontFamily.RobotoBold,
+                        fontSize: Width * 0.037,
+                        color: Couleur.Black7,
+                      }}
+                    >
+                      {getFormattedDate(Trajets.dateDepart)}
+                    </Text>
                   </Text>
                 </View>
               </View>
@@ -804,7 +868,7 @@ export const EffectuerReservationScreen = ({
                 </View>
                 <View className="w-4/5 h-5/5 justify-center items-start pt-3">
                   <Text
-                    className="  h-1/2"
+                    className="  h-auto"
                     style={{
                       fontFamily: FontFamily.RobotoBold,
                       fontSize: Width * 0.05,
@@ -814,24 +878,27 @@ export const EffectuerReservationScreen = ({
                     Horaire
                   </Text>
                   <Text
-                    className="h-1/2"
+                    className="h-auto"
                     style={{
                       fontFamily: FontFamily.RobotoMedium,
                       fontSize: Width * 0.037,
                       color: Couleur.Black7,
                     }}
                   >
-                    vous souhaitez effectuer votre Voyage de
+                    vous souhaitez effectuer votre Voyage de {`\t`}
                     <Text style={{ fontFamily: FontFamily.RobotoBold }}>
-                      {getFormattedTime(Trajets?.dateDepart)} a
-                      {getFormattedTime(Trajets?.dateArriver)}
-                    </Text>
+                      {getFormattedTime(Trajets?.dateDepart)} {`\t`}à{`\t`}
+                      {addTime(
+                        getFormattedTime(Trajets?.dateDepart),
+                        convertDurationToTime(Trajets.itineraire.duree)
+                      )}
+                    </Text>{" "}
+                    {`\t`}
                     donc une duree de
                     <Text style={{ fontFamily: FontFamily.RobotoBold }}>
-                      {subtractTime(
-                        getFormattedTime(Trajets?.dateArriver),
-                        getFormattedTime(Trajets?.dateDepart)
-                      )}
+                      {" "}
+                      {"\n"}
+                      {Trajets.itineraire.duree} h: 00 min
                     </Text>
                   </Text>
                 </View>
@@ -865,7 +932,9 @@ export const EffectuerReservationScreen = ({
                   >
                     votre Reservation comprends
                     <Text style={{ fontFamily: FontFamily.RobotoBold }}>
-                      {convertNumberToWords(passager)}({passager})
+                      {" "}
+                      {"\t\t"}
+                      {passagerName.length} {"\t\t"}
                     </Text>
                     Passagers
                   </Text>
@@ -984,12 +1053,14 @@ export const EffectuerReservationScreen = ({
 const styles = StyleSheet.create({
   container: {
     display: "flex",
+    flex: 1,
     flexDirection: "column",
     // backgroundColor: "#fff",
     justifyContent: "flex-start",
     alignItems: "center",
     width: Width,
     height: "auto",
+    marginBottom: Width * 0.01,
     // marginBottom: Height * 0.2,
   },
   message: {

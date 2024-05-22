@@ -238,7 +238,7 @@ export function HomeRoot() {
                 />
                 <Text
                   style={{
-                    fontSize: screenWidth * 0.042,
+                    fontSize: screenWidth * 0.032,
                     color: focused ? "#0081C7" : "#9A999F",
                     fontFamily: focused
                       ? FontFamily.RobotoBold
@@ -319,12 +319,12 @@ export function HomeRoot() {
                 <Text
                   className="  text-2xl  "
                   style={{
-                    fontSize: screenWidth * 0.042,
+                    fontSize: screenWidth * 0.032,
                     color: focused ? "#0081C7" : "#9A999F",
                     fontFamily: focused
                       ? FontFamily.RobotoBold
                       : FontFamily.RobotoMedium,
-                  }}
+                  }}     
                   numberOfLines={1}
                 >
                   Reservations
@@ -384,7 +384,7 @@ export function HomeRoot() {
                 />
                 <Text
                   style={{
-                    fontSize: screenWidth * 0.042,
+                    fontSize: screenWidth * 0.032,
                     color: focused ? "#0081C7" : "#9A999F",
                     fontFamily: focused
                       ? FontFamily.RobotoBold
@@ -450,7 +450,7 @@ export function HomeRoot() {
                 />
                 <Text
                   style={{
-                    fontSize: screenWidth * 0.042,
+                    fontSize: screenWidth * 0.032,
                     color: focused ? "#0081C7" : "#9A999F",
                     fontFamily: focused
                       ? FontFamily.RobotoBold

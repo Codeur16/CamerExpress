@@ -54,7 +54,7 @@ export const TouchButton = ({
       className="flex "
       style={{
         backgroundColor: isPressed ? Couleur.Limeblue7 : col,
-
+        // minWidth: width ,
         width: isPressed ? "89%" : "90%",
         height: height ? height : 45,
         borderRadius: radius ? radius : 5,

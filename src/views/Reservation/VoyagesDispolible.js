@@ -38,21 +38,24 @@ import {
   getFormattedTime,
   subtractTime,
 } from "./TrajetScreen";
+
 export function VoyagesDisponible() {
   const [ShowAction, setShowAction] = useState(true);
   const bottomSheetRef = useRef();
   const navigation = useNavigation();
   const route = useRoute();
   const [trajets, setTrajets] = useState([]);
-  let params = [];
-  params = route.params.trajets;
+  const currentTrajet = route.params.trajets;
+  // var params = route.params.trajets;
+
   useEffect(() => {
-    setTrajets(params);
-    console.log("TRAJEts A afficher:" + trajets);
-  }, [params]);
+    setTrajets(route.params.trajets);
+  }, []);
+
   console.log("TRAJEts A afficher:" + trajets);
-  const [currentTrajet, setCurrentTrajet] = useState(null);
+  // const [currentTrajet, setCurrentTrajet] = useState(null);
   const [currentindex, setCurrentindex] = useState(null);
+
   const prixReservation = (trajet) => {
     if (trajet.bus.classe == "VIP") {
       return trajet.itineraire.prixVip;
@@ -62,90 +65,14 @@ export function VoyagesDisponible() {
     }
   };
   //=====================================================================
-  const ajouterDuree = (heure, duree) => {
-    // Diviser l'heure en heures et minutes
-    const [heureStr, minuteStr] = heure.split(":");
-    let heureInt = parseInt(heureStr, 10);
-    let minuteInt = parseInt(minuteStr, 10);
 
-    // Ajouter la durée
-    minuteInt += duree;
-
-    // Gérer le cas où les minutes dépassent 60
-    heureInt += Math.floor(minuteInt / 60);
-    minuteInt %= 60;
-
-    // Formater l'heure de fin pour l'affichage
-    const heureFinFormattee = `${heureInt
-      .toString()
-      .padStart(2, "0")}:${minuteInt.toString().padStart(2, "0")}`;
-
-    return heureFinFormattee;
-  };
-  //==============================================================
-  // function getFormattedTime(dateDepart) {
-  //   const date = new Date(dateDepart);
-  //   const hours = date.getHours().toString().padStart(2, "0");
-  //   const minutes = date.getMinutes().toString().padStart(2, "0");
-  //   return `${hours}:${minutes}`;
-  // }
   console.log(
     "============================== Voyages disponible  ============================\n\n"
   );
-  console.log(JSON.stringify(params));
+  console.log(JSON.stringify(trajets));
   console.log(
     "==============================================================================="
   );
-
-  function regrouperParDateDepart(Trajets) {
-    // Initialisation d'un objet pour stocker les trajets par date de départ
-    var trajetsParDate = {};
-
-    // Parcours de tous les trajets
-    Trajets.forEach(function (trajet) {
-      // Extraction de la date de départ (sans l'heure)
-      var dateDepart = trajet.dateDepart.split("T")[0];
-
-      // Si la date de départ n'existe pas encore comme clé dans l'objet, on la crée avec un tableau vide comme valeur
-      if (!trajetsParDate[dateDepart]) {
-        trajetsParDate[dateDepart] = [];
-      }
-
-      // Ajout du trajet au tableau correspondant à sa date de départ
-      trajetsParDate[dateDepart].push(trajet);
-    });
-
-    // Conversion de l'objet en liste de tableaux
-    var listeDeTableaux = Object.values(trajetsParDate);
-
-    return listeDeTableaux;
-  }
-
-  // Exemple d'utilisation de la fonction avec le tableau de trajets fourni
-
-  //var result = regrouperParDateDepart(Trajets);
-  // console.log(result);
-
-  //rechercher l'index d'un trajet selectionne:
-  function trouverIndexInitial(trajetSelectionne, trajets) {
-    // Recherche de l'index initial du trajet sélectionné dans le tableau initial
-    if (trajetSelectionne != null) {
-      const indexInitial = trajets.findIndex(
-        (trajet) => trajet.id === trajetSelectionne.id
-      );
-      return trajets[indexInitial];
-    }
-  }
-
-  // Regrouper les trajets par date de départ
-  const trajetsParDate = trajets.reduce((acc, trajet) => {
-    const date = trajet.dateDepart.split("T")[0]; // Récupérer la date sans l'heure
-    if (!acc[date]) {
-      acc[date] = [];
-    }
-    acc[date].push(trajet);
-    return acc;
-  }, {});
 
   useEffect(() => {
     console.log("IndexSelect=" + currentindex);
@@ -161,6 +88,22 @@ export function VoyagesDisponible() {
     setSelectedTrajet(trajet);
     setSelectedTrajetIndex(index);
   };
+  //=========================== Supposons que prixReservation(trajet) soit une fonction asynchrone qui retourne le prix de la réservation======================
+  const updateAndNavigate = async (trajet, index) => {
+    // Attendre la mise à jour du prix de la réservation
+    const prix = await prixReservation(trajet);
+
+    // Naviguer vers la destination avec le prix mis à jour
+    navigation.navigate("trajet", {
+      trajet: trajet,
+      prixReservation: prix,
+    });
+
+    // Exécuter toute autre logique nécessaire après la navigation
+    handlePress(trajet, index);
+  };
+
+  //=================================================//=================================================//=================================================
   useEffect(() => {
     console.log("trajetId:" + selectedTrajetIndex);
     console.log("\n\ntrajet:" + JSON.stringify(selectedTrajet));
@@ -170,6 +113,41 @@ export function VoyagesDisponible() {
     //       JSON.stringify(trouverIndexInitial(selectedTrajet, Trajets))
     //   );
   }, [selectedTrajet]);
+
+  //================================================== convert duree ==================================================
+  function convertDurationToTime(duration) {
+    const hours = Math.floor(duration); // Obtient le nombre d'heures entières
+    const minutes = Math.round((duration % 1) * 60); // Convertit la partie décimale en minutes
+
+    // Formate les heures et les minutes
+    const formattedHours = hours.toString().padStart(2, "0");
+    const formattedMinutes = minutes.toString().padStart(2, "0");
+
+    return `${formattedHours}:${formattedMinutes}`;
+  }
+
+  //==================================================AddTime==================================================
+
+  function addTime(time1, time2) {
+    const [hours1, minutes1] = time1.split(":").map(Number);
+    const [hours2, minutes2] = time2.split(":").map(Number);
+
+    let totalMinutes = (hours1 + hours2) * 60 + (minutes1 + minutes2);
+
+    // Si le total des minutes dépasse 23h59min, recommencer à 00h00min (24h00min)
+    if (totalMinutes >= 24 * 60) {
+      totalMinutes -= 24 * 60;
+    }
+
+    const hours = Math.floor(totalMinutes / 60)
+      .toString()
+      .padStart(2, "0");
+    const minutes = (totalMinutes % 60).toString().padStart(2, "0");
+
+    return `${hours}:${minutes}`;
+  }
+  //==================================================
+
   return (
     <ScrollView
       nestedScrollEnabled={true}
@@ -183,7 +161,7 @@ export function VoyagesDisponible() {
         alignItems: "center",
       }}
     >
-      {trajets?.map((trajet, index) => (
+      {currentTrajet?.map((trajet, index) => (
         <View
           key={index}
           className=" bg-white border-Black1 border shadow-lg shadow-Black5  rounded flex-col mt-5"
@@ -202,7 +180,10 @@ export function VoyagesDisponible() {
                   {getFormattedTime(trajet.dateDepart)}
                 </Text>
                 <Text style={styles.text}>
-                  {getFormattedTime(trajet.dateDepart)}{" "}
+                  {addTime(
+                    getFormattedTime(trajet?.dateDepart),
+                    convertDurationToTime(trajet.itineraire.duree)
+                  )}
                   {/* {ajouterDuree(
                     getFormattedTime(trajet.dateDepart),
                     trajet.duree
@@ -253,6 +234,7 @@ export function VoyagesDisponible() {
                 </Text>
               </View>
             </View>
+
             <View className="w-1/2 h-full items-end">
               <Pressable
                 // onPressIn={() => {
@@ -318,7 +300,7 @@ export function VoyagesDisponible() {
                 style={{ width: "80%" }}
               >
                 <Text style={styles.text}>
-                  {getFormattedTime(trajet.dateDepart)}
+                  {convertDurationToTime(trajet.itineraire.duree)}
                 </Text>
 
                 <View
@@ -368,12 +350,8 @@ export function VoyagesDisponible() {
                   }}
                   onPress={() => {
                     bottomSheetRef.current.close();
-                    // setShowAction(false);
-                    navigation.navigate("trajet", {
-                      trajet: trajet,
-                      prixReservation: prixReservation(trajet),
-                    });
                     handlePress(trajet, index);
+                    updateAndNavigate(trajet, index);
                   }}
                 >
                   {/* <Ionicons
@@ -391,6 +369,7 @@ export function VoyagesDisponible() {
               </View>
             </View>
           </View>
+
           <ActionSheet
             BottomSheetRef={bottomSheetRef}
             height={Height * 0.7}
@@ -398,9 +377,7 @@ export function VoyagesDisponible() {
             trajet={trajet}
             // index={index}
             NextStep={() => {
-              navigation.navigate("trajet", {
-                trajet: trajet,
-              });
+              updateAndNavigate(trajet, index);
               bottomSheetRef.current.close();
             }}
             subtractTime={subtractTime}
