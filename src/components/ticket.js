@@ -5,91 +5,15 @@ import {
   getFormattedTime,
   convertDurationToTime,
 } from "./datetimeformatter";
-let reservationPrint = {
-  id: 7,
-  voyage: {
-    id: 1,
-    itineraire: {
-      id: 22,
-      site: {
-        id: 1,
-        agence: {
-          id: 3,
-          nom: "General",
-        },
-        ville: {
-          id: 6,
-          nom: "Yaounde",
-        },
-        quartier: "Mvan",
-        prixAnnulation: 1000.0,
-      },
-      villeDepart: {
-        id: 6,
-        nom: "Yaounde",
-      },
-      villeDestination: {
-        id: 2,
-        nom: "Maroua",
-      },
-      duree: 1,
-      prixClassique: 3500.0,
-      prixVip: 3500.0,
-      createdAt: "2024-04-09T15:36:43",
-    },
-    bus: {
-      id: 1,
-      site: {
-        id: 1,
-        agence: {
-          id: 3,
-          nom: "General",
-        },
-        ville: {
-          id: 6,
-          nom: "Yaounde",
-        },
-        quartier: "Mvan",
-        prixAnnulation: 1000.0,
-      },
-      capacite: 70,
-      code: "B1",
-      classe: "VIP",
-    },
-    code: "456WEFX",
-    dateDepart: "2024-12-04T15:40:10",
-  },
-  client: null,
-  prix: 500.0,
-  nom: "nomReservation2",
-  code: "R-cwihVyXa",
-  classe: "VIP",
-  dateReservation: "2024-05-19T16:33:12.863283909",
-  places: 1,
-  passagers: "[]",
-  bagages: "[]",
-  scanned: false,
-  statut: "",
-  alertsms: false,
-};
 
-const ticket = () =>
-  // reservationPrint,
-  //MontantTotal
-  // addTime,
-  // getFormattedDate,
-  // getFormattedTime,
-  // subtractTime
-  {
-    // console.log("Ticket data:" + reservationPrint.nom);
-    if (reservationPrint) {
-      console.log("Ticket paiement:id::" + reservationPrint);
-    } else {
-      console.log(
-        "Erreur: reservationPrint est indéfini ou ne possède pas de propriété 'id'"
-      );
-    }
-    return `<!DOCTYPE html>
+// Convertir le code QR en URL de données
+// const imageDataURL = convertQRCodeToDataURL();
+
+const ticket = (ReservationPrint, MontantTotal, uri) => {
+  const image = uri;
+
+  console.log("Images::::" + uri);
+  return `<!DOCTYPE html>
 <html lang="fr">
 
 <head>
@@ -99,6 +23,8 @@ const ticket = () =>
 </head>
 
 <body>
+
+
   <div class="container">
     <div class="section" id="section1">
       <div class="header">
@@ -126,28 +52,29 @@ const ticket = () =>
           <h3
             style="font-size:small; color: rgba(0,0,0,0.6); font-family: Roboto, sans-serif;font-weight: normal;">
             CamerExpress</h3>
+            
         </div>
         <div class="reservation-info"  style="display:flex; flex-direction:column; ">
           <p style="font-size:small; color: rgba(0,0,0,0.6); font-family: Roboto, sans-serif;font-weight:normal text-align: right;">CODE DE
             LA RÉSERVATION
           </p>
           <p style="font-size: medium; color: rgba(0,0,0,0.6); font-family: Roboto, sans-serif;text-align: right;">
-            ${reservationPrint.voyage.code}
+            ${ReservationPrint.voyage.code}
           </p>
         </div>
       </div>
       <div class="contain">
         <p style="font-size: x-large; color: rgba(0,0,0,0.8); font-family: Roboto, sans-serif; text-align: left;">${getFormattedDate(
-          reservationPrint.voyage.dateDepart
+          ReservationPrint.voyage.dateDepart
         )}</p>
         <div class="cardVoyage">
           <div class="heure" style="">
             <p class="text centerup" style=" height: 40px;">${getFormattedTime(
-              reservationPrint.voyage.dateDepart
+              ReservationPrint.voyage.dateDepart
             )}</p>
             <p class="text centerdown" style="height: 40px">  ${addTime(
-              getFormattedTime(reservationPrint.voyage.dateDepart),
-              convertDurationToTime(reservationPrint.voyage.itineraire.duree)
+              getFormattedTime(ReservationPrint.voyage.dateDepart),
+              convertDurationToTime(ReservationPrint.voyage.itineraire.duree)
             )}</p>
           </div>
           <div class="Fleche">
@@ -162,7 +89,7 @@ const ticket = () =>
                   <label
                     style="font-size: x-large; color: rgba(0,0,0,0.8); font-family: Roboto, sans-serif; text-align: left;height: auto;">
                    ${
-                     reservationPrint.voyage.itineraire.villeDepart.nom
+                     ReservationPrint.voyage.itineraire.villeDepart.nom
                    } <em style="font-size: 70%; font-weight: 400;">(Depart)</em></label>
                 </div>
                 <div style=" flex-direction: row;height: auto;" class="center">
@@ -185,13 +112,13 @@ const ticket = () =>
                   </svg>
                 </div>
                 <div class="titrebus" style="max-height: 100%; width: auto; display: flex; flex-direction: column;">
-                  <label class="text" style="font-size: 100%; height: 100%;">${
-                    reservationPrint.voyage.bus.code
-                  } <label
+                  <label class="text" style="font-size: 100%; height: 100%;">Bus ${
+                    ReservationPrint.voyage.bus.code
+                  } (${ReservationPrint.classe})<label
                       style="font-family: Arial, Helvetica, sans-serif; font-size: 60%; border: solid 1px rgba(0, 129, 199, 0.3); border-radius: 10px; font-weight: 100; font-style:normal; background-color: rgba(0, 129, 199, 0.5); width: auto; height: 100%;">CamerExpress
                     </label></label>
                   <label class="text" style="font-size: 60%;">A destination de  ${
-                    reservationPrint.voyage.itineraire.villeDestination.nom
+                    ReservationPrint.voyage.itineraire.villeDestination.nom
                   } </label>
                 </div>
               </div>
@@ -200,7 +127,7 @@ const ticket = () =>
                   <label
                     style="font-size: x-large; color: rgba(0,0,0,0.8); font-family: Roboto, sans-serif; text-align: left;height: auto;">
                      ${
-                       reservationPrint.voyage.itineraire.villeDestination.nom
+                       ReservationPrint.voyage.itineraire.villeDestination.nom
                      } <em style="font-size: 70%; font-weight: 400;"> (Arrivée)</em></label>
                 </div>
                 <div style=" flex-direction: row;height: auto;" class="center">
@@ -253,11 +180,12 @@ const ticket = () =>
         </div>
       </div>
       <div class="qrcode center" style="width: 100%; height: auto; display: flex; flex-direction: column;">
-        <svg xmlns="http://www.w3.org/2000/svg" height="300px" viewBox="0 -960 960 960" width="300px"
+      <svg xmlns="http://www.w3.org/2000/svg" height="300px" viewBox="0 -960 960 960" width="300px"
           fill="rgba(0, 0, 0, 0.5)">
           <path
             d="M520-120v-80h80v80h-80Zm-80-80v-200h80v200h-80Zm320-120v-160h80v160h-80Zm-80-160v-80h80v80h-80Zm-480 80v-80h80v80h-80Zm-80-80v-80h80v80h-80Zm360-280v-80h80v80h-80ZM170-650h140v-140H170v140Zm-50 50v-240h240v240H120Zm50 430h140v-140H170v140Zm-50 50v-240h240v240H120Zm530-530h140v-140H650v140Zm-50 50v-240h240v240H600Zm80 480v-120h-80v-80h160v120h80v80H680ZM520-400v-80h160v80H520Zm-160 0v-80h-80v-80h240v80h-80v80h-80Zm40-200v-160h80v80h80v80H400Zm-190-90v-60h60v60h-60Zm0 480v-60h60v60h-60Zm480-480v-60h60v60h-60Z" />
-        </svg>
+        </svg> 
+          <img src="${uri}} alt=""/>
         <div class="description text" style="font-weight: normal; font-size: large;">Le même code QR est utilisé pour
           l’ensemble de votre voyage</div>
       </div>
@@ -272,15 +200,19 @@ const ticket = () =>
           <div class="nom" style="display: flex;flex-direction: column; width: auto; height: auto;">
 
             <label class="text" style="font-weight: normal;">Adulte </label>
-            <label class="text" style="font-size: 100%; margin-top: 5px; ">NJIOSSEU TCHOUTCHUI CHARLES LOIC</label>
+            <label class="text" style="font-size: 70%; margin-top: 5px; ">${
+              ReservationPrint.passagers
+            }</label>
           </div>
         </div>
         <div class="siege" style="display: flex;flex-direction: column;">
-          <label class="text" style="text-decoration: underline;font-weight: normal;">Bus 7734</label>
+          <label class="text" style="text-decoration: underline;font-weight: normal;">Bus ${
+            ReservationPrint.voyage.bus.code
+          }</label>
           <label class="text center" style="margin-top: 5px;">12A</label>
         </div>
       </div>
-      <!-- bagages -->
+      <!-- bagages 
       <div class="bagage">
         <div class="bagage1">
           <div class="user" style="display: flex; flex-direction: row; width: 80%;">
@@ -316,7 +248,7 @@ const ticket = () =>
           </div>
         </div>
       </div>
-
+-->
     </div>
     <div class="section3" id="section3">
       <div
@@ -339,7 +271,7 @@ const ticket = () =>
               </g>
             </svg>
             <p class="text" style="margin-left: 20px; font-weight: normal;">Prix total : <label
-                style="font-weight: bold;">13,98 EUR</label></p>
+                style="font-weight: bold;"> ${MontantTotal} FCFA</label></p>
           </div>
 
           <div class="total center" style="display: flex; flex-direction: row; justify-content: flex-start;">
@@ -697,6 +629,74 @@ const ticket = () =>
 
 </html>
 `;
-  };
+};
 
 export default ticket;
+
+// let ReservationPrint = {
+//   id: 7,
+//   voyage: {
+//     id: 1,
+//     itineraire: {
+//       id: 22,
+//       site: {
+//         id: 1,
+//         agence: {
+//           id: 3,
+//           nom: "General",
+//         },
+//         ville: {
+//           id: 6,
+//           nom: "Yaounde",
+//         },
+//         quartier: "Mvan",
+//         prixAnnulation: 1000.0,
+//       },
+//       villeDepart: {
+//         id: 6,
+//         nom: "Yaounde",
+//       },
+//       villeDestination: {
+//         id: 2,
+//         nom: "Maroua",
+//       },
+//       duree: 1,
+//       prixClassique: 3500.0,
+//       prixVip: 3500.0,
+//       createdAt: "2024-04-09T15:36:43",
+//     },
+//     bus: {
+//       id: 1,
+//       site: {
+//         id: 1,
+//         agence: {
+//           id: 3,
+//           nom: "General",
+//         },
+//         ville: {
+//           id: 6,
+//           nom: "Yaounde",
+//         },
+//         quartier: "Mvan",
+//         prixAnnulation: 1000.0,
+//       },
+//       capacite: 70,
+//       code: "B1",
+//       classe: "VIP",
+//     },
+//     code: "456WEFX",
+//     dateDepart: "2024-12-04T15:40:10",
+//   },
+//   client: null,
+//   prix: 500.0,
+//   nom: "nomReservation2",
+//   code: "R-cwihVyXa",
+//   classe: "VIP",
+//   dateReservation: "2024-05-19T16:33:12.863283909",
+//   places: 1,
+//   passagers: "[]",
+//   bagages: "[]",
+//   scanned: false,
+//   statut: "",
+//   alertsms: false,
+// };

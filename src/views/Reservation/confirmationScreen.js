@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { View, Button, StyleSheet, Text, Alert } from "react-native";
 import * as Print from "expo-print";
 import { Height, Width } from "../../utils/DimensionScreen";
@@ -13,32 +13,28 @@ import {
 import Couleur from "../../utils/color";
 import ticket from "../../components/ticket";
 import { FontFamily } from "../../../GlobalStyles";
+import { WebView } from "react-native-webview";
+import QRCode from "react-native-qrcode-svg";
+import ViewShot from "react-native-view-shot";
 // import { addTime, getFormattedDate, getFormattedTime, subtractTime } from "./TrajetScreen";
+import {
+  getFormattedDate,
+  addTime,
+  subtractTime,
+  getFormattedTime,
+  convertDurationToTime,
+} from "../../components/datetimeformatter";
+import canvg from "canvg";
 
-const ConfirmationScreen = (
+const ConfirmationScreen = ({
   MontanTotal,
   modePaiement,
   ReservationDetail,
   ReservationPrint,
-  addTime,
-  getFormattedDate,
-  getFormattedTime,
-  subtractTime
-) => {
+}) => {
+  // console.log("Reservation Print:::::" + ReservationPrint);
+  // console.log("Reservation Detail:::::" + ReservationDetail);
   const [pdfPath, setPdfPath] = useState("");
-  // const [htmlContent, setHtmlContent] = useState(
-  //   `<html><body><h1>Hello World!</h1></body></html>`
-  // );
-
-  const htmlContent =
-    ticket();
-    // ReservationPrint,
-    // MontanTotal,
-    // addTime,
-    // getFormattedDate,
-    // getFormattedTime,
-    // subtractTime
-
   //   useEffect(() => {
   //     // Récupérer le code HTML du serveur
   //     const html = "<html><body><h1>Hello World!</h1></body></html>";
@@ -59,7 +55,7 @@ const ConfirmationScreen = (
   //   }, []);
 
   // Fonction pour générer et imprimer le PDF à partir du contenu HTML
-  console.log("Ticket paiement:::" + ReservationPrint);
+  // console.log("Ticket paiement::::::::" + ReservationPrint);
   const generateAndPrintPDF = async () => {
     try {
       // Générer le PDF à partir du contenu HTML
@@ -81,6 +77,23 @@ const ConfirmationScreen = (
       );
     }
   };
+
+  const htmlContent = ticket(ReservationPrint, MontanTotal, uri);
+  const viewShotRef = useRef(null);
+  const [uri, setUri] = useState();
+  const captureQRCode = async () => {
+    try {
+      setUri(await viewShotRef.current.capture());
+
+      console.log("Image captured:", uri);
+      // Enregistrement de l'image localement
+      // const path = `${RNFS.DocumentDirectoryPath}/QRCode.png`;
+      // console.log("Image saved at:", path);
+    } catch (error) {
+      console.error("Error capturing image:", error);
+    }
+  };
+
   return (
     <View>
       <View
@@ -115,10 +128,22 @@ const ConfirmationScreen = (
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
+          <View>
+            <ViewShot ref={viewShotRef} options={{ format: "png", quality: 1 }}>
+              <QRCode value={ReservationPrint.code} />
+            </ViewShot>
+            {/* <Button title="Capture QR Code" onPress={captureQRCode} /> */}
+          </View>
           <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
           >
-            <Button title="Imprimer le billet" onPress={generateAndPrintPDF} />
+            <Button
+              title="Imprimer le billet"
+              onPress={() => {
+                captureQRCode();
+                generateAndPrintPDF();
+              }}
+            />
           </View>
         </View>
       </View>

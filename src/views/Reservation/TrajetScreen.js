@@ -410,13 +410,15 @@ const TrajetsScreen = () => {
     classe: "VIP",
     dateReservation: "2024-05-19T16:33:12.863283909",
     places: 1,
-    passagers: "[]",
+    passagers: "[Njiosseu Loic]",
     bagages: "[]",
     scanned: false,
     statut: "",
     alertsms: false,
   });
-
+  // const setReservationPrint =(value)=>{
+  //   ReservationPrint=value
+  // }
   useEffect(() => {
     setReservationDetail([
       { id: 1, label: "nombrePassager", value: nombrePassager },
@@ -572,14 +574,10 @@ const TrajetsScreen = () => {
           // }
         >
           <ConfirmationScreen
+            ReservationPrint={ReservationPrint}
             MontanTotal={MontantTotal}
             modePaiement={modepaiement}
             ReservationDetail={ReservationDetail}
-            ReservationPrint={ReservationPrint}
-            addTime={addTime}
-            getFormattedDate={getFormattedDate}
-            getFormattedTime={getFormattedTime}
-            subtractTime={subtractTime}
           />
         </ProgressStep>
       </ProgressSteps>

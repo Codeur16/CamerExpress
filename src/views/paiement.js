@@ -165,7 +165,7 @@ export const PaimentScreen = ({
         console.log(
           "\n\t\t=======================================================================================\n"
         );
-        setReservationPrint(res.data);
+        //setReservationPrint(res.data);
         // =========================== ALLer a l'ecrant de confirmation =================================
         NexStep();
       })
