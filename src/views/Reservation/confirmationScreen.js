@@ -933,7 +933,6 @@ import Couleur from "../../utils/color";
 import { FontFamily } from "../../../GlobalStyles";
 import QRCode from "react-native-qrcode-svg";
 import * as MediaLibrary from "expo-media-library";
-import QRCodeGenerator from "../../components/QRCodeGenerator";
 import { FileSystem } from "expo";
 import { useNavigation } from "@react-navigation/native";
 const ConfirmationScreen = ({
