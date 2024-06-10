@@ -325,6 +325,7 @@ const TrajetsScreen = () => {
   // Inside your component
   const route = useRoute();
   const [trajets, setTrajets] = useState(route.params.trajet);
+  console.log("Trajet selectionnee :::::" + trajets.id);
   const [prixReservation, setPrixReservation] = useState(
     route.params.prixReservation
   );
@@ -347,6 +348,7 @@ const TrajetsScreen = () => {
   const [nombrePassager, setNombrePassager] = useState(0);
   const [ListePassager, setListePassager] = useState("");
   const [modePaiement, setModePaiement] = useState("");
+  const [classe, setClasse] = useState("");
   const [MontantTotal, setMontantTotal] = useState(0);
   const [ReservationDetail, setReservationDetail] = useState([]);
   const [ReservationPrint, setReservationPrint] = useState({
@@ -425,6 +427,7 @@ const TrajetsScreen = () => {
       { id: 2, label: "ListePassager", value: ListePassager },
       { id: 3, label: "modePaiement", value: modePaiement },
       { id: 4, label: "MontantTotal", value: MontantTotal },
+      { id: 5, label: "classe", value: trajets.bus.classe },
     ]);
 
     console.log(
@@ -530,6 +533,7 @@ const TrajetsScreen = () => {
             setModePaiement={setModePaiement}
             setMontantTotal={setMontantTotal}
             modePaiement={modepaiement}
+            setClasse={setClasse}
           />
         </ProgressStep>
         <ProgressStep
@@ -541,6 +545,7 @@ const TrajetsScreen = () => {
           removeBtnRow={true}
         >
           <PaimentScreen
+            Trajets={trajets}
             MontanTotal={MontantTotal}
             NexStep={handleNextStep}
             modePaiement={modepaiement}

@@ -32,3 +32,7 @@ const QRCodeGenerator = ({ setUri, codeReservation, capture }) => {
 };
 
 export default QRCodeGenerator;
+
+
+
+

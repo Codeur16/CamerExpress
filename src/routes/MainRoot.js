@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { LandingSreen } from "../views/landingScreen";
 import { LogoTitle } from "../components/logoTitle";
@@ -6,7 +6,7 @@ import { FontFamily } from "../../GlobalStyles";
 import { HomeRoot } from "./HomeRoot";
 import { AuthRoot } from "./AuthRoot";
 import { Ionicons } from "@expo/vector-icons";
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View, Text } from "react-native";
 import { NotificationScreen } from "../views/Notification";
 import { AgenceScreen } from "../views/index";
 import { TrajetsScreen } from "../views/Reservation/TrajetScreen";
@@ -15,7 +15,7 @@ import Couleur from "../utils/color";
 import { EffectuerReservationScreen, PaimentScreen } from "../views/index";
 import { Width } from "../utils/DimensionScreen";
 import { VoyagesDisponible } from "../views/index";
-// import DropdownMenu from "../components/DropdwonMenu";
+
 const Stack = createNativeStackNavigator();
 
 export default function MainRoot() {
@@ -309,14 +309,21 @@ export default function MainRoot() {
           //     }}
           //   >
           //     <TouchableOpacity
+          //       style={{
+          //         display: "flex",
+          //         flexDirection: "row",
+          //         justifyContent: "center",
+          //         alignItems: "center",
+          //       }}
           //       onPress={() => {
-          //         navigation.navigate("Notification");
+                 
           //       }}
           //     >
+          //       <Text style={{ color: "#FFFFFF", padding: 1 }}>FIltre</Text>
           //       <Ionicons
-          //         name="notifications"
+          //         name="filter"
           //         size={24}
-          //         color={Couleur.Black4}
+          //         color={"#fff"}
           //         style={{ marginRight: 10 }}
           //       />
           //     </TouchableOpacity>
@@ -324,6 +331,7 @@ export default function MainRoot() {
           // ),
         }}
       />
+
       {/* <Stack.Screen
         name="Effectuer Reservation"
         component={EffectuerReservationScreen}

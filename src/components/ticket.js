@@ -5,14 +5,41 @@ import {
   getFormattedTime,
   convertDurationToTime,
 } from "./datetimeformatter";
+import * as FileSystem from "expo-file-system";
+// import { png2svg } from "svg-png-converter";
 
 // Convertir le code QR en URL de données
 // const imageDataURL = convertQRCodeToDataURL();
 
 const ticket = (ReservationPrint, MontantTotal, uri) => {
   const image = uri;
+  // const [svgContent, setSvgContent] = useState("");
+  // const convertPngToSvg = async () => {
+  //   try {
+  //     const pngPath = `${RNFS.DocumentDirectoryPath}/your-image.png`;
+  //     const pngData = await RNFS.readFile(pngPath, "base64");
+  //     const result = await png2svg({
+  //       tracer: "imagetracer",
+  //       optimize: true,
+  //       input: Buffer.from(pngData, "base64"),
+  //       numberofcolors: 24,
+  //       pathomit: 1,
+  //     });
 
-  console.log("Images::::" + uri);
+  //     const svgString = result.content; // SVG content as string
+  //     setSvgContent(svgString);
+  //     //  await RNFS.writeFile(
+  //     //    `${RNFS.DocumentDirectoryPath}/your-image.svg`,
+  //     //    svgString,
+  //     //    "utf8"
+  //     //  );
+  //     console.log("SVG file written successfully");
+  //   } catch (error) {
+  //     console.error("Error converting PNG to SVG:", error);
+  //   }
+  // };
+
+  console.log("Images::TICKET::" + uri);
   return `<!DOCTYPE html>
 <html lang="fr">
 
@@ -59,7 +86,7 @@ const ticket = (ReservationPrint, MontantTotal, uri) => {
             LA RÉSERVATION
           </p>
           <p style="font-size: medium; color: rgba(0,0,0,0.6); font-family: Roboto, sans-serif;text-align: right;">
-            ${ReservationPrint.voyage.code}
+            ${ReservationPrint.code}
           </p>
         </div>
       </div>
@@ -114,7 +141,9 @@ const ticket = (ReservationPrint, MontantTotal, uri) => {
                 <div class="titrebus" style="max-height: 100%; width: auto; display: flex; flex-direction: column;">
                   <label class="text" style="font-size: 100%; height: 100%;">Bus ${
                     ReservationPrint.voyage.bus.code
-                  } (${ReservationPrint.classe})<label
+                  } <label style="font-size: 50%; height: 50%;" >(${
+    ReservationPrint.classe
+  })</label><label
                       style="font-family: Arial, Helvetica, sans-serif; font-size: 60%; border: solid 1px rgba(0, 129, 199, 0.3); border-radius: 10px; font-weight: 100; font-style:normal; background-color: rgba(0, 129, 199, 0.5); width: auto; height: 100%;">CamerExpress
                     </label></label>
                   <label class="text" style="font-size: 60%;">A destination de  ${
@@ -179,13 +208,15 @@ const ticket = (ReservationPrint, MontantTotal, uri) => {
             imprimée ou numerique</p>
         </div>
       </div>
-      <div class="qrcode center" style="width: 100%; height: auto; display: flex; flex-direction: column;">
-      <svg xmlns="http://www.w3.org/2000/svg" height="300px" viewBox="0 -960 960 960" width="300px"
+      <div class="qrcode center" style="width: 100%; height: auto; display: flex; flex-direction: column; margin:60">
+       <div style="width:100%; height:50"></div>
+    <!--  <svg xmlns="http://www.w3.org/2000/svg" height="300px" viewBox="0 -960 960 960" width="300px"
           fill="rgba(0, 0, 0, 0.5)">
           <path
             d="M520-120v-80h80v80h-80Zm-80-80v-200h80v200h-80Zm320-120v-160h80v160h-80Zm-80-160v-80h80v80h-80Zm-480 80v-80h80v80h-80Zm-80-80v-80h80v80h-80Zm360-280v-80h80v80h-80ZM170-650h140v-140H170v140Zm-50 50v-240h240v240H120Zm50 430h140v-140H170v140Zm-50 50v-240h240v240H120Zm530-530h140v-140H650v140Zm-50 50v-240h240v240H600Zm80 480v-120h-80v-80h160v120h80v80H680ZM520-400v-80h160v80H520Zm-160 0v-80h-80v-80h240v80h-80v80h-80Zm40-200v-160h80v80h80v80H400Zm-190-90v-60h60v60h-60Zm0 480v-60h60v60h-60Zm480-480v-60h60v60h-60Z" />
-        </svg> 
-          <img src="${uri}} alt=""/>
+        </svg> -->
+          <img src="data:image/png;base64,${uri}" alt=""  width=300 height=300/>
+          <div style="width:100%; height:50"></div>
         <div class="description text" style="font-weight: normal; font-size: large;">Le même code QR est utilisé pour
           l’ensemble de votre voyage</div>
       </div>
@@ -372,9 +403,10 @@ const ticket = (ReservationPrint, MontantTotal, uri) => {
         width: 95%;
         height: 100%;
         gap: 10px;
-         row-gap: 200px; /* Espacement vertical entre les lignes */
+         row-gap: 600px; /* Espacement vertical entre les lignes */
         /* Espace entre les sections */
-        margin-top: 50px;
+        margin-top: 100px;
+        
       }
 
       .section {

@@ -11,6 +11,9 @@ import {
   ScrollView,
   Pressable,
   Alert,
+  TouchableOpacity,
+  Button,
+  RadioButton,
 } from "react-native";
 import Couleur from "../../utils/color";
 import { FontFamily } from "../../../GlobalStyles";
@@ -31,22 +34,24 @@ import Swiper from "react-native-swiper";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { useRoute } from "@react-navigation/native";
 import Svg, { Ellipse, Path, Line, Circle } from "react-native-svg";
-import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
-import { EffectuerReservationScreen } from "./EffectuerReservation";
 import {
   getFormattedDate,
   getFormattedTime,
   subtractTime,
 } from "./TrajetScreen";
+import BottomSheet from "react-native-raw-bottom-sheet";
+
 
 export function VoyagesDisponible() {
   const [ShowAction, setShowAction] = useState(true);
   const bottomSheetRef = useRef();
+  const BottomSheetRef = useRef();
   const navigation = useNavigation();
   const route = useRoute();
   const [trajets, setTrajets] = useState([]);
   const currentTrajet = route.params.trajets;
   // var params = route.params.trajets;
+
 
   useEffect(() => {
     setTrajets(route.params.trajets);
@@ -161,6 +166,26 @@ export function VoyagesDisponible() {
         alignItems: "center",
       }}
     >
+      <TouchableOpacity
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          // justifyContent: "center",
+          // alignItems: "center",
+        }}
+        className="w-full bg-Limeblue9 items-end justify-end"
+        onPress={() => {
+          BottomSheetRef.current.open();
+        }}
+      >
+        <Text style={{ color: "#FFF", padding: 1 }}>Filtre</Text>
+        <Ionicons
+          name="filter"
+          size={24}
+          color={"#FFFF"}
+          style={{ marginRight: 10 }}
+        />
+      </TouchableOpacity>
       {currentTrajet?.map((trajet, index) => (
         <View
           key={index}
@@ -384,6 +409,54 @@ export function VoyagesDisponible() {
             getFormattedDate={getFormattedDate}
             getFormattedTime={getFormattedTime}
           />
+
+          <BottomSheet
+            ref={BottomSheetRef}
+            closeOnDragDown={true}
+            height={Height * 0.8}
+            openDuration={350}
+            animationType="slide"
+            minClosingHeight={0}
+            closeDuration={20}
+            closeOnPressMask={true}
+            customStyles={{
+              wrapper: "bg-Black5",
+              container: "rounded-t-3xl bg-white flex flex-col",
+              draggableIcon: "bg-Limeblue6",
+            }}
+          >
+            <View className="p-4 flex flex-row items-center justify-start border-b border-gray-300">
+              <Pressable
+                onPress={() => {
+                  BottomSheetRef.current.close();
+                }}
+                className="p-4"
+              >
+                <AntDesign name="close" size={25} color={"#000"} />
+              </Pressable>
+              <View className="w-4/5 items-center justify-center">
+                <Text className="text-lg font-bold ">Trier & Filtrer</Text>
+              </View>
+            </View>
+            <View className="p-4 border-b border-gray-300">
+              <Text className="text-lg font-bold mb-2">Trier par</Text>
+              <View className="space-y-2">
+                {/* <RadioButton label="Départ" />
+                <RadioButton label="Le plus tôt" />
+                <RadioButton label="Prix le moins cher en premier" />
+                <RadioButton label="Durée la moins longue" /> */}
+              </View>
+            </View>
+            <View className="p-4 border-b border-gray-300">
+              <Text className="text-lg font-bold mb-2">Départ de</Text>
+              {/* <SelectAgence /> */}
+            </View>
+            <View className="p-4 border-t border-gray-300">
+              <Button title="Appliquer" />
+            </View>
+          </BottomSheet>
+
+         
         </View>
       ))}
     </ScrollView>

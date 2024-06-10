@@ -103,6 +103,7 @@ const showToast = (message) => {
 //   alertsms: false,
 // };
 export const PaimentScreen = ({
+  Trajets,
   MontanTotal,
   NexStep,
   modePaiement,
@@ -113,6 +114,12 @@ export const PaimentScreen = ({
   // useEffect(() => {
   //   setReservationPrint(reservationPrint);
   // }, []);
+  // const  ReservationDetail = [
+  //   { id: 1, label: "nombrePassager", value: nombrePassager },
+  //   { id: 2, label: "ListePassager", value: ListePassager },
+  //   { id: 3, label: "modePaiement", value: modePaiement },
+  //   { id: 4, label: "MontantTotal", value: MontantTotal },
+  // ];
   const [isLoading, setisLoading] = useState(false);
   const [infoReservation, setInfoReservation] = useState([]);
   const handleSendReservation = () => {
@@ -121,15 +128,15 @@ export const PaimentScreen = ({
     const data = {
       reservation: {
         voyage: {
-          id: 2,
+          id: Trajets.id,
         },
         client: null,
-        prix: 500,
+        prix: ReservationDetail[3].value,
         nom: "nomReservation",
-        classe: "vip",
+        classe: ReservationDetail[4].value,
         dateReservation: "",
-        places: 1,
-        passagers: "[]",
+        places: ReservationDetail[0].value,
+        passagers: ReservationDetail[1].value,
         bagages: "[]",
         isAlertsms: false,
         statut: "",
@@ -142,15 +149,15 @@ export const PaimentScreen = ({
       .post(url + "/api/reservation/create", {
         reservation: {
           voyage: {
-            id: 2,
+            id: Trajets.id,
           },
           client: null,
-          prix: 500,
+          prix: ReservationDetail[3].value,
           nom: "nomReservation",
-          classe: "vip",
+          classe: ReservationDetail[4].value,
           dateReservation: "",
-          places: 1,
-          passagers: "[]",
+          places: ReservationDetail[0].value,
+          passagers: ReservationDetail[1].value,
           bagages: "[]",
           isAlertsms: false,
           statut: "",
@@ -161,11 +168,13 @@ export const PaimentScreen = ({
         console.log(
           "\n\t\t==================================== ReponseReservation ===============================\n\n"
         );
-        console.log(JSON.stringify(res.data));
+        console.log(
+          "Reservation print::::::::" + JSON.stringify(res.data.data)
+        );
         console.log(
           "\n\t\t=======================================================================================\n"
         );
-        //setReservationPrint(res.data);
+        setReservationPrint(res.data.data);
         // =========================== ALLer a l'ecrant de confirmation =================================
         NexStep();
       })
@@ -201,7 +210,7 @@ export const PaimentScreen = ({
     }
   };
   // const setLabelValue = () => {
-  //   if (ReservationDetail[2].value === "Carte bancaire") {
+  //   if ( ReservationDetail[2].value === "Carte bancaire") {
   //     setLabel("Numero de la carte bancaire");
   //   } else {
   //     setLabel("Numero du payeur");

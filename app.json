@@ -14,17 +14,28 @@
       "image": "./assets/logo1.png",
       "backgroundColor": "#fff"
     },
-    "assetBundlePatterns": ["./assets/fonts/"],
+    "assetBundlePatterns": [
+      "./assets/fonts/"
+    ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.tokoss.camerexpress"
+      "bundleIdentifier": "com.tokoss.camerexpress",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos.",
+        "NSPhotoLibraryAddUsageDescription": "Allow $(PRODUCT_NAME) to save photos."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo.png",
         "backgroundColor": "#fff"
       },
-      "permissions": ["android.permission.RECORD_AUDIO"],
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.ACCESS_MEDIA_LOCATION"
+      ],
       "package": "com.tokoss.camerexpress"
     },
     "web": {
@@ -38,11 +49,19 @@
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
+          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
+          "isAccessMediaLocationEnabled": true
+        }
       ]
     ],
     "extra": {
       "eas": {
-        "projectId": "8fd761ab-a4ee-4acf-b9e7-06aea3718a0b"
+        "projectId": "f0236e0c-41d2-4934-b4cb-9ae13e11c0a7"
       }
     },
     "owner": "tokoss"

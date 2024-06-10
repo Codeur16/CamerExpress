@@ -50,6 +50,7 @@ export const EffectuerReservationScreen = ({
   setModePaiement,
   setMontantTotal,
   modePaiement,
+  setClasse,
 }) => {
   const bottomSheetRef = useRef();
 
@@ -210,7 +211,11 @@ export const EffectuerReservationScreen = ({
     setMontantTotal(prixReservation * passagerName.length);
     console.log("Total" + total);
   }, [passagerName]);
+
+  Trajets.bus.classe ? setClasse(Trajets.bus.classe) : null;
+
   useEffect(() => {
+    // setListePassager(JSON.stringify(passagerName));
     setListePassager(JSON.stringify(passagerName));
     setNombrePassager(passagerName.length);
   }, [passagerName]);
