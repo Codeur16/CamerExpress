@@ -10,7 +10,7 @@ const MonDropdown = ({ data, onChange, placeholder, width }) => {
     if (val == place) {
       return Couleur.Black9;
     } else {
-      return Couleur.Black9;
+      return Couleur.Black8;
     }
   };
   const [selectedValue, setSelectedValue] = useState(placeholder);
@@ -34,7 +34,7 @@ const MonDropdown = ({ data, onChange, placeholder, width }) => {
       paddingHorizontal: 10,
       paddingVertical: 8,
       borderWidth: 0.5,
-      borderColor: Couleur.Black2,
+      borderColor: Couleur.Black4,
       borderRadius: 4,
       elevation: 1,
       color: colore(selectedValue, placeholder),

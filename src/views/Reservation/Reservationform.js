@@ -76,6 +76,58 @@ const initialData = [
     code: "N10rX",
     dateDepart: "2024-12-04T15:40:10",
   },
+  {
+    id: 3,
+    itineraire: {
+      id: 23,
+      site: {
+        id: 1,
+        agence: {
+          id: 3,
+          nom: "Finex",
+        },
+        ville: {
+          id: 6,
+          nom: "Yaounde",
+        },
+        quartier: "Mvan",
+        prixAnnulation: 1000,
+      },
+      villeDepart: {
+        id: 6,
+        nom: "Yaounde",
+      },
+      villeDestination: {
+        id: 4,
+        nom: "Baffoussam",
+      },
+      duree: 4,
+      prixClassique: 5000,
+      prixVip: 8000,
+      createdAt: "2024-04-09T15:47:54",
+    },
+    bus: {
+      id: 2,
+      site: {
+        id: 2,
+        agence: {
+          id: 1,
+          nom: "Fitnexs",
+        },
+        ville: {
+          id: 6,
+          nom: "Yaounde",
+        },
+        quartier: "Mvan",
+        prixAnnulation: 1000,
+      },
+      capacite: 70,
+      code: "B2",
+      classe: "VIP",
+    },
+    code: "N10rX",
+    dateDepart: "2024-12-04T15:40:10",
+  },
   // Ajoutez les autres objets ici
 ];
 
@@ -124,6 +176,7 @@ export function ReservationForm({ onClick }) {
   };
   //***********     GESTION  DES DATES       ************/
   const [valueDate, setValueDate] = useState("Date de depart");
+  const [valueDate2, setValueDate2] = useState("Date de retour");
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
 
@@ -358,7 +411,7 @@ export function ReservationForm({ onClick }) {
           </View>
 
           {/* =========================Agences==================== */}
-          <View className="  flex flex-1 mt-2" style={{ width: Width * 0.9 }}>
+          {/* <View className="  flex flex-1 mt-2" style={{ width: Width * 0.9 }}>
             <Text
               style={{
                 marginTop: 0,
@@ -389,7 +442,7 @@ export function ReservationForm({ onClick }) {
               placeholder="Site Depart"
               width={Width * 0.9}
             />
-          </View>
+          </View> */}
           {/* =====================Date de depart================== */}
           <View
             className="mt-2"
@@ -408,7 +461,7 @@ export function ReservationForm({ onClick }) {
                   fontFamily: FontFamily.RobotoMedium,
                 }}
               >
-                Date de depart
+                Aller
                 <Text
                   className=" color-Black4"
                   style={{
@@ -481,8 +534,99 @@ export function ReservationForm({ onClick }) {
               </View>
             </View>
           </View>
+
+          <View
+            className="mt-2"
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              alignContent: "center",
+            }}
+          >
+            <View className="">
+              <Text
+                style={{
+                  fontSize: 15,
+
+                  color: Couleur.Black10,
+                  fontFamily: FontFamily.RobotoMedium,
+                }}
+              >
+                Retour
+                <Text
+                  className=" color-Black4"
+                  style={{
+                    fontSize: 14,
+
+                    color: Couleur.Black5,
+                    fontFamily: FontFamily.RobotoThin,
+                  }}
+                >
+                  {`\t(`}indisponible{`)`}
+                </Text>
+              </Text>
+              <View className="my-1 w-full">
+                {/* <MyDatePicker
+                  onDateSelected={handleDateSelection}
+                  name={selectedDate ? selectedDate : "Date de depart"}
+                /> */}
+
+                {/* ********************DATE******************* */}
+                <View>
+                  <Pressable
+                    onPress={() => {
+                      console.log("PressedDate");
+                      setFocus(true);
+                      showDatepicker();
+                    }}
+                    className="flex-row"
+                    style={{
+                      backgroundColor: Couleur.White,
+                      fontSize: 12,
+                      width: Width * 0.9,
+                      height: 45,
+                      borderRadius: 5,
+                      justifyContent: "flex-start",
+                      alignItems: "center",
+                      display: "flex",
+                      borderStyle: "solid",
+                      borderWidth: 0.5,
+                      borderColor: Couleur.Black1,
+                      elevation: 1,
+                      paddingLeft: 10,
+                    }}
+                  >
+                    <Fontisto name="date" size={24} color={Couleur.Black11} />
+                    <Text
+                      style={{
+                        fontFamily: FontFamily.RobotoMedium,
+                        letterSpacing: 0.5,
+                        lineHeight: 20,
+                        fontSize: 16,
+                        color: getColor(valueDate),
+                        paddingLeft: 10,
+                      }}
+                    >
+                      {valueDate2}
+                    </Text>
+                  </Pressable>
+                  {showDatePicker && (
+                    <DateTimePicker
+                      value={date}
+                      mode="date"
+                      is24Hour={true}
+                      display="default"
+                      onChange={onChangeDate}
+                      minimumDate={new Date()}
+                    />
+                  )}
+                </View>
+                {/* ******************************************* */}
+              </View>
+            </View>
+          </View>
           {/* =======================Classe======================= */}
-          <View className="  flex flex-1" style={{ width: Width * 0.9 }}>
+          {/* <View className="  flex flex-1" style={{ width: Width * 0.9 }}>
             <Text
               style={{
                 marginTop: 5,
@@ -513,7 +657,7 @@ export function ReservationForm({ onClick }) {
               placeholder="Classe de voyage"
               width={Width * 0.9}
             />
-          </View>
+          </View> */}
         </View>
 
         {/* ============= Bouton Rechercher=========================== */}

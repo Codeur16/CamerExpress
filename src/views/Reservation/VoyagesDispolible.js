@@ -13,7 +13,6 @@ import {
   Alert,
   TouchableOpacity,
   Button,
-  RadioButton,
 } from "react-native";
 import Couleur from "../../utils/color";
 import { FontFamily } from "../../../GlobalStyles";
@@ -40,7 +39,8 @@ import {
   subtractTime,
 } from "./TrajetScreen";
 import BottomSheet from "react-native-raw-bottom-sheet";
-
+import { RadioButton } from "react-native-paper";
+import Dropdown from "../../components/select-picker";
 
 export function VoyagesDisponible() {
   const [ShowAction, setShowAction] = useState(true);
@@ -48,14 +48,29 @@ export function VoyagesDisponible() {
   const BottomSheetRef = useRef();
   const navigation = useNavigation();
   const route = useRoute();
-  const [trajets, setTrajets] = useState([]);
+  const [trajets, setTrajets] = useState(currentTrajet);
   const currentTrajet = route.params.trajets;
   // var params = route.params.trajets;
-
-
+  const [selectDuree, setselectDuree] = useState("");
+  const [value, setValue] = useState("");
+  const [Agence, setAgence] = useState([
+    { id: "Yaounde", nom: "General" },
+    { id: "Douala", nom: "Finex" },
+  ]);
+  const [selectAgence, setSelectA] = useState("");
   useEffect(() => {
     setTrajets(route.params.trajets);
   }, []);
+  useEffect(() => {
+    const newAgences = currentTrajet.map((trajet) => {
+      return {
+        id: trajet.itineraire.site.agence.nom,
+        nom: trajet.itineraire.site.agence.nom,
+      };
+    });
+
+    setAgence(newAgences);
+  }, [trajets]);
 
   console.log("TRAJEts A afficher:" + trajets);
   // const [currentTrajet, setCurrentTrajet] = useState(null);
@@ -153,6 +168,46 @@ export function VoyagesDisponible() {
   }
   //==================================================
 
+  const [filteredTrajets, setFilteredTrajets] = useState(currentTrajet);
+
+  // filtres
+  const filterTrajet = () => {
+    let filtered = currentTrajet;
+
+    // Filtrer par classe
+    if (value === "VIP") {
+      filtered = filtered.filter((trajet) => trajet.bus.classe === "VIP");
+    } else if (value === "CLASSIQUE") {
+      filtered = filtered.filter((trajet) => trajet.bus.classe === "CLASSIQUE");
+    } else {
+      filtered = filtered;
+    }
+
+    // Filtrer par agence "General"
+    if (selectAgence === "") {
+      filtered = filtered;
+    } else {
+      filtered = filtered.filter(
+        (trajet) => trajet.itineraire.site.agence.nom === selectAgence
+      );
+    }
+    // Trier par durée
+    if (selectDuree === "1") {
+      filtered = filtered.sort(
+        (a, b) => a.itineraire.duree - b.itineraire.duree
+      );
+    } else if (selectDuree === "2") {
+      filtered = filtered.sort(
+        (a, b) => b.itineraire.duree - a.itineraire.duree
+      );
+    }
+
+    setFilteredTrajets(filtered);
+  };
+  useEffect(() => {
+    filterTrajet();
+    console.log("value:", value);
+  }, [value]);
   return (
     <ScrollView
       nestedScrollEnabled={true}
@@ -173,7 +228,7 @@ export function VoyagesDisponible() {
           // justifyContent: "center",
           // alignItems: "center",
         }}
-        className="w-full bg-Limeblue9 items-end justify-end"
+        className="w-full bg-white items-end justify-end"
         onPress={() => {
           BottomSheetRef.current.open();
         }}
@@ -182,11 +237,11 @@ export function VoyagesDisponible() {
         <Ionicons
           name="filter"
           size={24}
-          color={"#FFFF"}
+          color={Couleur.Black8}
           style={{ marginRight: 10 }}
         />
       </TouchableOpacity>
-      {currentTrajet?.map((trajet, index) => (
+      {filteredTrajets?.map((trajet, index) => (
         <View
           key={index}
           className=" bg-white border-Black1 border shadow-lg shadow-Black5  rounded flex-col mt-5"
@@ -394,7 +449,6 @@ export function VoyagesDisponible() {
               </View>
             </View>
           </View>
-
           <ActionSheet
             BottomSheetRef={bottomSheetRef}
             height={Height * 0.7}
@@ -409,56 +463,106 @@ export function VoyagesDisponible() {
             getFormattedDate={getFormattedDate}
             getFormattedTime={getFormattedTime}
           />
-
-          <BottomSheet
-            ref={BottomSheetRef}
-            closeOnDragDown={true}
-            height={Height * 0.8}
-            openDuration={350}
-            animationType="slide"
-            minClosingHeight={0}
-            closeDuration={20}
-            closeOnPressMask={true}
-            customStyles={{
-              wrapper: "bg-Black5",
-              container: "rounded-t-3xl bg-white flex flex-col",
-              draggableIcon: "bg-Limeblue6",
-            }}
-          >
-            <View className="p-4 flex flex-row items-center justify-start border-b border-gray-300">
-              <Pressable
-                onPress={() => {
-                  BottomSheetRef.current.close();
-                }}
-                className="p-4"
-              >
-                <AntDesign name="close" size={25} color={"#000"} />
-              </Pressable>
-              <View className="w-4/5 items-center justify-center">
-                <Text className="text-lg font-bold ">Trier & Filtrer</Text>
-              </View>
-            </View>
-            <View className="p-4 border-b border-gray-300">
-              <Text className="text-lg font-bold mb-2">Trier par</Text>
-              <View className="space-y-2">
-                {/* <RadioButton label="Départ" />
-                <RadioButton label="Le plus tôt" />
-                <RadioButton label="Prix le moins cher en premier" />
-                <RadioButton label="Durée la moins longue" /> */}
-              </View>
-            </View>
-            <View className="p-4 border-b border-gray-300">
-              <Text className="text-lg font-bold mb-2">Départ de</Text>
-              {/* <SelectAgence /> */}
-            </View>
-            <View className="p-4 border-t border-gray-300">
-              <Button title="Appliquer" />
-            </View>
-          </BottomSheet>
-
-         
         </View>
       ))}
+
+      <BottomSheet
+        ref={BottomSheetRef}
+        closeOnDragDown={true}
+        height={Height * 0.8}
+        openDuration={350}
+        animationType="slide"
+        minClosingHeight={0}
+        closeDuration={20}
+        closeOnPressMask={true}
+        customStyles={{
+          wrapper: "bg-Black5",
+          container: "rounded-t-3xl bg-white flex flex-col",
+          draggableIcon: "bg-Limeblue6",
+        }}
+      >
+        <View className="p-4 flex flex-row h-auto items-center justify-start border-b border-gray-300">
+          <Pressable
+            onPress={() => {
+              BottomSheetRef.current.close();
+            }}
+            className="p-0"
+          >
+            <AntDesign name="close" size={25} color={"#000"} />
+          </Pressable>
+          <View className="w-4/5 h-auto items-center justify-center">
+            <Text className="text-lg font-bold ">Trier & Filtrer</Text>
+          </View>
+        </View>
+        {/* filter  1 */}
+        <View className="p-4 border-b border-gray-300">
+          <Text className="text-lg font-bold mb-2">Trier par classe</Text>
+          <View className="space-y-2">
+            <RadioButton.Group
+              onValueChange={(newValue) => setValue(newValue)}
+              value={value}
+            >
+              <View className="flex flex-row items-center justify-start">
+                <Text className="text-left w-auto">CLASSIQUE</Text>
+                <RadioButton value="CLASSIQUE" color={"rgba(0, 129, 199, 1)"} />
+              </View>
+              <View className="flex flex-row items-center justify-start">
+                <Text className="text-left w-auto">VIP</Text>
+                <RadioButton value="VIP" color={"rgba(0, 129, 199, 1)"} />
+              </View>
+              <View className="flex flex-row items-center justify-start">
+                <Text className="text-left w-auto">Tout</Text>
+                <RadioButton value="" color={"rgba(0, 129, 199, 1)"} />
+              </View>
+            </RadioButton.Group>
+          </View>
+        </View>
+        {/* filtre 2 */}
+        <View className="p-4 border-b border-gray-300">
+          <Text className="text-lg font-bold mb-2">
+            Trier par duree du trajet
+          </Text>
+          <View className="space-y-2">
+            <RadioButton.Group
+              onValueChange={(newValue) => setselectDuree(newValue)}
+              value={selectDuree}
+              color={"rgba(0, 129, 199, 1)"}
+            >
+              <View className="flex flex-row items-center justify-start">
+                <Text className="text-left w-auto">
+                  Plus longue duree d'abord
+                </Text>
+                <RadioButton value="1" color={"rgba(0, 129, 199, 1)"} />
+              </View>
+              <View className="flex flex-row items-center justify-start">
+                <Text className="text-left w-auto">
+                  Plus courte duree d'abord
+                </Text>
+                <RadioButton value="2" color={"rgba(0, 129, 199, 1)"} />
+              </View>
+            </RadioButton.Group>
+          </View>
+        </View>
+        <View className="p-4 border-b border-gray-300">
+          <Text className="text-lg font-bold mb-2">Filtrer par agence</Text>
+          {/* <SelectAgence /> */}
+          <Dropdown
+            data={Agence}
+            onChange={setSelectA}
+            placeholder="Agence"
+            width={Width * 0.8}
+          />
+        </View>
+        <View className="p-4 border-t border-gray-300">
+          <Button
+            title="Appliquer"
+            onPress={() => {
+              filterTrajet();
+              BottomSheetRef.current.close();
+            }}
+          />
+        </View>
+      </BottomSheet>
     </ScrollView>
   );
 }

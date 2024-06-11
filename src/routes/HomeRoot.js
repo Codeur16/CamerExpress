@@ -148,7 +148,7 @@ export function HomeRoot() {
       borderBottomWidth: 0.5,
       borderBottomColor: Couleur.Black0,
       elevation: 5,
-      shadowColor: "rgba(0, 0, 0, 0.6)", // Couleur de l'ombre
+      shadowColor: "rgba(0, 0, 0, 0.6z)", // Couleur de l'ombre
     },
     headerTitleAlign: "center",
     headerTintColor: Couleur.Black7,
