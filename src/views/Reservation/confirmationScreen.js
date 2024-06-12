@@ -1077,7 +1077,7 @@
                 }}
               >
                 Votre code de reservation est:{" "}
-                <Text className="text-Limeblue">{ReservationPrint.code}</Text>
+                <Text className="text-Limeblue">{text}</Text>
               </Text>
               {/* <Button title="Générer QR Code" onPress={generateQRCode} /> */}
               {qrCodeValue ? (
