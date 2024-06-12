@@ -1,9 +1,10 @@
-xml
-Copier le code
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
-    <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">10.0.2.2</domain>
-        <!-- Ajoutez d'autres domaines si nécessaire -->
-    </domain-config>
+    <base-config cleartextTrafficPermitted="true" >
+     <domain includeSubdomains="true">http://monorail.proxy.rlwy.net:46323/</domain>
+        <trust-anchors>
+            <certificates src="@raw/extracas"/>
+            <certificates src="system"/>
+        </trust-anchors>
+    </base-config>
 </network-security-config>

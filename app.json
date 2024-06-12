@@ -3,10 +3,9 @@
     "name": "CamerExpress",
     "slug": "camerexpress",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "portrait",    
     "icon": "./assets/logo.png",
     "userInterfaceStyle": "light",
-     "platforms": ["android","ios", "web"],
     "androidStatusBar": {
       "translucent": true
     },
@@ -15,9 +14,7 @@
       "image": "./assets/logo1.png",
       "backgroundColor": "#fff"
     },
-    "assetBundlePatterns": [
-      "./assets/fonts/"
-    ],
+    "assetBundlePatterns": ["./assets/fonts/"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.tokoss.camerexpress",
