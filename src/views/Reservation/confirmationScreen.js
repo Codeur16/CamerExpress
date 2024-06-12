@@ -905,236 +905,238 @@
 
 // export default ConfirmationScreen;
 
-import React, { useState, useRef, useEffect } from "react";
-import * as Print from "expo-print";
-import { shareAsync } from "expo-sharing";
-import ticket from "../../components/ticket";
-import {
-  View,
-  Button,
-  StyleSheet,
-  Text,
-  Alert,
-  PermissionsAndroid,
-  Platform,
-  ScrollView,
-  Image,
-} from "react-native";
-import { Height, Width } from "../../utils/DimensionScreen";
-import {
-  Ionicons,
-  MaterialIcons,
-  FontAwesome5,
-  AntDesign,
-  Entypo,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons";
-import Couleur from "../../utils/color";
-import { FontFamily } from "../../../GlobalStyles";
-import QRCode from "react-native-qrcode-svg";
-import * as MediaLibrary from "expo-media-library";
-import { FileSystem } from "expo";
-import { useNavigation } from "@react-navigation/native";
-const ConfirmationScreen = ({
-  MontanTotal,
-  modePaiement,
-  ReservationDetail,
-  ReservationPrint,
-  enfants,
-  adultes,
-}) => {
-  // export default function App() {
-  const [text, setText] = useState(ReservationPrint.code);
-  const [qrCodeValue, setQrCodeValue] = useState("");
-  const qrRef = useRef();
-  const navigation = useNavigation();
+  import React, { useState, useRef, useEffect } from "react";
+  import * as Print from "expo-print";
+  import { shareAsync } from "expo-sharing";
+  import ticket from "../../components/ticket";
+  import {
+    View,
+    Button,
+    StyleSheet,
+    Text,
+    Alert,
+    PermissionsAndroid,
+    Platform,
+    ScrollView,
+    Image,
+  } from "react-native";
+  import { Height, Width } from "../../utils/DimensionScreen";
+  import {
+    Ionicons,
+    MaterialIcons,
+    FontAwesome5,
+    AntDesign,
+    Entypo,
+    MaterialCommunityIcons,
+  } from "@expo/vector-icons";
+  import Couleur from "../../utils/color";
+  import { FontFamily } from "../../../GlobalStyles";
+  import QRCode from "react-native-qrcode-svg";
+  import * as MediaLibrary from "expo-media-library";
+  import { FileSystem } from "expo";
+  import { useNavigation } from "@react-navigation/native";
+  const ConfirmationScreen = ({
+    MontanTotal,
+    modePaiement,
+    ReservationDetail,
+    ReservationPrint,
+    enfants,
+    adultes,
+  }) => {
+    // export default function App() {
+    const [text, setText] = useState("");
+    useEffect(() => {ReservationPrint ? setText(ReservationPrint.code) : setText("");}, [ReservationPrint]);
+    
+    const [qrCodeValue, setQrCodeValue] = useState("");
+    const qrRef = useRef();
+    const navigation = useNavigation();
 
-  const [fileUri, setFileUri] = useState("");
+    const [fileUri, setFileUri] = useState("");
 
-  const handleSaveFile = async () => {
-    if (fileUri) {
-      try {
-        // Check permissions
-        const { status } = await MediaLibrary.checkAsync();
-        if (status !== "granted") {
-          await MediaLibrary.requestPermissionsAsync();
-          return;
+    const handleSaveFile = async () => {
+      if (fileUri) {
+        try {
+          // Check permissions
+          const { status } = await MediaLibrary.checkAsync();
+          if (status !== "granted") {
+            await MediaLibrary.requestPermissionsAsync();
+            return;
+          }
+
+          // Create asset from file URI
+          const asset = await MediaLibrary.createAssetAsync(fileUri);
+
+          // Save asset to album
+          const albumName = "MySavedFiles";
+          await MediaLibrary.saveToAlbumAsync(asset, albumName);
+
+          // Success message
+          alert("File saved successfully!");
+        } catch (error) {
+          console.error("Error saving file:", error);
         }
-
-        // Create asset from file URI
-        const asset = await MediaLibrary.createAssetAsync(fileUri);
-
-        // Save asset to album
-        const albumName = "MySavedFiles";
-        await MediaLibrary.saveToAlbumAsync(asset, albumName);
-
-        // Success message
-        alert("File saved successfully!");
-      } catch (error) {
-        console.error("Error saving file:", error);
       }
-    }
-  };
+    };
 
-  const generateQRCode = () => {
-    setQrCodeValue(text);
-  };
-  const Permission = async () => {
-    if (Platform.OS === "android") {
-      const { status } = await MediaLibrary.requestPermissionsAsync();
-      if (status !== "granted") {
-        Alert.alert(
-          "Permission requise",
-          "Vous devez accorder la permission de stockage pour enregistrer le PDF."
-        );
+    const generateQRCode = () => {
+      setQrCodeValue(text);
+    };
+    const Permission = async () => {
+      if (Platform.OS === "android") {
+        const { status } = await MediaLibrary.requestPermissionsAsync();
+        if (status !== "granted") {
+          Alert.alert(
+            "Permission requise",
+            "Vous devez accorder la permission de stockage pour enregistrer le PDF."
+          );
+        }
       }
-    }
-  };
-  useEffect(() => {
-    Permission();
-    generateQRCode();
-  }, []);
-  const generatePDF = async () => {
-    if (!qrCodeValue) {
+    };
+    useEffect(() => {
+      Permission();
       generateQRCode();
-    }
+    }, []);
+    const generatePDF = async () => {
+      if (!qrCodeValue) {
+        generateQRCode();
+      }
 
-    await qrRef.current.toDataURL((dataURL) => {
-      const htmlContent = ticket(
-        ReservationPrint,
-        MontanTotal,
-        dataURL,
-        enfants,
-        adultes
-      );
-      createPDF(htmlContent);
-    });
-  };
+      await qrRef.current.toDataURL((dataURL) => {
+        const htmlContent = ticket(
+          ReservationPrint,
+          MontanTotal,
+          dataURL,
+          enfants,
+          adultes
+        );
+        createPDF(htmlContent);
+      });
+    };
 
-  const createPDF = async (htmlContent) => {
-    //const { uri } = await Print.printToFileAsync({ html: htmlContent });
-    await Print.printAsync({ html: htmlContent });
-    // await shareAsync(uri);
-    //Afficher un message de réussite
-    Alert.alert("Ticket généré et imprimé avec succès");
-    // navigation.navigate("Acceuil");
-    // Facultatif : ouvrir le PDF dans l'application de visualisation de PDF par défaut
-  };
+    const createPDF = async (htmlContent) => {
+      //const { uri } = await Print.printToFileAsync({ html: htmlContent });
+      await Print.printAsync({ html: htmlContent });
+      // await shareAsync(uri);
+      //Afficher un message de réussite
+      Alert.alert("Ticket généré et imprimé avec succès");
+      // navigation.navigate("Acceuil");
+      // Facultatif : ouvrir le PDF dans l'application de visualisation de PDF par défaut
+    };
 
-  return (
-    <ScrollView contentContainerStyle={{ backgroundColor: "#FFFFFF" }}>
-      <View
-        style={{
-          backgroundColor: Couleur.White,
-          height: "auto",
-          width: Width,
-          justifyContent: "center",
-          alignItems: "center",
-          paddingTop: Height * 0.07,
-        }}
-      >
-        <MaterialCommunityIcons
-          name="cellphone-check"
-          size={60}
-          color={Couleur.Limeblue9}
-        />
-
-        <Text
+    return (
+      <ScrollView contentContainerStyle={{ backgroundColor: "#FFFFFF" }}>
+        <View
           style={{
-            fontFamily: FontFamily.RobotoItalic,
-            fontSize: Width * 0.055,
-            color: Couleur.Limeblue,
-            textAlign: "center",
-            marginVertical: Height * 0,
-            width: Width * 0.8,
+            backgroundColor: Couleur.White,
+            height: "auto",
+            width: Width,
+            justifyContent: "center",
+            alignItems: "center",
+            paddingTop: Height * 0.07,
           }}
         >
-          Félicitation Votre paiement a été effectuée avec succes
-        </Text>
+          <MaterialCommunityIcons
+            name="cellphone-check"
+            size={60}
+            color={Couleur.Limeblue9}
+          />
 
-        {/* <QRCodeGenerator /> */}
+          <Text
+            style={{
+              fontFamily: FontFamily.RobotoItalic,
+              fontSize: Width * 0.055,
+              color: Couleur.Limeblue,
+              textAlign: "center",
+              marginVertical: Height * 0,
+              width: Width * 0.8,
+            }}
+          >
+            Félicitation Votre paiement a été effectuée avec succes
+          </Text>
 
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-          <View style={styles.container}>
-            {/* <TextInput
-              style={styles.input}
-              placeholder="Entrez une chaîne de caractères"
-              value={text}
-              onChangeText={setText}
-            /> */}
-            <Text
-              style={{
-                fontFamily: FontFamily.RobotoBold,
-                fontSize: Width * 0.035,
-                color: Couleur.Black7,
-                textAlign: "center",
-                marginVertical: Height * 0.005,
-                width: Width * 0.8,
-              }}
-            >
-              Votre code de reservation est:{" "}
-              <Text className="text-Limeblue">{ReservationPrint.code}</Text>
-            </Text>
-            {/* <Button title="Générer QR Code" onPress={generateQRCode} /> */}
-            {qrCodeValue ? (
-              <View>
-                {/* <Text>QR CODE:</Text> */}
-                <QRCode value={qrCodeValue} size={200} getRef={qrRef} />
-                <View
-                  style={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                  className=" pt-2 pb-2"
-                >
-                  <Button
-                    title="Imprimer votre le ticket"
-                    onPress={() => {
-                      generatePDF();
+          {/* <QRCodeGenerator /> */}
+
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
+            <View style={styles.container}>
+              {/* <TextInput
+                style={styles.input}
+                placeholder="Entrez une chaîne de caractères"
+                value={text}
+                onChangeText={setText}
+              /> */}
+              <Text
+                style={{
+                  fontFamily: FontFamily.RobotoBold,
+                  fontSize: Width * 0.035,
+                  color: Couleur.Black7,
+                  textAlign: "center",
+                  marginVertical: Height * 0.005,
+                  width: Width * 0.8,
+                }}
+              >
+                Votre code de reservation est:{" "}
+                <Text className="text-Limeblue">{ReservationPrint.code}</Text>
+              </Text>
+              {/* <Button title="Générer QR Code" onPress={generateQRCode} /> */}
+              {qrCodeValue ? (
+                <View>
+                  {/* <Text>QR CODE:</Text> */}
+                  <QRCode value={qrCodeValue} size={200} getRef={qrRef} />
+                  <View
+                    style={{
+                      justifyContent: "center",
+                      alignItems: "center",
                     }}
-                  />
+                    className=" pt-2 pb-2"
+                  >
+                    <Button
+                      title="Imprimer votre le ticket"
+                      onPress={() => {
+                        generatePDF();
+                      }}
+                    />
+                  </View>
                 </View>
-              </View>
-            ) : (
-              <View></View>
-            )}
-            {/* <Button title="Générer PDF" onPress={generatePDF} /> */}
+              ) : (
+                <View></View>
+              )}
+              {/* <Button title="Générer PDF" onPress={generatePDF} /> */}
+            </View>
+          </View>
+          <View className="w-full mt-5 ">
+            {/* <TextInput
+            value={fileUri}
+            onChangeText={(text) => setFileUri(text)}
+            placeholder="Enter file URI"
+          /> */}
+            <Button
+              title="Retourner a l'accueil"
+              onPress={() => {
+                navigation.navigate("HomeRoot");
+              }}
+              
+            />
           </View>
         </View>
-        <View className="w-full mt-5 ">
-          {/* <TextInput
-          value={fileUri}
-          onChangeText={(text) => setFileUri(text)}
-          placeholder="Enter file URI"
-        /> */}
-          <Button
-            title="Retourner a l'accueil"
-            onPress={() => {
-              navigation.navigate("HomeRoot");
-            }}
-             
-          />
-        </View>
-      </View>
-    </ScrollView>
-  );
-};
-export default ConfirmationScreen;
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 1,
-  },
-  input: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    marginBottom: 2,
-    paddingHorizontal: 10,
-    width: "80%",
-  },
-});
+      </ScrollView>
+    );
+  };
+  export default ConfirmationScreen;
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      padding: 1,
+    },
+    input: {
+      height: 40,
+      borderColor: "gray",
+      borderWidth: 1,
+      marginBottom: 2,
+      paddingHorizontal: 10,
+      width: "80%",
+    },
+  });
