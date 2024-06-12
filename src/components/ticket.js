@@ -11,7 +11,7 @@ import * as FileSystem from "expo-file-system";
 // Convertir le code QR en URL de données
 // const imageDataURL = convertQRCodeToDataURL();
 
-const ticket = (ReservationPrint, MontantTotal, uri) => {
+const ticket = (ReservationPrint, MontantTotal, uri, enfants, adultes) => {
   const image = uri;
   // const [svgContent, setSvgContent] = useState("");
   // const convertPngToSvg = async () => {
@@ -220,7 +220,10 @@ const ticket = (ReservationPrint, MontantTotal, uri) => {
         <div class="description text" style="font-weight: normal; font-size: large;">Le même code QR est utilisé pour
           l’ensemble de votre voyage</div>
       </div>
+      <p style="font-size:small">NOMBRE DE PASSERGERS</p>
+      <span style="font-size:small">Adultes: ${adultes};  Enfants: ${enfants}</span>
       <div class="passager ">
+      
         <div class="user" style="display: flex; flex-direction: row; width: 80%;">
           <div class="avatar" style="width: 70px;"> <svg xmlns="http://www.w3.org/2000/svg" height="48px"
               viewBox="0 0 24 24" width="48px" fill="rgba(0, 129, 199, 0.9)">
@@ -240,7 +243,7 @@ const ticket = (ReservationPrint, MontantTotal, uri) => {
           <label class="text" style="text-decoration: underline;font-weight: normal;">Bus ${
             ReservationPrint.voyage.bus.code
           }</label>
-          <label class="text center" style="margin-top: 5px;">12A</label>
+         <!--  <label class="text center" style="margin-top: 5px;">12A</label> -->
         </div>
       </div>
       <!-- bagages 

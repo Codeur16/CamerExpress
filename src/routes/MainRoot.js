@@ -14,7 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import Couleur from "../utils/color";
 import { EffectuerReservationScreen, PaimentScreen } from "../views/index";
 import { Width } from "../utils/DimensionScreen";
-import { VoyagesDisponible } from "../views/index";
+import { VoyagesDisponible, Passagers } from "../views/index";
 
 const Stack = createNativeStackNavigator();
 
@@ -316,7 +316,7 @@ export default function MainRoot() {
           //         alignItems: "center",
           //       }}
           //       onPress={() => {
-                 
+
           //       }}
           //     >
           //       <Text style={{ color: "#FFFFFF", padding: 1 }}>FIltre</Text>
@@ -332,6 +332,56 @@ export default function MainRoot() {
         }}
       />
 
+      <Stack.Screen
+        name="Passagers"
+        component={Passagers}
+        options={{
+          headerShown: true,
+          title: "Passagers",
+          headerTitleAlign: "center",
+          headerStyle: {
+            backgroundColor: Couleur.Limeblue9,
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {},
+          headerTitleAlign: "left",
+          headerTitleStyle: {
+            fontFamily: FontFamily.RobotoBold,
+            fontSize: 18,
+          },
+          // headerLeft: (props) => <LogoTitle {...props} />,
+
+          // headerRight: () => (
+          //   <View
+          //     style={{
+          //       flexDirection: "row",
+          //       alignItems: "center",
+          //       marginRight: 10,
+          //     }}
+          //   >
+          //     <TouchableOpacity
+          //       style={{
+          //         display: "flex",
+          //         flexDirection: "row",
+          //         justifyContent: "center",
+          //         alignItems: "center",
+          //       }}
+          //       onPress={() => {
+
+          //       }}
+          //     >
+          //       <Text style={{ color: "#FFFFFF", padding: 1 }}>FIltre</Text>
+          //       <Ionicons
+          //         name="filter"
+          //         size={24}
+          //         color={"#fff"}
+          //         style={{ marginRight: 10 }}
+          //       />
+          //     </TouchableOpacity>
+          //   </View>
+          // ),
+        }}
+      />
       {/* <Stack.Screen
         name="Effectuer Reservation"
         component={EffectuerReservationScreen}

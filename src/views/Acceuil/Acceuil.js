@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -23,9 +23,24 @@ import { Width, Height } from "../../utils/DimensionScreen";
 import Spinner from "react-native-loading-spinner-overlay";
 console.log("Largeur de l'écran : ", Width);
 console.log("Hauteur de l'écran : ", Height);
+import { useRoute } from "@react-navigation/native";
 
 export function AcceuilSreen() {
   const [date, setDate] = useState(null);
+  const route = useRoute();
+  let enfants = route.params?.enfants;
+  let adultes = route.params?.adultes;
+
+  useEffect(() => {
+    adultes = route.params?.adultes;
+    enfants = route.params?.enfants;
+    console.log(
+      "===========================Enfants=============================:",
+      enfants,
+      "=====================================Adultes===========================",
+      adultes
+    );
+  }, [enfants, adultes]);
   const navigation = useNavigation();
   const handleDateSelection = (date) => {
     setDate(date);
@@ -113,7 +128,7 @@ export function AcceuilSreen() {
           </View> */}
 
           <Pressable
-            className="flex-1 flex-grow items-center content-start border-t-2 border-t-Black2 w-full"
+            className=" mt-2 flex-1 flex-grow items-center content-start border-t-2 rounded-t-md border-t-Black2 w-full"
             onPress={() => {
               navigation.navigate("Agences");
             }}

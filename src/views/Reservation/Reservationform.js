@@ -2,7 +2,7 @@
 //             Importations
 //===========================================================
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Platform,
@@ -11,6 +11,7 @@ import {
   Text,
   ScrollView,
   ToastAndroid,
+  Button,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -22,6 +23,17 @@ import Dropdown from "../../components/select-picker";
 import { Width, Height } from "../../utils/DimensionScreen";
 import { TouchButton } from "../../components/TouchableButton";
 import url from "../../utils/url";
+import { RadioButton } from "react-native-paper";
+import BottomSheet from "react-native-raw-bottom-sheet";
+import {
+  Ionicons,
+  MaterialIcons,
+  FontAwesome5,
+  AntDesign,
+  Entypo,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
+import ButtomSheet from "../../components/BottomSheetForPaiement";
 
 const initialData = [
   {
@@ -139,7 +151,7 @@ export function ReservationForm({ onClick }) {
   //============================================
   //           Declaration des constantes
   //============================================
-
+  const BottomSheetRef = useRef();
   const [selectedDate, setSelectedDate] = useState(date);
   const [SelectedVilleArrive, setSelectedVilleArrive] = useState(null);
   const [SelectedVilleDepart, setSelectedVilleDepart] = useState(null);
@@ -162,7 +174,7 @@ export function ReservationForm({ onClick }) {
   ]);
   // Parametre de requette
   const [Trajets, setTrajets] = useState(initialData);
-
+  const [allerSimple, setAllerSimple] = useState("true");
   //================================================================
 
   /*   Requette de recupperer   les sites de depart*/
@@ -291,13 +303,21 @@ export function ReservationForm({ onClick }) {
           const currentTrajets = res.data.data;
           setTrajets(res.data.data);
 
-          navigation.navigate("Voyages", { trajets: currentTrajets });
+          navigation.navigate("Voyages", {
+            trajets: currentTrajets,
+            enfants: enfants,
+            adultes: adultes,
+          });
           onClick(false);
         })
         .catch((err) => {
           console.error("Erreur ! \n veillez reessayer");
           console.error(err);
-          navigation.navigate("Voyages", { trajets: Trajets });
+          navigation.navigate("Voyages", {
+            trajets: Trajets,
+            enfants: enfants,
+            adultes: adultes,
+          });
           onClick(false);
           console.log(typeof Trajets);
         });
@@ -315,6 +335,31 @@ export function ReservationForm({ onClick }) {
       year: "numeric",
     };
     return date.toLocaleDateString("fr-FR", options);
+  };
+
+  //==========================================passager
+
+  const [adultes, setAdultes] = useState(0);
+  const [enfants, setEnfants] = useState(0);
+
+  const incrementAdultes = () => {
+    setAdultes(adultes + 1);
+  };
+
+  const decrementAdultes = () => {
+    if (adultes > 0) {
+      setAdultes(adultes - 1);
+    }
+  };
+
+  const incrementEnfants = () => {
+    setEnfants(enfants + 1);
+  };
+
+  const decrementEnfants = () => {
+    if (enfants > 0) {
+      setEnfants(enfants - 1);
+    }
   };
   // ==========================Loading==========================
 
@@ -344,6 +389,37 @@ export function ReservationForm({ onClick }) {
             alignContent: "center",
           }}
         >
+          <View className="w-full h-auto flex flex-row ">
+            <RadioButton.Group
+              onValueChange={(newValue) => setAllerSimple(newValue)}
+              value={allerSimple}
+              className="flex flex-row w-full p-2  "
+              style={{ display: "flex", flexDirection: "row" }}
+            >
+              <View className="flex flex-row">
+                <View
+                  className="flex w-1/2 flex-row items-center justify-start"
+                  value="true"
+                  color={"rgba(0, 129, 199, 1)"}
+                >
+                  <RadioButton
+                    status="checked"
+                    value="true"
+                    color={"rgba(0, 129, 199, 1)"}
+                  />
+                  <Text className="text-left w-auto">Aller simple</Text>
+                </View>
+                <View className="flex w-1/2 flex-row items-center justify-start">
+                  <RadioButton
+                    value="false"
+                    disabled
+                    color={"rgba(0, 129, 199, 1)"}
+                  />
+                  <Text className="text-left w-auto">Aller retour </Text>
+                </View>
+              </View>
+            </RadioButton.Group>
+          </View>
           {/* =======================Villes============================ */}
           <View
             className="  flex  flex-row  justify-between"
@@ -534,97 +610,99 @@ export function ReservationForm({ onClick }) {
               </View>
             </View>
           </View>
-
-          <View
-            className="mt-2"
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-              alignContent: "center",
-            }}
-          >
-            <View className="">
-              <Text
-                style={{
-                  fontSize: 15,
-
-                  color: Couleur.Black10,
-                  fontFamily: FontFamily.RobotoMedium,
-                }}
-              >
-                Retour
+          {allerSimple === "false" && (
+            <View
+              className="mt-2"
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                alignContent: "center",
+              }}
+            >
+              <View className="">
                 <Text
-                  className=" color-Black4"
                   style={{
-                    fontSize: 14,
+                    fontSize: 15,
 
-                    color: Couleur.Black5,
-                    fontFamily: FontFamily.RobotoThin,
+                    color: Couleur.Black10,
+                    fontFamily: FontFamily.RobotoMedium,
                   }}
                 >
-                  {`\t(`}indisponible{`)`}
+                  Retour
+                  <Text
+                    className=" color-Black4"
+                    style={{
+                      fontSize: 14,
+
+                      color: Couleur.Black5,
+                      fontFamily: FontFamily.RobotoThin,
+                    }}
+                  >
+                    {`\t(`}indisponible{`)`}
+                  </Text>
                 </Text>
-              </Text>
-              <View className="my-1 w-full">
-                {/* <MyDatePicker
+                <View className="my-1 w-full">
+                  {/* <MyDatePicker
                   onDateSelected={handleDateSelection}
                   name={selectedDate ? selectedDate : "Date de depart"}
                 /> */}
 
-                {/* ********************DATE******************* */}
-                <View>
-                  <Pressable
-                    onPress={() => {
-                      console.log("PressedDate");
-                      setFocus(true);
-                      showDatepicker();
-                    }}
-                    className="flex-row"
-                    style={{
-                      backgroundColor: Couleur.White,
-                      fontSize: 12,
-                      width: Width * 0.9,
-                      height: 45,
-                      borderRadius: 5,
-                      justifyContent: "flex-start",
-                      alignItems: "center",
-                      display: "flex",
-                      borderStyle: "solid",
-                      borderWidth: 0.5,
-                      borderColor: Couleur.Black1,
-                      elevation: 1,
-                      paddingLeft: 10,
-                    }}
-                  >
-                    <Fontisto name="date" size={24} color={Couleur.Black11} />
-                    <Text
+                  {/* ********************DATE******************* */}
+                  <View>
+                    <Pressable
+                      onPress={() => {
+                        console.log("PressedDate");
+                        setFocus(true);
+                        showDatepicker();
+                      }}
+                      className="flex-row"
                       style={{
-                        fontFamily: FontFamily.RobotoMedium,
-                        letterSpacing: 0.5,
-                        lineHeight: 20,
-                        fontSize: 16,
-                        color: getColor(valueDate),
+                        backgroundColor: Couleur.White,
+                        fontSize: 12,
+                        width: Width * 0.9,
+                        height: 45,
+                        borderRadius: 5,
+                        justifyContent: "flex-start",
+                        alignItems: "center",
+                        display: "flex",
+                        borderStyle: "solid",
+                        borderWidth: 0.5,
+                        borderColor: Couleur.Black1,
+                        elevation: 1,
                         paddingLeft: 10,
                       }}
                     >
-                      {valueDate2}
-                    </Text>
-                  </Pressable>
-                  {showDatePicker && (
-                    <DateTimePicker
-                      value={date}
-                      mode="date"
-                      is24Hour={true}
-                      display="default"
-                      onChange={onChangeDate}
-                      minimumDate={new Date()}
-                    />
-                  )}
+                      <Fontisto name="date" size={24} color={Couleur.Black11} />
+                      <Text
+                        style={{
+                          fontFamily: FontFamily.RobotoMedium,
+                          letterSpacing: 0.5,
+                          lineHeight: 20,
+                          fontSize: 16,
+                          color: getColor(valueDate),
+                          paddingLeft: 10,
+                        }}
+                      >
+                        {valueDate2}
+                      </Text>
+                    </Pressable>
+                    {showDatePicker && (
+                      <DateTimePicker
+                        value={date}
+                        mode="date"
+                        is24Hour={true}
+                        display="default"
+                        onChange={onChangeDate}
+                        minimumDate={new Date()}
+                      />
+                    )}
+                  </View>
+                  {/* ******************************************* */}
                 </View>
-                {/* ******************************************* */}
               </View>
             </View>
-          </View>
+          )}
+
           {/* =======================Classe======================= */}
           {/* <View className="  flex flex-1" style={{ width: Width * 0.9 }}>
             <Text
@@ -659,6 +737,33 @@ export function ReservationForm({ onClick }) {
             />
           </View> */}
         </View>
+        <View className="w-full h-auto justify-center items-center px-5">
+          <Pressable
+            onPress={() => {
+              BottomSheetRef.current.open();
+            }}
+            className="flex-row"
+            style={{
+              backgroundColor: Couleur.White,
+              fontSize: 12,
+              width: Width * 0.9,
+              height: 45,
+              borderRadius: 5,
+              justifyContent: "flex-start",
+              alignItems: "center",
+              display: "flex",
+              borderStyle: "solid",
+              borderWidth: 0.5,
+              borderColor: Couleur.Black1,
+              elevation: 1,
+              paddingLeft: 10,
+            }}
+          >
+            <Text>
+              {adultes} adultes et {enfants} enfants
+            </Text>
+          </Pressable>
+        </View>
 
         {/* ============= Bouton Rechercher=========================== */}
         <View
@@ -685,6 +790,95 @@ export function ReservationForm({ onClick }) {
       </View>
 
       {/* </View> */}
+      <BottomSheet
+        ref={BottomSheetRef}
+        closeOnDragDown={true}
+        height={Height * 0.6}
+        openDuration={350}
+        animationType="slide"
+        minClosingHeight={0}
+        closeDuration={20}
+        closeOnPressMask={true}
+        customStyles={{
+          wrapper: "bg-Black5",
+          container: "rounded-t-3xl bg-white flex flex-col",
+          draggableIcon: "bg-Limeblue6",
+        }}
+      >
+        <View className="p-4 flex flex-row h-auto items-center justify-start border-b border-gray-300">
+          <Pressable
+            onPress={() => {
+              BottomSheetRef.current.close();
+            }}
+            className="p-0"
+          >
+            <AntDesign name="close" size={25} color={"#000"} />
+          </Pressable>
+          <View className="w-4/5 h-auto items-center justify-center">
+            <Text className="text-lg font-bold ">Passagers</Text>
+          </View>
+        </View>
+        {/* filter  1 */}
+        <View className="items-center justify-center flex flex-col w-full h-auto py-10 ">
+          <Text>Nombre de passagers adultes: {adultes}</Text>
+          <View
+            style={{
+              backgroundColor: "#FFF",
+              fontSize: 12,
+              width: Width * 0.9,
+              height: 45,
+              borderRadius: 5,
+              justifyContent: "space-around",
+              alignItems: "center",
+              display: "flex",
+              borderStyle: "solid",
+              borderWidth: 0.5,
+              borderColor: Couleur.Black1,
+              elevation: 1,
+              paddingLeft: 10,
+              marginVertical: 10,
+              flexDirection: "row",
+            }}
+          >
+            <Button title="  +  " onPress={incrementAdultes} />
+            <Text> {adultes}</Text>
+            <Button title="  -  " onPress={decrementAdultes} />
+          </View>
+          <Text>Nombre de passagers enfants: {enfants}</Text>
+          <View
+            style={{
+              backgroundColor: Couleur.White,
+              fontSize: 12,
+              paddingVertical: 10,
+              width: Width * 0.9,
+              height: "auto",
+              borderRadius: 5,
+              justifyContent: "space-around",
+              alignItems: "center",
+              display: "flex",
+              flexDirection: "row",
+              borderStyle: "solid",
+              borderWidth: 0.5,
+              borderColor: Couleur.Black1,
+              elevation: 1,
+              marginVertical: 10,
+            }}
+          >
+            <Button title="  +  " onPress={incrementEnfants} />
+            <Text> {enfants}</Text>
+            <Button title="  -  " onPress={decrementEnfants} />
+          </View>
+
+          <View className=" w-11/12 h-20">
+            <Button
+              title="Confirmer"
+              onPress={() => {
+                BottomSheetRef.current.close();
+              }}
+            />
+          </View>
+        </View>
+      </BottomSheet>
     </ScrollView>
     // {/* </ScrollView> */}
   );

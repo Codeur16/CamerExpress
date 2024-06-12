@@ -94,231 +94,6 @@ function addTime(time1, time2) {
 
   return `${hours}:${minutes}`;
 }
-//==========================================================================================================
-// function Step1({ nextStep }) {
-//   const [ShowAction, setShowAction] = useState(true);
-//   const bottomSheetRef = useRef();
-//   const navigation = useNavigation();
-//   const route = useRoute();
-
-//   return (
-//     <SafeAreaView style={{ backgroundColor: "#fff", paddingTop: -50 }}>
-//       <ScrollView
-//         nestedScrollEnabled={true}
-//         showsVerticalScrollIndicator={false}
-//         contentContainerStyle={{
-//           flexDirection: "column",
-//           width: "100%",
-//           height: "100%",
-//           backgroundColor: "white",
-//           justifyContent: "flex-start ",
-//           alignItems: "center",
-//         }}
-//       >
-//         <View
-//           className=" bg-white border-Black1 border shadow-lg shadow-Black5  rounded flex-col mt-5"
-//           style={styles.container}
-//         >
-//           <View
-//             className="h-1/2 w-full p-2 flex-row "
-//             style={{ marginBottom: -20 }}
-//           >
-//             <View className="w-1/2 h-full flex-row">
-//               <View
-//                 className=" w-1/3 justify-between items-center"
-//                 style={{ height: "85%" }}
-//               >
-//                 <Text style={styles.text}>
-//                   {getFormattedTime(Trajets[0].dateDepart)}
-//                 </Text>
-//                 <Text style={styles.text}>
-//                   {getFormattedTime(Trajets[0].dateArriver)}
-//                 </Text>
-//               </View>
-//               <View className=" w-auto" style={{ height: "100%" }}>
-//                 <Svg
-//                   width="10"
-//                   height="80%"
-//                   viewBox="0 0 86 665"
-//                   fill="none"
-//                   xmlns="http://www.w3.org/2000/svg"
-//                 >
-//                   <Path
-//                     d="M43 583L43 83"
-//                     stroke="black"
-//                     stroke-width="5"
-//                     stroke-linecap="round"
-//                   />
-//                   <Circle
-//                     cx="43"
-//                     cy="63"
-//                     r="60"
-//                     fill="white"
-//                     stroke="black"
-//                     stroke-width="5"
-//                   />
-//                   <Circle
-//                     cx="43"
-//                     cy="583"
-//                     r="60"
-//                     fill={Couleur.Black7}
-//                     stroke="black"
-//                     stroke-width="15"
-//                   />
-//                 </Svg>
-//               </View>
-//               <View
-//                 className=" w-2/3 justify-between  items-start pl-2"
-//                 style={{ height: "85%" }}
-//               >
-//                 <Text style={styles.text} className="">
-//                   {" "}
-//                   {Trajets[0].itineraire.villeDepart.nom}
-//                 </Text>
-//                 <Text style={styles.text}>
-//                   {Trajets[0].itineraire.villeDestination.nom}{" "}
-//                 </Text>
-//               </View>
-//             </View>
-//             <View className="w-1/2 h-full items-end">
-//               <Pressable
-//                 onPress={() => {
-//                   bottomSheetRef.current.open();
-//                   setShowAction(true);
-//                 }}
-//               >
-//                 <AntDesign name="down" size={24} color={Couleur.Black7} />
-//               </Pressable>
-//             </View>
-//           </View>
-//           <View className="h-auto  p-2 flex-row items-center content-center">
-//             <View
-//               className="w-3/5"
-//               style={{
-//                 borderBottomWidth: 1,
-//                 borderBottomColor: Couleur.Black3,
-//               }}
-//             ></View>
-//             <Text className="w-2/5  color-Limeblue8 pl-1" style={styles.text}>
-//               Presque Complet
-//             </Text>
-//           </View>
-
-//           <View className="h-1/2 w-full flex-row" style={{ marginTop: -15 }}>
-//             <View className="w-1/2 h-auto flex-col items-start ">
-//               <View
-//                 className="  h-8 border-Black1 border shadow-sm  bg-white shadow-Black5 rounded-2xl mt-2 ml-1 flex-row items-center justify-around"
-//                 style={{ width: "80%" }}
-//               >
-//                 <FontAwesome5
-//                   name="bus-alt"
-//                   size={20}
-//                   color={Couleur.Limeblue9}
-//                 />
-//                 <View
-//                   className="w-auto   rounded"
-//                   style={{
-//                     height: "80%",
-//                     borderLeftWidth: 2,
-//                     borderLeftColor: Couleur.Black3,
-//                   }}
-//                 ></View>
-//                 <Text style={styles.text}>Direct</Text>
-//                 <Pressable
-//                   onPress={() => {
-//                     setShowAction(true);
-//                   }}
-//                 >
-//                   <AntDesign name="down" size={20} color={Couleur.Black4} />
-//                 </Pressable>
-//               </View>
-//               <View
-//                 className="  h-8  bg-white mt-1 ml-1 flex-row items-center justify-around"
-//                 style={{ width: "80%" }}
-//               >
-//                 <Text style={styles.text}>
-//                   {getFormattedTime(Trajets[0].dateDepart)}
-//                 </Text>
-
-//                 <View
-//                   className="w-auto   rounded"
-//                   style={{
-//                     height: "80%",
-//                     borderLeftWidth: 2,
-//                     borderLeftColor: Couleur.Black3,
-//                   }}
-//                 ></View>
-
-//                 <AntDesign name="wifi" size={20} color="green" />
-//                 <MaterialIcons
-//                   name="electrical-services"
-//                   size={20}
-//                   color="green"
-//                 />
-//                 {/* <Pressable
-//                   onPress={() => {
-//                     Alert.alert("OK");
-//                   }}
-//                 >
-//                   <AntDesign name="down" size={20} color={Couleur.Black4} />
-//                 </Pressable> */}
-//               </View>
-//             </View>
-//             <View className="items-end justify-center ">
-//               <View className="w-1/2 h-auto flex-row justify-end items-center pr-1">
-//                 <Text style={styles.text2} className="text-left ">
-//                   {Trajets[0].prixReservation} XAF
-//                 </Text>
-//                 <Pressable
-//                   style={{
-//                     width: 40,
-//                     height: 40,
-//                     borderRadius: 50,
-//                     backgroundColor: Couleur.Limeblue9,
-//                     justifyContent: "center",
-//                     alignItems: "center",
-//                     marginRight: 10,
-//                     marginLeft: 5,
-//                   }}
-//                   onPress={() => {
-//                     bottomSheetRef.current.open();
-//                     setShowAction(true);
-//                   }}
-//                 >
-//                   {/* <Ionicons
-//                     name="arrow-redo-sharp"
-//                     size={24}
-//                     color={Couleur.White}
-//                   /> */}
-//                   <AntDesign name="right" size={24} color={Couleur.White} />
-//                 </Pressable>
-//               </View>
-//               <View className=" items-end justify-end w-full pr-5">
-//                 <Text style={styles.text2} className="  color-Limeblue9">
-//                   {Trajets[0].itineraire.site.agence.nom}
-//                 </Text>
-//               </View>
-//             </View>
-//           </View>
-//         </View>
-//         <ActionSheet
-//           BottomSheetRef={bottomSheetRef}
-//           height={Height * 0.7}
-//           openDuration={600}
-//           data={trajets}
-//           index={0}
-//           NextStep={() => {
-//             bottomSheetRef.current.close();
-//             nextStep();
-//           }}
-//           subtractTime={subtractTime}
-//           getFormattedDate={getFormattedDate}
-//           getFormattedTime={getFormattedTime}
-//         />
-//       </ScrollView>
-//     </SafeAreaView>
-//   );
-// }
 
 const TrajetsScreen = () => {
   const navigation = useNavigation();
@@ -326,6 +101,8 @@ const TrajetsScreen = () => {
   const route = useRoute();
   const [trajets, setTrajets] = useState(route.params.trajet);
   console.log("Trajet selectionnee :::::" + trajets.id);
+  const enfants = route.params.enfants;
+  const adultes = route.params.adultes;
   const [prixReservation, setPrixReservation] = useState(
     route.params.prixReservation
   );
@@ -418,9 +195,7 @@ const TrajetsScreen = () => {
     statut: "",
     alertsms: false,
   });
-  // const setReservationPrint =(value)=>{
-  //   ReservationPrint=value
-  // }
+
   useEffect(() => {
     setReservationDetail([
       { id: 1, label: "nombrePassager", value: nombrePassager },
@@ -534,6 +309,8 @@ const TrajetsScreen = () => {
             setMontantTotal={setMontantTotal}
             modePaiement={modepaiement}
             setClasse={setClasse}
+            enfants={enfants}
+            adultes={adultes}
           />
         </ProgressStep>
         <ProgressStep
@@ -583,6 +360,8 @@ const TrajetsScreen = () => {
             MontanTotal={MontantTotal}
             modePaiement={modepaiement}
             ReservationDetail={ReservationDetail}
+            enfants={enfants}
+            adultes={adultes}
           />
         </ProgressStep>
       </ProgressSteps>

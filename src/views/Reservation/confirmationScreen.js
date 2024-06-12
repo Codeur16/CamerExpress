@@ -940,6 +940,8 @@ const ConfirmationScreen = ({
   modePaiement,
   ReservationDetail,
   ReservationPrint,
+  enfants,
+  adultes,
 }) => {
   // export default function App() {
   const [text, setText] = useState(ReservationPrint.code);
@@ -998,7 +1000,13 @@ const ConfirmationScreen = ({
     }
 
     await qrRef.current.toDataURL((dataURL) => {
-      const htmlContent = ticket(ReservationPrint, MontanTotal, dataURL);
+      const htmlContent = ticket(
+        ReservationPrint,
+        MontanTotal,
+        dataURL,
+        enfants,
+        adultes
+      );
       createPDF(htmlContent);
     });
   };
@@ -1095,7 +1103,7 @@ const ConfirmationScreen = ({
             {/* <Button title="Générer PDF" onPress={generatePDF} /> */}
           </View>
         </View>
-        <View className="w-full mt-28 ">
+        <View className="w-full mt-5 ">
           {/* <TextInput
           value={fileUri}
           onChangeText={(text) => setFileUri(text)}
@@ -1104,8 +1112,9 @@ const ConfirmationScreen = ({
           <Button
             title="Retourner a l'accueil"
             onPress={() => {
-              navigation.navigate("Acceuil");
+              navigation.navigate("HomeRoot");
             }}
+             
           />
         </View>
       </View>

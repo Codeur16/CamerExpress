@@ -8,7 +8,8 @@ import { TrajetsScreen } from "./Reservation/TrajetScreen";
 import { AgenceScreen } from "./Reservation/AgencesScreen";
 import { EffectuerReservationScreen } from "./Reservation/EffectuerReservation";
 import { PaimentScreen } from "./paiement";
-import {VoyagesDisponible} from "./Reservation/VoyagesDispolible"
+import { VoyagesDisponible } from "./Reservation/VoyagesDispolible";
+import { Passagers } from "./Reservation/Passagers";
 export {
   ReservationSreen,
   AgendaSreen,
@@ -21,4 +22,5 @@ export {
   EffectuerReservationScreen,
   PaimentScreen,
   VoyagesDisponible,
+  Passagers,
 };

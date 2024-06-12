@@ -142,16 +142,16 @@ export function HomeRoot() {
       }),
     },
     headerStyle: {
-      backgroundColor: "#ffff",
-      borderTopWidth: Width * 0.111,
+      backgroundColor: "#fff",
+      borderTopWidth: Width * 0.1,
       borderTopColor: Couleur.Limeblue9,
       borderBottomWidth: 0.5,
-      borderBottomColor: Couleur.Black0,
+      borderBottomColor: Couleur.Black1,
       elevation: 5,
-      shadowColor: "rgba(0, 0, 0, 0.6z)", // Couleur de l'ombre
+      shadowColor: "rgba(0, 0, 0, 0.1)", // Couleur de l'ombre
     },
     headerTitleAlign: "center",
-    headerTintColor: Couleur.Black7,
+    headerTintColor: Couleur.Black8,
     headerTitleStyle: {
       fontFamily: FontFamily.RobotoBold,
       width: "auto",
@@ -324,7 +324,7 @@ export function HomeRoot() {
                     fontFamily: focused
                       ? FontFamily.RobotoBold
                       : FontFamily.RobotoMedium,
-                  }}     
+                  }}
                   numberOfLines={1}
                 >
                   Reservations

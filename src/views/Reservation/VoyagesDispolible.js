@@ -50,6 +50,8 @@ export function VoyagesDisponible() {
   const route = useRoute();
   const [trajets, setTrajets] = useState(currentTrajet);
   const currentTrajet = route.params.trajets;
+  const enfants = route.params.enfants;
+  const adultes = route.params.adultes;
   // var params = route.params.trajets;
   const [selectDuree, setselectDuree] = useState("");
   const [value, setValue] = useState("");
@@ -62,7 +64,7 @@ export function VoyagesDisponible() {
     setTrajets(route.params.trajets);
   }, []);
   useEffect(() => {
-    const newAgences = currentTrajet.map((trajet) => {
+    const newAgences = currentTrajet?.map((trajet) => {
       return {
         id: trajet.itineraire.site.agence.nom,
         nom: trajet.itineraire.site.agence.nom,
@@ -117,6 +119,8 @@ export function VoyagesDisponible() {
     navigation.navigate("trajet", {
       trajet: trajet,
       prixReservation: prix,
+      enfants: enfants,
+      adultes: adultes,
     });
 
     // Exécuter toute autre logique nécessaire après la navigation
@@ -215,7 +219,7 @@ export function VoyagesDisponible() {
       contentContainerStyle={{
         flexDirection: "column",
         width: "100%",
-        height: "100%",
+        height: "auto",
         backgroundColor: "white",
         justifyContent: "flex-start ",
         alignItems: "center",

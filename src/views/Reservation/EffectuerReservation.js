@@ -34,7 +34,8 @@ import { TouchButton } from "../../components/TouchableButton";
 import * as ImagePicker from "expo-image-picker";
 import ButtomSheet from "../../components/BottomSheetForPaiement";
 import Dialog from "react-native-dialog";
-
+import { RadioButton } from "react-native-paper";
+       
 export const EffectuerReservationScreen = ({
   Trajets,
   index,
@@ -51,6 +52,8 @@ export const EffectuerReservationScreen = ({
   setMontantTotal,
   modePaiement,
   setClasse,
+  enfants,
+  adultes,
 }) => {
   const bottomSheetRef = useRef();
 
@@ -373,8 +376,8 @@ export const EffectuerReservationScreen = ({
         />
       </Dialog.Container>
     </View>
-  );
-
+  );      
+const [isadulte,setisadulte] = useState("true")   
   return (
     <SafeAreaView>
       {!showNext && (
@@ -413,13 +416,17 @@ export const EffectuerReservationScreen = ({
               <Text
                 style={{
                   fontFamily: FontFamily.RobotoBold,
-                  fontSize: Width * 0.06,
+                  fontSize: Width * 0.05,
                   textAlign: "left",
-                  paddingLeft: 5,
+                  paddingLeft: 2,
                   width: "70%",
+                  height: "80%  ",
                 }}
               >
                 Passagers
+                <Text className="font-light text-Black6 text-xs">
+                  ({adultes} adultes et {enfants} enfants)
+                </Text>
               </Text>
               <Pressable
                 className="flex justify-end items-center w-auto h-auto"
@@ -726,11 +733,13 @@ export const EffectuerReservationScreen = ({
           <TouchButton
             title="Continuer"
             onPress={() => {
-              if (passagerName.length > 0) {
+              if (passagerName.length >= adultes + enfants) {
                 setShowNext(true);
               } else {
                 return ToastAndroid.show(
-                  "Ajoutez au moins 1 passager !!!",
+                  `Ajoutez au moins tous les ${
+                    adultes + enfants
+                  }  passager !!!`,
                   ToastAndroid.SHORT
                 );
               }
@@ -1013,12 +1022,41 @@ export const EffectuerReservationScreen = ({
               }}
               // right={<TextInput.Affix text="/100" />}
             />
+            <RadioButton.Group
+              onValueChange={(newValue) => setisadulte(newValue)}
+              value={isadulte}
+              className="flex flex-row w-full p-2  "
+              style={{ display: "flex", flexDirection: "row" }}
+            >
+              <View className="flex flex-row">
+                <View
+                  className="flex w-1/2 flex-row items-center justify-start"
+                  value="true"
+                  color={"rgba(0, 129, 199, 1)"}
+                >
+                  <RadioButton
+                    // status="checked"
+                    value="true"
+                    color={"rgba(0, 129, 199, 1)"}
+                  />
+                  <Text className="text-left w-auto">Adulte</Text>
+                </View>
+                <View className="flex w-1/2 flex-row items-center justify-start">
+                  <RadioButton
+                    value="false"
+                    // disabled
+                    color={"rgba(0, 129, 199, 1)"}
+                  />
+                  <Text className="text-left w-auto">Enfant </Text>
+                </View>
+              </View>
+            </RadioButton.Group>
             <View className="flex flex-row">
               <Pressable
                 onPress={() => {
                   setDialogNewPassager(false);
                 }}
-                className="  bg-red-600  w-4/6 h-1/4 justify-center items-center text-white color-white  rounded-3xl "
+                className="  bg-red-600  w-4/6 h-1/4 justify-center items-center text-white  rounded-3xl "
               >
                 <Text
                   className="text-white"
@@ -1032,8 +1070,15 @@ export const EffectuerReservationScreen = ({
               </Pressable>
               <Pressable
                 onPress={() => {
-                  ajouterPassager(currentName);
-                  setDialogNewPassager(false);
+                  if (currentName != "") {
+                    ajouterPassager(currentName);
+                    setDialogNewPassager(false);
+                  } else {
+                    return ToastAndroid.show(
+                      `le nom  du passager ne doit pas etre vide !!!`,
+                      ToastAndroid.SHORT
+                    );
+                  }
                 }}
                 className="  bg-red-600  w-4/6 h-1/4 justify-center items-center text-white color-white  rounded-3xl "
               >
@@ -1062,7 +1107,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     // backgroundColor: "#fff",
     justifyContent: "flex-start",
-    alignItems: "center",
+     alignItems: "center",
     width: Width,
     height: "auto",
     marginBottom: Width * 0.01,
