@@ -271,6 +271,11 @@ export function ReservationForm({ onClick }) {
         "La ville de depart doit etre différente de la ville d'arrivée !!!",
         ToastAndroid.SHORT
       );
+    } else if (adultes + enfants == 0) {
+      return ToastAndroid.show(
+        "Entrer le nombre de passager",
+        ToastAndroid.SHORT
+      );
     } else {
       onClick(true);
       const data = {
@@ -290,7 +295,7 @@ export function ReservationForm({ onClick }) {
             classe: selectedClasse,
             date: selectedDate,
           },
-          timeout: 5, // Timeout en millisecondes (ici 5000 pour 5 secondes)
+          //timeout: 5, // Timeout en millisecondes (ici 5000 pour 5 secondes)
         })
         .then((res) => {
           console.log(
@@ -298,28 +303,41 @@ export function ReservationForm({ onClick }) {
           );
           console.log(JSON.stringify(res.data.data));
           console.log(
+            typeof res.data.data,
             "\n\t\t=======================================================================================\n"
           );
-          const currentTrajets = res.data.data;
           setTrajets(res.data.data);
+          const currentTrajets = res.data.data;
+          if (!res.data.data) {
+            onClick(false);
+            return ToastAndroid.show(
+              "Aucun voyage configure!!!",
+              ToastAndroid.SHORT
+            );
+          } else {
+            navigation.navigate("Voyages", {
+              trajets: currentTrajets,
+              enfants: enfants,
+              adultes: adultes,
+            });
+          }
 
-          navigation.navigate("Voyages", {
-            trajets: currentTrajets,
-            enfants: enfants,
-            adultes: adultes,
-          });
           onClick(false);
         })
         .catch((err) => {
           console.error("Erreur ! \n veillez reessayer");
           console.error(err);
-          navigation.navigate("Voyages", {
-            trajets: Trajets,
-            enfants: enfants,
-            adultes: adultes,
-          });
           onClick(false);
           console.log(typeof Trajets);
+          return ToastAndroid.show(
+            "Probleme de connection internet",
+            ToastAndroid.SHORT
+          );
+          // navigation.navigate("Voyages", {
+          //   trajets: Trajets,
+          //   enfants: enfants,
+          //   adultes: adultes,
+          // });
         });
     }
   };

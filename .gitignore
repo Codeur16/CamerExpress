@@ -10,7 +10,9 @@ node_modules/
 .expo/
 dist/
 web-build/
-
+# Ignorer les dossiers ios et android
+ios/
+android/
 # Native
 *.orig.*
 *.jks
